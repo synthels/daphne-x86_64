@@ -17,6 +17,8 @@
 
 #include <io/io.h>
 
+#define TIMER_FREQ 100
+
 /* Initialize PIT */
 void pit_init(void);
 

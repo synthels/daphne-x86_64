@@ -14,8 +14,6 @@
 
 #include "PIT.h"
 
-#define TIMER_FREQ 100
-
 static int ticks = 0;
 
 /* Initialize PIT */
