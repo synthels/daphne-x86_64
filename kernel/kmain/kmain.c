@@ -19,16 +19,21 @@
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
-	UNUSED(info);
 	tty_init();
 	tty_puts("phiOS - (C) Synthels 2021, All rights reserved", VGA_COLOR_LIGHT_GRAY);
 
-	/* Load IDT */
-	gen_lidt();
-	/* Init keyboard */
-	kbd_init();
-	/* Init PIT */
-	pit_init();
+	mm_init(info->mem_upper, info->mem_lower);
 
-	for(;;);
+	gen_lidt();
+	pit_init();
+	kbd_init();
+
+	for(;;) {
+		uint8_t key;
+		if (kbd_interface->event) {
+			kbd_interface->event = 0;
+			kbd_interface->read(&key);
+			tty_puts("IRQ1", VGA_COLOR_LIGHT_GRAY);
+		}
+	}
 }

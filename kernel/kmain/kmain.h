@@ -29,4 +29,6 @@
 #include <drivers/sound/speaker/speaker.h>
 #include <drivers/PIT/sleep.h>
 
+#include <memory/mm.h>
+
 #endif

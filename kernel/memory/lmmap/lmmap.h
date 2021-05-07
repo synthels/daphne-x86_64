@@ -12,28 +12,14 @@
  * GNU General Public License for more details.
  */
 
-#include "PIT.h"
+#ifndef TINY_MMAP
+#define TINY_MMAP
 
-static int ticks = 0;
+#include <stdint.h>
+#include <kernel.h>
+#include <memory/mm.h>
 
-/* Initialize PIT */
-void pit_init(void)
-{
-	int div = 1193180 / TIMER_FREQ;
-	/* Mode 2, hibyte, channel 0 */
-	outb(0x43, 0x16);
-	outb(0x40, div & 0xff);
-	outb(0x40, (div >> 8) & 0xff);
-}
+/* Linear memory map */
+uint32_t *lmmap(size_t n);
 
-/* Tick */
-void pit_tick(void)
-{
-	ticks++;
-}
-
-/* Read tick counter */
-int pit_get_ticks(void)
-{
-	return ticks;
-}
+#endif

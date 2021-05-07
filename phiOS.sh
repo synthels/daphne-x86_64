@@ -1,5 +1,16 @@
-args=("")
+# Build directory name
+BUILD_DIR="build"
 
+# Create build directory if it doesn't exist
+if ! [[ -d "$BUILD_DIR" ]]
+then
+	mkdir $BUILD_DIR
+	mkdir $BUILD_DIR/boot
+	mkdir $BUILD_DIR/boot/grub
+	touch $BUILD_DIR/boot/grub/grub.cfg
+fi
+
+args=("")
 # Parse args
 for arg in "$@"; do
 	if [ $arg == "-iso" ]; then

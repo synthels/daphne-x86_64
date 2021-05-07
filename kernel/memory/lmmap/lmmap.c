@@ -12,28 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#include "PIT.h"
+#include "lmmap.h"
 
-static int ticks = 0;
+static uint32_t memoffset = 0;
 
-/* Initialize PIT */
-void pit_init(void)
+/* Linear memory map */
+uint32_t *lmmap(size_t n)
 {
-	int div = 1193180 / TIMER_FREQ;
-	/* Mode 2, hibyte, channel 0 */
-	outb(0x43, 0x16);
-	outb(0x40, div & 0xff);
-	outb(0x40, (div >> 8) & 0xff);
-}
+	uint32_t lower = mm_get_lower();
 
-/* Tick */
-void pit_tick(void)
-{
-	ticks++;
-}
-
-/* Read tick counter */
-int pit_get_ticks(void)
-{
-	return ticks;
+	uint32_t *mem_ptr = (uint32_t *) (lower + memoffset);
+	memoffset += n * WORD;
+	return mem_ptr;
 }

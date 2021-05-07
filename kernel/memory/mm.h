@@ -12,28 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#include "PIT.h"
+#ifndef MEMORY
+#define MEMORY
 
-static int ticks = 0;
+#include <stdint.h>
 
-/* Initialize PIT */
-void pit_init(void)
-{
-	int div = 1193180 / TIMER_FREQ;
-	/* Mode 2, hibyte, channel 0 */
-	outb(0x43, 0x16);
-	outb(0x40, div & 0xff);
-	outb(0x40, (div >> 8) & 0xff);
-}
+/* Init mm */
+void mm_init(uint32_t upper, uint32_t lower);
 
-/* Tick */
-void pit_tick(void)
-{
-	ticks++;
-}
+/* mm getter functions */
+uint32_t mm_get_upper();
+uint32_t mm_get_lower();
 
-/* Read tick counter */
-int pit_get_ticks(void)
-{
-	return ticks;
-}
+#endif

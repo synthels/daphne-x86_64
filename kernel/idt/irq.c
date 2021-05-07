@@ -19,14 +19,14 @@
 
 #define IRQ_END outb(0x20, 0x20)
 
-void irq0_handler()
+void irq0_handler(void)
 {
 	pit_tick();
 	IRQ_END;
 }
 
 /* Keyboard IRQ */
-void irq1_handler()
+void irq1_handler(void)
 {
 	kbd_read();
 	IRQ_END;

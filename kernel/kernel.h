@@ -17,6 +17,9 @@
 #ifndef KERNEL_
 #define KERNEL_
 
+#include <stddef.h>
+
 #define UNUSED(x) (void) (x)
+#define WORD sizeof(size_t)
 
 #endif

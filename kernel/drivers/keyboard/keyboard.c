@@ -16,71 +16,45 @@
 
 #include "keyboard.h"
 
-static int kbd_enabled = 0;
 static int kbd_last_key_pressed;
 static uint8_t kbd_last_key;
 
-/* Key event */
-static int kbd_keyev = 0;
+int kbd_no_write(uint8_t *data)
+{
+	UNUSED(data);
+	return DRIVER_NO_WRITE;
+}
 
 /* Init keyboard */
 void kbd_init(void)
 {
-	/* Enable keyboard IRQ */
-	outb(0x21, 0xfd);
-	kbd_enabled = 1;
+	kbd_send_command(0xfd);
+	kbd_interface = (struct driver_interface *) lmmap(sizeof(struct driver_interface));
+
+	kbd_interface->enabled = 1;
+	kbd_interface->event = 0;
+	kbd_interface->name = "PS/2 Keyboard Interface";
+	kbd_interface->write = &kbd_no_write;
+	kbd_interface->read = &kbd_get_last_key;
 }
 
 /* Read 0x60 */
 void kbd_read()
 {
-	if (kbd_enabled) {
-		kbd_keyev = 1;
+	if (kbd_interface->enabled) {
 		kbd_last_key = inb(0x60);
 		kbd_last_key_pressed = !(kbd_last_key & 0x80);
+		kbd_interface->event = 1;
 		return;
 	}
-	/* Keyboard is disabled */
 	/* Read once again from here, so the PIC doesn't think we're stupid
 	   if the keyboard is disabled */
 	kbd_last_key = '\0';
 	inb(0x60);
 }
 
-/* Check if keyboard is enabled */
-int kbd_is_enabled(void)
-{
-	return kbd_enabled;
-}
-
-/* Enable/disable keyboard */
-void kbd_set_enabled(int enabled)
-{
-	kbd_enabled = enabled;
-}
-
 /* Return last key */
-void kbd_get_last_key(uint8_t *key, int *pressed)
+void kbd_get_last_key(uint8_t *key)
 {
-	*key = kbd_last_key;
-	*pressed = kbd_last_key_pressed;
-}
-
-/* Check if there is a key event */
-int kbd_get_event()
-{
-	return kbd_keyev;
-}
-
-uint8_t kbd_translate(uint8_t key, uint8_t layout[])
-{
-	return layout[key];
-}
-
-/* Acknowledge that keyboard event was read */
-/* This is fine, since there will always be exactly one recepient of this event,
-   the kernel. The kernel can then communicate to user-space */
-void kbd_ack()
-{
-	kbd_keyev = 0;
+	*key = kbd_last_key | kbd_last_key_pressed;
 }

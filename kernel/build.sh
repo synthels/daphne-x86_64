@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# phiOS Build script
+# Kernel build script
 
 # Point this to your nasm binary
 NASM="nasm"
@@ -12,18 +12,8 @@ QEMU="qemu-system-i386"
 # Point this to your as binary
 AS="i686-elf-as"
 
-# Point this to your build directory
-# Should already contain boot/grub/grub.cfg
+# Build directory name
 BUILD_DIR="build"
-
-# Create build directory if it doesn't exist
-if ! [[ -d "$BUILD_DIR" ]]
-then
-	mkdir $BUILD_DIR
-	mkdir $BUILD_DIR/boot
-	mkdir $BUILD_DIR/boot/grub
-	touch $BUILD_DIR/boot/grub/grub.cfg
-fi
 
 # Overwrite grub.cfg
 echo "default=0
@@ -52,6 +42,7 @@ compileModule "io"
 compileModule "idt"
 compileModule "drivers"
 compileModule "tty"
+compileModule "memory"
 
 echo "Linking..."
 
