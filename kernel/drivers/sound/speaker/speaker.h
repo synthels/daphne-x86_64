@@ -17,7 +17,13 @@
 
 #include <stdint.h>
 #include <io/io.h>
+#include <kernel.h>
 #include <drivers/time/sleep.h>
+#include <drivers/driver.h>
+
+struct driver_interface *spk_interface;
+
+void spk_init(void);
 
 /* Play a certain frequency through the PC speaker */
 void spk_play_freq(uint16_t freq);
@@ -25,8 +31,8 @@ void spk_play_freq(uint16_t freq);
 /*  
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
-*/
-void spk_play_freq_tm(uint16_t freq, uint16_t ticks);
+ */
+int spk_play_freq_tm(uint32_t data, int commit);
 
 /* Stop the speaker */
 void spk_stop(void);

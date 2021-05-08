@@ -14,17 +14,81 @@
  * PC Speaker driver
  */
 
+/*
+ * The PC Speaker driver expects data to be written to it
+ * like this:
+ *
+ * spk_interface->write(freq, DRIVER_WRITE);
+ * spk_interface->write(ticks, DRIVER_WRITE);
+ * spk_interface->write(0, DRIVER_COMMIT);
+ *
+ * Anything else will cause it to throw a tantrum. Please don't
+ * allow it to do that.
+ */
+
 #include "speaker.h"
+
+static int writes = 0;
+
+/* Speaker data */
+static int freq = 250;
+static int ticks = 10;
+
+void spk_no_read(uint32_t *data)
+{
+	*data = DRIVER_NO_READ;
+}
+
+void spk_init(void)
+{
+	spk_interface = (struct driver_interface *) lmmap(sizeof(struct driver_interface));
+
+	spk_interface->enabled = 1;
+	spk_interface->event = 0;
+	spk_interface->write = &spk_play_freq_tm;
+	spk_interface->read = &spk_no_read;
+}
 
 /*
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
  */
-void spk_play_freq_tm(uint16_t freq, uint16_t ticks)
+int spk_play_freq_tm(uint32_t data, int commit)
 {
-	spk_play_freq(freq);
-	sleep(ticks);
-	spk_stop();
+	writes++;
+	if (commit == 1) {
+		/* Committed with correct amount of data */
+		if (writes == 3) {
+			writes = 0;
+			spk_play_freq(freq);
+			sleep(ticks);
+			spk_stop();
+			return DRIVER_WRITE_OK;
+		}
+
+		/* Committed with too little writes */
+		if (writes < 2) {
+			writes = 0;
+			return DRIVER_TOO_LITTLE_WRITES;
+		}		
+	}
+
+	/* Too many writes */
+	if (writes > 2) {
+		writes = 0;
+		return DRIVER_TOO_MANY_WRITES;
+	}
+
+	switch (writes) {
+		case 1:
+			freq = data;
+			return DRIVER_EXPECTING_NEXT_WRITE;
+		case 2:
+			ticks = data;
+			return DRIVER_EXPECTING_NEXT_WRITE;
+	}
+
+	DRIVER_WRITE_END;
 }
 
 /* Play a certain frequency through the PC speaker */
@@ -38,7 +102,6 @@ void spk_play_freq(uint16_t freq)
 	outb(0x42, (uint8_t) div);
 	outb(0x42, (uint8_t) (div >> 8));
 
-	/* Play the sound */
 	uint8_t tmp = inb(0x61);
 	if (tmp != (tmp | 3)) {
 		outb(0x61, tmp | 3);

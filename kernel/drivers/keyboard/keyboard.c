@@ -19,9 +19,10 @@
 static int kbd_last_key_pressed;
 static uint8_t kbd_last_key;
 
-int kbd_no_write(uint32_t *data)
+int kbd_no_write(uint32_t data, int commit)
 {
 	UNUSED(data);
+	UNUSED(commit);
 	return DRIVER_NO_WRITE;
 }
 

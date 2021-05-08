@@ -27,6 +27,12 @@ void kmain(multiboot_info_t *info)
 	gen_lidt();
 	pit_init();
 	kbd_init();
+	spk_init();
+
+	/* "Welcome" Jingle */
+	spk_interface->write(650, DRIVER_WRITE);
+	spk_interface->write(1, DRIVER_WRITE);
+	spk_interface->write(0, DRIVER_COMMIT);
 
 	for(;;) {
 		uint32_t key;

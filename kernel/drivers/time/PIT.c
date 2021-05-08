@@ -19,9 +19,10 @@
 static uint32_t ticks = 0;
 static uint32_t real_ticks = 1;
 
-int pit_no_write(uint32_t *data)
+int pit_no_write(uint32_t data, int commit)
 {
 	UNUSED(data);
+	UNUSED(commit);
 	return DRIVER_NO_WRITE;
 }
 
