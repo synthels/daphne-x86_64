@@ -10,34 +10,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Main function
  */
 
-#include "kmain.h"
+#include "driver.h"
 
-/* Kernel main function */
-void kmain(multiboot_info_t *info)
+void init_drivers(void)
 {
-	tty_init();
-	tty_puts("phiOS - (C) Synthels 2021, All rights reserved", VGA_COLOR_LIGHT_GRAY);
-
-	mm_init(info->mem_upper, info->mem_lower);
-
-	gen_lidt();
-	pit_init();
-	init_drivers();
-
-	/* "Welcome" Jingle */
-	spk_interface->write(650, DRIVER_WRITE);
-	spk_interface->write(1, DRIVER_WRITE);
-	spk_interface->write(0, DRIVER_COMMIT);
-
-	for(;;) {
-		uint32_t key;
-		if (kbd_interface->event) {
-			kbd_interface->event = 0;
-			kbd_interface->read(&key);
-		}
-	}
+    kbd_init();
+	spk_init();
 }

@@ -36,6 +36,10 @@
 #define DRIVER_WRITE 0
 #define DRIVER_COMMIT 1
 
+#include <drivers/keyboard/keyboard.h>
+#include <drivers/sound/speaker/speaker.h>
+#include <drivers/time/PIT.h>
+
 struct driver_interface {
 	/*
 	 * Param 1: data
@@ -55,5 +59,8 @@ struct driver_interface {
 	int enabled;
 	int event; /* Set if an event is raised (SHOULD ONLY BE SET BY THE DRIVER & CLEARED BY THE KERNEL) */
 };
+
+/* Init drivers */
+void init_drivers(void);
 
 #endif

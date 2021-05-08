@@ -31,8 +31,8 @@
 static int writes = 0;
 
 /* Speaker data */
-static int freq = 250;
-static int ticks = 10;
+static int freq = 0;
+static int ticks = 0;
 
 void spk_no_read(uint32_t *data)
 {
