@@ -16,6 +16,6 @@
 
 void init_drivers(void)
 {
-    kbd_init();
+	kbd_init();
 	spk_init();
 }
