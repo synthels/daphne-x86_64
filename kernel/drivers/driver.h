@@ -27,6 +27,7 @@
 #define DRIVER_NO_READ -2
 #define DRIVER_TOO_MANY_WRITES -3
 #define DRIVER_TOO_LITTLE_WRITES -4
+#define DRIVER_DISABLED -5
 
 /* --- */
 #define DRIVER_WRITE_END return 0

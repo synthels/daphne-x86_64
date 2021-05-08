@@ -55,37 +55,39 @@ void spk_init(void)
  */
 int spk_play_freq_tm(uint32_t data, int commit)
 {
-	writes++;
-	if (commit == 1) {
-		/* Committed with correct amount of data */
-		if (writes == 3) {
-			writes = 0;
-			spk_play_freq(freq);
-			sleep(ticks);
-			spk_stop();
-			return DRIVER_WRITE_OK;
+	if (spk_interface->enabled) {
+		writes++;
+		if (commit == 1) {
+			/* Committed with correct amount of data */
+			if (writes == 3) {
+				writes = 0;
+				spk_play_freq(freq);
+				sleep(ticks);
+				spk_stop();
+				return DRIVER_WRITE_OK;
+			}
+
+			/* Committed with too little writes */
+			if (writes < 2) {
+				writes = 0;
+				return DRIVER_TOO_LITTLE_WRITES;
+			}		
 		}
 
-		/* Committed with too little writes */
-		if (writes < 2) {
+		/* Too many writes */
+		if (writes > 2) {
 			writes = 0;
-			return DRIVER_TOO_LITTLE_WRITES;
-		}		
-	}
+			return DRIVER_TOO_MANY_WRITES;
+		}
 
-	/* Too many writes */
-	if (writes > 2) {
-		writes = 0;
-		return DRIVER_TOO_MANY_WRITES;
-	}
-
-	switch (writes) {
-		case 1:
-			freq = data;
-			return DRIVER_EXPECTING_NEXT_WRITE;
-		case 2:
-			ticks = data;
-			return DRIVER_EXPECTING_NEXT_WRITE;
+		switch (writes) {
+			case 1:
+				freq = data;
+				return DRIVER_EXPECTING_NEXT_WRITE;
+			case 2:
+				ticks = data;
+				return DRIVER_EXPECTING_NEXT_WRITE;
+		}
 	}
 
 	DRIVER_WRITE_END;
