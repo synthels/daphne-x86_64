@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Thanks https://github.com/mental32 to for this script!
+# Thanks to https://github.com/mental32 for this script!
 
 VERSION=0.1.0
 
