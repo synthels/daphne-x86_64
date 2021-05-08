@@ -12,12 +12,24 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __SLEEP
-#define __SLEEP
+#ifndef DRIVER_PIT
+#define DRIVER_PIT
 
-#include <drivers/PIT/PIT.h>
+#include <io/io.h>
+#include <drivers/driver.h>
+#include <stdint.h>
 
-/* Sleep n ticks... */
-void sleep(int ticks);
+#define TIMER_FREQ 100
+
+struct driver_interface *pit_interface;
+
+/* Initialize PIT */
+void pit_init(void);
+
+/* Tick approx. every sec */
+void pit_tick(void);
+
+/* Read tick counter */
+void pit_get_ticks(uint32_t *data);
 
 #endif

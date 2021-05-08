@@ -19,7 +19,7 @@
 static int kbd_last_key_pressed;
 static uint8_t kbd_last_key;
 
-int kbd_no_write(uint8_t *data)
+int kbd_no_write(uint32_t *data)
 {
 	UNUSED(data);
 	return DRIVER_NO_WRITE;
@@ -33,7 +33,6 @@ void kbd_init(void)
 
 	kbd_interface->enabled = 1;
 	kbd_interface->event = 0;
-	kbd_interface->name = "PS/2 Keyboard Interface";
 	kbd_interface->write = &kbd_no_write;
 	kbd_interface->read = &kbd_get_last_key;
 }
@@ -54,7 +53,7 @@ void kbd_read()
 }
 
 /* Return last key */
-void kbd_get_last_key(uint8_t *key)
+void kbd_get_last_key(uint32_t *key)
 {
 	*key = kbd_last_key | kbd_last_key_pressed;
 }

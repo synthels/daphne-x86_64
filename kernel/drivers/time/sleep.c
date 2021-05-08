@@ -15,8 +15,13 @@
 #include "sleep.h"
 
 /* Sleep n ticks... */
-void sleep(int ticks)
+void sleep(uint32_t ticks)
 {
-	int start = pit_get_ticks();
-	while ((pit_get_ticks() - start) < ticks);
+	uint32_t start;
+	uint32_t now;
+	pit_get_ticks(&start);
+	pit_get_ticks(&now);
+	while ((now - start) < ticks) {
+		pit_get_ticks(&now);
+	}
 }

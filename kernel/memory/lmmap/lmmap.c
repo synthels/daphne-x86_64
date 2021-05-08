@@ -14,14 +14,17 @@
 
 #include "lmmap.h"
 
-static uint32_t memoffset = 0;
+static uint32_t lower;
+
+void init_lmmap(void)
+{
+	lower = mm_get_lower();
+}
 
 /* Linear memory map */
 uint32_t *lmmap(size_t n)
 {
-	uint32_t lower = mm_get_lower();
-
-	uint32_t *mem_ptr = (uint32_t *) (lower + memoffset);
-	memoffset += n * WORD;
+	uint32_t *mem_ptr = (uint32_t *) lower;
+	lower += n;
 	return mem_ptr;
 }

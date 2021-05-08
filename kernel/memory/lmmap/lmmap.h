@@ -19,6 +19,9 @@
 #include <kernel.h>
 #include <memory/mm.h>
 
+/* Init lmmap */
+void init_lmmap(void);
+
 /* Linear memory map */
 uint32_t *lmmap(size_t n);
 

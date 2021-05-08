@@ -25,9 +25,9 @@
 #include <kernel.h>
 
 #include <drivers/keyboard/keyboard.h>
-#include <drivers/PIT/PIT.h>
+#include <drivers/time/PIT.h>
 #include <drivers/sound/speaker/speaker.h>
-#include <drivers/PIT/sleep.h>
+#include <drivers/time/sleep.h>
 
 #include <memory/mm.h>
 

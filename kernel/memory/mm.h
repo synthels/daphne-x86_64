@@ -16,6 +16,7 @@
 #define MEMORY
 
 #include <stdint.h>
+#include <memory/lmmap/lmmap.h>
 
 /* Init mm */
 void mm_init(uint32_t upper, uint32_t lower);

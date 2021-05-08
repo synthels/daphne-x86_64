@@ -29,11 +29,10 @@ void kmain(multiboot_info_t *info)
 	kbd_init();
 
 	for(;;) {
-		uint8_t key;
+		uint32_t key;
 		if (kbd_interface->event) {
 			kbd_interface->event = 0;
 			kbd_interface->read(&key);
-			tty_puts("IRQ1", VGA_COLOR_LIGHT_GRAY);
 		}
 	}
 }

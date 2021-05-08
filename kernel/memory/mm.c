@@ -21,6 +21,8 @@ void mm_init(uint32_t upper, uint32_t lower)
 {
 	mem_upper = upper;
 	mem_lower = lower;
+
+	init_lmmap();
 }
 
 uint32_t mm_get_upper()

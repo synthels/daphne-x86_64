@@ -12,28 +12,13 @@
  * GNU General Public License for more details.
  */
 
-#include "PIT.h"
+#ifndef __SLEEP
+#define __SLEEP
 
-static int ticks = 0;
+#include <drivers/time/PIT.h>
+#include <stdint.h>
 
-/* Initialize PIT */
-void pit_init(void)
-{
-	int div = 1193180 / TIMER_FREQ;
-	/* Mode 2, hibyte, channel 0 */
-	outb(0x43, 0x16);
-	outb(0x40, div & 0xff);
-	outb(0x40, (div >> 8) & 0xff);
-}
+/* Sleep n ticks... */
+void sleep(uint32_t ticks);
 
-/* Tick */
-void pit_tick(void)
-{
-	ticks++;
-}
-
-/* Read tick counter */
-int pit_get_ticks(void)
-{
-	return ticks;
-}
+#endif

@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <io/io.h>
-#include <drivers/PIT/PIT.h>
+#include <drivers/time/sleep.h>
 
 /* Play a certain frequency through the PC speaker */
 void spk_play_freq(uint16_t freq);

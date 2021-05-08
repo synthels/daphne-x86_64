@@ -20,9 +20,8 @@
 */
 void spk_play_freq_tm(uint16_t freq, uint16_t ticks)
 {
-	int start = pit_get_ticks();
 	spk_play_freq(freq);
-	while ((pit_get_ticks() - start) < ticks);
+	sleep(ticks);
 	spk_stop();
 }
 

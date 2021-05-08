@@ -18,7 +18,6 @@
 #include <io/io.h>
 #include <stdint.h>
 #include <drivers/driver.h>
-#include <memory/lmmap/lmmap.h>
 
 struct driver_interface *kbd_interface;
 
@@ -28,7 +27,7 @@ struct driver_interface *kbd_interface;
 void kbd_init(void);
 
 /* Get last key */
-void kbd_get_last_key(uint8_t *key);
+void kbd_get_last_key(uint32_t *key);
 
 /* Read 0x60 */
 void kbd_read();
