@@ -10,9 +10,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * Symbols used throughout the kernel
  */
-
-/* Symbols used throughout the kernel */
 
 #ifndef KERNEL_
 #define KERNEL_

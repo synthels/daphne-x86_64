@@ -10,6 +10,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * PC Speaker driver
  */
 
 #include "speaker.h"
@@ -17,7 +19,7 @@
 /*
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
-*/
+ */
 void spk_play_freq_tm(uint16_t freq, uint16_t ticks)
 {
 	spk_play_freq(freq);

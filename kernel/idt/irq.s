@@ -1,4 +1,4 @@
-; Assembly IRQ dummy handlers
+; IRQ dummy handlers
 
 global irq0
 global irq1

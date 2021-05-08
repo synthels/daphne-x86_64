@@ -10,6 +10,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * PIT driver
  */
 
 #include "PIT.h"
@@ -27,7 +29,7 @@ int pit_no_write(uint32_t *data)
 void pit_init(void)
 {
 	int div = 1193180 / TIMER_FREQ;
-	/* Mode 2, hibyte, channel 0 */
+	/* Mode 4, hibyte, channel 0 */
 	outb(0x43, 0x36);
 	outb(0x40, div & 0xff);
 	outb(0x40, (div >> 8) & 0xff);

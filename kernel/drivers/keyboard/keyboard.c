@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * Simple PS/2 keyboard driver
+ * PS/2 keyboard driver
  */
 
 #include "keyboard.h"
