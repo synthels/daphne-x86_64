@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Build directory name
 BUILD_DIR="build"
 
