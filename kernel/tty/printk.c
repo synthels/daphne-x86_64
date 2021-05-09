@@ -23,7 +23,7 @@ static char printk_buf[1024];
  * Written by Lukas Chmela
  * Released under GPLv3
  */
-static void itoa(int value, char *result, int base) {
+static char *itoa(int value, char *result, int base) {
 	// Check that base is valid
 	if (base < 2 || base > 36) { *result = '\0'; return result; }
 	char* ptr = result, *ptr1 = result, tmp_char;
@@ -74,7 +74,7 @@ int vsprintf(char **buf, va_list args)
 		printk_buf[i++] = c;
 		if (c == '%') {
 			c = *fmt++;
-			char *str;
+			char *str = "";
 			switch (c) {
 				/* Strings */
 				case 's':
