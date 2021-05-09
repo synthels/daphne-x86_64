@@ -22,4 +22,8 @@
 #define UNUSED(x) (void) (x)
 #define WORD sizeof(size_t)
 
+#define SIGOK 0
+#define SIGERR 10
+#define SIGWARN 20
+
 #endif

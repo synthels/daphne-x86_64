@@ -10,23 +10,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef PRINTK
+#define PRINTK
 
-#include <multiboot.h>
-
+#include <stdarg.h>
 #include <tty/tty_io.h>
-#include <io/io.h>
-#include <idt/idt.h>
 #include <kernel.h>
 
-#include <drivers/time/sleep.h>
-#include <memory/mm.h>
+/* Prints a formatted string to a buffer */
+int vsprintf(char **buf, va_list args);
 
-#include <tty/printk.h>
+/* Prints a formatted string to the screen using tty functions */
+int printk(const char *fmt, ...);
 
 #endif

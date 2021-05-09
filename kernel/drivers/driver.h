@@ -43,7 +43,7 @@
 struct driver_interface {
 	/*
 	 * Param 1: data
-	 * Param 2: commit, 1 for commit, anything else for just write
+	 * Param 2: commit: 1 for commit, anything else for just write
 	 *
 	 * Passing data to the driver requires that you set
 	 * the second parameter to the be anything other than 1 every time you

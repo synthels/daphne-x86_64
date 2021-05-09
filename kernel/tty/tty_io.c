@@ -16,6 +16,7 @@
 
 #include "tty_io.h"
 
+/* TODO: Move this to lib */
 static size_t strlen(const char *str)
 {
 	size_t i = 0;
@@ -103,7 +104,7 @@ void tty_print(const char *data, const unsigned char color)
 	size_t k = 0;
 	for (size_t i = 0; i < size; i++) {
 		/* Go to next line when this line is filled up */
-		if (k > VGA_WIDTH && data[i] != '\n') {
+		if (k >= VGA_WIDTH && data[i] != '\n') {
 			tty_putc('\n', color);
 			k = 0;
 		}

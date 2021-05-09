@@ -23,6 +23,9 @@ for arg in "$@"; do
 		echo " -iso   Output an ISO file alongside the binary"
 		echo " -qemu  Test using QEMU"
 		exit 0
+	else
+		echo "Unknown option \"$arg\"! (See phiOS.sh -help for assistance)"
+		exit 1
 	fi
 done
 

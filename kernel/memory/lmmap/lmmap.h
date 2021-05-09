@@ -12,12 +12,13 @@
  * GNU General Public License for more details.
  */
 
-#ifndef TINY_MMAP
-#define TINY_MMAP
+#ifndef LMMMAP
+#define LMMMAP
 
 #include <stdint.h>
 #include <kernel.h>
 #include <memory/mm.h>
+#include <drivers/driver.h>
 
 /* Init lmmap */
 void init_lmmap(void);

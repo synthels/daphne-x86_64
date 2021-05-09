@@ -40,4 +40,3 @@ _start:
 		cli
 		hlt
 .size _start, . - _start
-
