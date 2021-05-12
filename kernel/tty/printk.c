@@ -89,6 +89,18 @@ int vsprintf(char **buf, va_list args)
 				case 'i':
 					itoa(va_arg(args, int), str, 10);
 					break;
+				/* Hex */
+				case 'h':
+					itoa(va_arg(args, int), str, 16);
+					break;
+				/* Binary */
+				case 'b':
+					itoa(va_arg(args, int), str, 2);
+					break;
+				/* Just print a '%' */
+				case '%':
+					str = "%";
+					break;
 				/* Unknown type */
 				default:
 					*buf = "";
