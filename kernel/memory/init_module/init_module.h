@@ -17,11 +17,15 @@
 
 #include <modules/module.h>
 #include <memory/mm.h>
+#include <kernel.h>
 
 /* Initialise module */
 void __mm_init_alloc_module__(void);
 
 /* Allocates memory for a module struct */
 struct module_interface *init_module(void);
+
+/* Frees module memory */
+void free_module(struct module_interface *module);
 
 #endif

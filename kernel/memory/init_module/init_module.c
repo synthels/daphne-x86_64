@@ -17,6 +17,7 @@
 #include "init_module.h"
 
 static uint32_t lower;
+static struct module_interface *free_addr = NULL;
 
 void __mm_init_alloc_module__(void)
 {
@@ -25,7 +26,25 @@ void __mm_init_alloc_module__(void)
 
 struct module_interface *init_module(void)
 {
-	struct module_interface *mem_ptr = (struct module_interface *) lower;
-	lower += sizeof(struct module_interface);
+	struct module_interface *mem_ptr;
+	if (free_addr == NULL) {
+		mem_ptr = (struct module_interface *) lower;
+		lower += sizeof(struct module_interface);
+	} else {
+		/* We want a reference to the address, not to the variable since we NULL it right after */
+		mem_ptr = &(*free_addr);
+		free_addr = NULL;
+	}
 	return mem_ptr;
+}
+
+void free_module(struct module_interface *module)
+{
+	module->enabled = 0;
+	/*
+	 * Allow the address of the module to be overwritten.
+	 * The module itself is not erased from memory immediately,
+	 * so writing to it is still technically possible.
+	 */
+	free_addr = module;
 }

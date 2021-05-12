@@ -28,7 +28,7 @@ void kmain(multiboot_info_t *info)
 	init_modules();
 
 	/* "Welcome" Jingle */
-	spk_interface->write(650, MODULE_WRITE);
+	spk_interface->write(400, MODULE_WRITE);
 	spk_interface->write(1, MODULE_WRITE);
 	spk_interface->write(0, MODULE_COMMIT);
 
