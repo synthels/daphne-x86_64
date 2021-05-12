@@ -20,7 +20,7 @@
 void kmain(multiboot_info_t *info)
 {
 	tty_init();
-	printk("phiOS - (C) Synthels 2021, All rights reserved");
+	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
 
 	mm_init(info->mem_upper, info->mem_lower);
 

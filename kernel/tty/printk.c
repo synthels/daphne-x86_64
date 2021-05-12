@@ -41,7 +41,7 @@ static char *itoa(int value, char *result, int base) {
 
 	while(ptr1 < ptr) {
 		tmp_char = *ptr;
-		*ptr--= *ptr1;
+		*ptr-- = *ptr1;
 		*ptr1++ = tmp_char;
 	}
 
@@ -79,7 +79,7 @@ int vsprintf(char **buf, va_list args)
 		printk_buf[i++] = c;
 		if (c == '%') {
 			c = *fmt++;
-			char *str = "";
+			char *str;
 			switch (c) {
 				/* Strings */
 				case 's':

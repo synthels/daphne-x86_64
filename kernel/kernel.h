@@ -19,6 +19,8 @@
 
 #include <stddef.h>
 
+#define KERNEL_COPYRIGHT_YEAR 2021
+
 #define UNUSED(x) (void) (x)
 #define WORD sizeof(size_t)
 

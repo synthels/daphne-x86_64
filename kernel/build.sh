@@ -33,7 +33,7 @@ $NASM -f elf32 kernel/boot/gdt.s -o $BUILD_DIR/gdt.o
 function compileModule() {
 	for file in $(find kernel/$1 -name '*.c'); do
 		echo "Compiling kernel source file: $file..."
-		$GCC -g -c $file -o $BUILD_DIR/"${file//\/}".o -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Ilib/include -Ikernel
+		$GCC -g -c $file -o $BUILD_DIR/"${file//\/}".o -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Ilib/include -Ikernel -Wno-maybe-uninitialized
 	done
 }
 
