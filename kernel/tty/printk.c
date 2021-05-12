@@ -50,6 +50,11 @@ static char *itoa(int value, char *result, int base) {
 
 int printk(const char *fmt, ...)
 {
+	/* Empty buffer */
+	for (size_t i = 0; i < sizeof(printk_buf) / sizeof(char); i++) {
+		printk_buf[i] = '\0';
+	}
+
 	char *buf;
 	/*
 	 * Hack to make gcc point to the first parameter 
