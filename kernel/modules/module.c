@@ -17,5 +17,6 @@
 void init_modules(void)
 {
 	kbd_init();
+	pit_init();
 	spk_init();
 }

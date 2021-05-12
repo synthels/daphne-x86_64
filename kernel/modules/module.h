@@ -11,11 +11,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * Driver interface
+ * Module interface
  */
 
-#ifndef DRIVER
-#define DRIVER
+#ifndef MODULE
+#define MODULE
 
 #include <stdint.h>
 #include <kernel.h>

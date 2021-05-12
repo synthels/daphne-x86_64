@@ -25,7 +25,6 @@ void kmain(multiboot_info_t *info)
 	mm_init(info->mem_upper, info->mem_lower);
 
 	gen_lidt();
-	pit_init();
 	init_modules();
 
 	/* "Welcome" Jingle */
