@@ -23,14 +23,14 @@ int kbd_no_write(uint32_t data, int commit)
 {
 	UNUSED(data);
 	UNUSED(commit);
-	return DRIVER_NO_WRITE;
+	return MODULE_NO_WRITE;
 }
 
 /* Init keyboard */
 void kbd_init(void)
 {
 	kbd_send_command(0xfd);
-	kbd_interface = (struct driver_interface *) lmmap(sizeof(struct driver_interface));
+	kbd_interface = init_module();
 
 	kbd_interface->enabled = 1;
 	kbd_interface->event = 0;

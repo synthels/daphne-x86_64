@@ -20,18 +20,18 @@
 void kmain(multiboot_info_t *info)
 {
 	tty_init();
-	tty_puts("phiOS - (C) Synthels 2021, All rights reserved", VGA_COLOR_LIGHT_GRAY);
+	printk("phiOS - (C) Synthels 2021, All rights reserved");
 
 	mm_init(info->mem_upper, info->mem_lower);
 
 	gen_lidt();
 	pit_init();
-	init_drivers();
+	init_modules();
 
 	/* "Welcome" Jingle */
-	spk_interface->write(650, DRIVER_WRITE);
-	spk_interface->write(1, DRIVER_WRITE);
-	spk_interface->write(0, DRIVER_COMMIT);
+	spk_interface->write(650, MODULE_WRITE);
+	spk_interface->write(1, MODULE_WRITE);
+	spk_interface->write(0, MODULE_COMMIT);
 
 	for(;;) {
 		uint32_t key;

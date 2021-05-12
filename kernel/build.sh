@@ -40,7 +40,7 @@ function compileModule() {
 compileModule "kmain"
 compileModule "io"
 compileModule "idt"
-compileModule "drivers"
+compileModule "modules"
 compileModule "tty"
 compileModule "memory"
 

@@ -23,7 +23,7 @@ int pit_no_write(uint32_t data, int commit)
 {
 	UNUSED(data);
 	UNUSED(commit);
-	return DRIVER_NO_WRITE;
+	return MODULE_NO_WRITE;
 }
 
 /* Initialize PIT */
@@ -35,7 +35,7 @@ void pit_init(void)
 	outb(0x40, div & 0xff);
 	outb(0x40, (div >> 8) & 0xff);
 
-	pit_interface = (struct driver_interface *) lmmap(sizeof(struct driver_interface));
+	pit_interface = init_module();
 
 	pit_interface->enabled = 1;
 	pit_interface->event = 0;

@@ -12,29 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DRIVER_SPEAKER
-#define DRIVER_SPEAKER
+#ifndef ALLOC_MODULE
+#define ALLOC_MODULE
 
-#include <stdint.h>
-#include <io/io.h>
-#include <kernel.h>
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
+#include <modules/module.h>
+#include <memory/mm.h>
 
-struct driver_interface *spk_interface;
+/* Initialise module */
+void __mm_init_alloc_module__(void);
 
-void spk_init(void);
-
-/* Play a certain frequency through the PC speaker */
-void spk_play_freq(uint16_t freq);
-
-/*  
- * Play a certain frequency through the PC speaker 
- * for a certain amount of ticks
- */
-int spk_play_freq_tm(uint32_t data, int commit);
-
-/* Stop the speaker */
-void spk_stop(void);
+/* Allocates memory for a module struct */
+struct module_interface *init_module(void);
 
 #endif

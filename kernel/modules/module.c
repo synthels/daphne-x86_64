@@ -12,24 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DRIVER_KEYBOARD
-#define DRIVER_KEYBOARD
+#include "module.h"
 
-#include <io/io.h>
-#include <stdint.h>
-#include <drivers/driver.h>
-
-struct driver_interface *kbd_interface;
-
-#define kbd_send_command(x) outb(0x64, x)
-
-/* Init keyboard */
-void kbd_init(void);
-
-/* Get last key */
-void kbd_get_last_key(uint32_t *key);
-
-/* Read 0x60 */
-void kbd_read();
-
-#endif
+void init_modules(void)
+{
+	kbd_init();
+	spk_init();
+}

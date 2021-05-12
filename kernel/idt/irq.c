@@ -15,9 +15,10 @@
  */
 
 #include <io/io.h>
-#include <drivers/keyboard/keyboard.h>
-#include <drivers/time/PIT.h>
+#include <modules/keyboard/keyboard.h>
+#include <modules/time/PIT.h>
 #include <stdint.h>
+#include <tty/printk.h>
 
 #define IRQ_END outb(0x20, 0x20)
 

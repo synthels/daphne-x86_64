@@ -12,18 +12,24 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LMMMAP
-#define LMMMAP
+#ifndef MODULE_PIT
+#define MODULE_PIT
 
+#include <io/io.h>
+#include <modules/module.h>
 #include <stdint.h>
-#include <kernel.h>
-#include <memory/mm.h>
-#include <drivers/driver.h>
 
-/* Init lmmap */
-void init_lmmap(void);
+#define TIMER_FREQ 100
 
-/* Linear memory map */
-uint32_t *lmmap(size_t n);
+struct module_interface *pit_interface;
+
+/* Initialize PIT */
+void pit_init(void);
+
+/* Tick approx. every sec */
+void pit_tick(void);
+
+/* Read tick counter */
+void pit_get_ticks(uint32_t *data);
 
 #endif

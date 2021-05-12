@@ -19,28 +19,28 @@
 
 #include <stdint.h>
 #include <kernel.h>
-#include <memory/lmmap/lmmap.h>
+#include <memory/init_module/init_module.h>
 
-#define DRIVER_EXPECTING_NEXT_WRITE 1
-#define DRIVER_WRITE_OK 0
-#define DRIVER_NO_WRITE -1
-#define DRIVER_NO_READ -2
-#define DRIVER_TOO_MANY_WRITES -3
-#define DRIVER_TOO_LITTLE_WRITES -4
-#define DRIVER_DISABLED -5
-
-/* --- */
-#define DRIVER_WRITE_END return 0
+#define MODULE_EXPECTING_NEXT_WRITE 1
+#define MODULE_WRITE_OK 0
+#define MODULE_NO_WRITE -1
+#define MODULE_NO_READ -2
+#define MODULE_TOO_MANY_WRITES -3
+#define MODULE_TOO_LITTLE_WRITES -4
+#define MODULE_DISABLED -5
 
 /* --- */
-#define DRIVER_WRITE 0
-#define DRIVER_COMMIT 1
+#define MODULE_WRITE_END return 0
 
-#include <drivers/keyboard/keyboard.h>
-#include <drivers/sound/speaker/speaker.h>
-#include <drivers/time/PIT.h>
+/* --- */
+#define MODULE_WRITE 0
+#define MODULE_COMMIT 1
 
-struct driver_interface {
+#include <modules/keyboard/keyboard.h>
+#include <modules/sound/speaker/speaker.h>
+#include <modules/time/PIT.h>
+
+struct module_interface {
 	/*
 	 * Param 1: data
 	 * Param 2: commit: 1 for commit, anything else for just write
@@ -49,9 +49,9 @@ struct driver_interface {
 	 * the second parameter to the be anything other than 1 every time you
 	 * write to the driver and want to pass extra data again later
 	 * and 1 when you want to commit the data and start a new
-	 * session with the driver. Will return DRIVER_EXPECTING_NEXT_WRITE if it expects another write
-	 * (will return DRIVER_TOO_MANY_WRITES if you write more times than the driver supports before committing)
-	 * (will return DRIVER_TOO_LITTLE_WRITES if you don't write enough times before committing)
+	 * session with the driver. Will return MODULE_EXPECTING_NEXT_WRITE if it expects another write
+	 * (will return MODULE_TOO_MANY_WRITES if you write more times than the driver supports before committing)
+	 * (will return MODULE_TOO_LITTLE_WRITES if you don't write enough times before committing)
 	 */
 	int (*write) (uint32_t, int);
 	/* Param 1: data */
@@ -61,6 +61,6 @@ struct driver_interface {
 };
 
 /* Init drivers */
-void init_drivers(void);
+void init_modules(void);
 
 #endif

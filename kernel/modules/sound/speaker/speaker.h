@@ -12,13 +12,29 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __SLEEP
-#define __SLEEP
+#ifndef MODULE_SPEAKER
+#define MODULE_SPEAKER
 
-#include <drivers/time/PIT.h>
 #include <stdint.h>
+#include <io/io.h>
+#include <kernel.h>
+#include <modules/time/sleep.h>
+#include <modules/module.h>
 
-/* Sleep n ticks... */
-void sleep(uint32_t ticks);
+struct module_interface *spk_interface;
+
+void spk_init(void);
+
+/* Play a certain frequency through the PC speaker */
+void spk_play_freq(uint16_t freq);
+
+/*  
+ * Play a certain frequency through the PC speaker 
+ * for a certain amount of ticks
+ */
+int spk_play_freq_tm(uint32_t data, int commit);
+
+/* Stop the speaker */
+void spk_stop(void);
 
 #endif

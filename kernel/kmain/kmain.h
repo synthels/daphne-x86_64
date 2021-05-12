@@ -24,7 +24,7 @@
 #include <idt/idt.h>
 #include <kernel.h>
 
-#include <drivers/time/sleep.h>
+#include <modules/time/sleep.h>
 #include <memory/mm.h>
 
 #include <tty/printk.h>

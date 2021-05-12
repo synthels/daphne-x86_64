@@ -18,9 +18,9 @@
  * The PC Speaker driver expects data to be written to it
  * like this:
  *
- * spk_interface->write(freq, DRIVER_WRITE);
- * spk_interface->write(ticks, DRIVER_WRITE);
- * spk_interface->write(0, DRIVER_COMMIT);
+ * spk_interface->write(freq, MODULE_WRITE);
+ * spk_interface->write(ticks, MODULE_WRITE);
+ * spk_interface->write(0, MODULE_COMMIT);
  *
  * Anything else will cause it to throw a tantrum. Please don't
  * allow it to do that.
@@ -36,12 +36,12 @@ static int ticks = 0;
 
 void spk_no_read(uint32_t *data)
 {
-	*data = DRIVER_NO_READ;
+	*data = MODULE_NO_READ;
 }
 
 void spk_init(void)
 {
-	spk_interface = (struct driver_interface *) lmmap(sizeof(struct driver_interface));
+	spk_interface = init_module();
 
 	spk_interface->enabled = 1;
 	spk_interface->event = 0;
@@ -64,33 +64,33 @@ int spk_play_freq_tm(uint32_t data, int commit)
 				spk_play_freq(freq);
 				sleep(ticks);
 				spk_stop();
-				return DRIVER_WRITE_OK;
+				return MODULE_WRITE_OK;
 			}
 
 			/* Committed with too little writes */
 			if (writes < 2) {
 				writes = 0;
-				return DRIVER_TOO_LITTLE_WRITES;
+				return MODULE_TOO_LITTLE_WRITES;
 			}		
 		}
 
 		/* Too many writes */
 		if (writes > 2) {
 			writes = 0;
-			return DRIVER_TOO_MANY_WRITES;
+			return MODULE_TOO_MANY_WRITES;
 		}
 
 		switch (writes) {
 			case 1:
 				freq = data;
-				return DRIVER_EXPECTING_NEXT_WRITE;
+				return MODULE_EXPECTING_NEXT_WRITE;
 			case 2:
 				ticks = data;
-				return DRIVER_EXPECTING_NEXT_WRITE;
+				return MODULE_EXPECTING_NEXT_WRITE;
 		}
 	}
 
-	DRIVER_WRITE_END;
+	MODULE_WRITE_END;
 }
 
 /* Play a certain frequency through the PC speaker */

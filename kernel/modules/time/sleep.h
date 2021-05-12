@@ -12,10 +12,13 @@
  * GNU General Public License for more details.
  */
 
-#include "driver.h"
+#ifndef __SLEEP
+#define __SLEEP
 
-void init_drivers(void)
-{
-	kbd_init();
-	spk_init();
-}
+#include <modules/time/PIT.h>
+#include <stdint.h>
+
+/* Sleep n ticks... */
+void sleep(uint32_t ticks);
+
+#endif

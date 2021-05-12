@@ -10,23 +10,26 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Linear memory map
  */
 
-#include "lmmap.h"
+#ifndef MODULE_KEYBOARD
+#define MODULE_KEYBOARD
 
-static uint32_t lower;
+#include <io/io.h>
+#include <stdint.h>
+#include <modules/module.h>
 
-void init_lmmap(void)
-{
-	lower = mm_get_lower();
-}
+struct module_interface *kbd_interface;
 
-/* Linear memory map */
-uint32_t *lmmap(size_t n)
-{
-	uint32_t *mem_ptr = (uint32_t *) lower;
-	lower += n;
-	return mem_ptr;
-}
+#define kbd_send_command(x) outb(0x64, x)
+
+/* Init keyboard */
+void kbd_init(void);
+
+/* Get last key */
+void kbd_get_last_key(uint32_t *key);
+
+/* Read 0x60 */
+void kbd_read();
+
+#endif

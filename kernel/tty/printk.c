@@ -89,7 +89,7 @@ int vsprintf(char **buf, va_list args)
 					*buf = "";
 					return SIGERR;
 			}
-			/* Skip '%'  sign*/
+			/* Skip '%' sign */
 			i--;
 			/* Copy string to buffer */
 			for (; (c = *str++); i++) {

@@ -10,26 +10,22 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * Module init
  */
 
-#ifndef DRIVER_PIT
-#define DRIVER_PIT
+#include "init_module.h"
 
-#include <io/io.h>
-#include <drivers/driver.h>
-#include <stdint.h>
+static uint32_t lower;
 
-#define TIMER_FREQ 100
+void __mm_init_alloc_module__(void)
+{
+	lower = mm_get_lower();
+}
 
-struct driver_interface *pit_interface;
-
-/* Initialize PIT */
-void pit_init(void);
-
-/* Tick approx. every sec */
-void pit_tick(void);
-
-/* Read tick counter */
-void pit_get_ticks(uint32_t *data);
-
-#endif
+struct module_interface *init_module(void)
+{
+	struct module_interface *mem_ptr = (struct module_interface *) lower;
+	lower += sizeof(struct module_interface);
+	return mem_ptr;
+}
