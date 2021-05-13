@@ -18,14 +18,14 @@
 
 void logk(char *msg)
 {
-    uint32_t ticks;
-    pit_interface->read(&ticks);
-    switch (kernel_mode) {
-        case KERNEL_MODE:
-            printk("[%is] %s", ticks, msg);
-            break;
-        case OS_MODE:
-            /* Redirect to a log file once we have an fs... */
-            break;
-    }
+	uint32_t ticks;
+	pit_interface->read(&ticks);
+	switch (kernel_mode) {
+		case KERNEL_MODE:
+			printk("[%is] %s", ticks, msg);
+			break;
+		case OS_MODE:
+			/* Redirect to a log file once we have an fs... */
+			break;
+	}
 }

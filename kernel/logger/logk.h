@@ -12,9 +12,14 @@
  * GNU General Public License for more details.
  */
 
+#ifndef LOGGER
+#define LOGGER
+
 #include <tty/printk.h>
 #include <modules/time/PIT.h>
 #include <stdint.h>
 
 /* Logs a message */
 void logk(char *msg);
+
+#endif
