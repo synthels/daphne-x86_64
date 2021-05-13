@@ -61,7 +61,7 @@ void idt_install_handlers()
 }
 
 /* Generate & load an IDT */
-void gen_lidt(void)
+void init_idt(void)
 {
 	extern int load_idt();
 	uint32_t irq_addresses[16];

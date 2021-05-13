@@ -10,24 +10,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef PAGING
+#define PAGING
 
-#include <multiboot.h>
+#include <stdint.h>
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <idt/idt.h>
-#include <kernel.h>
-
-#include <modules/time/sleep.h>
-#include <memory/mm.h>
-#include <memory/paging/paging.h>
-
-#include <tty/printk.h>
+/* Init page directory */
+void init_page_directory(void);
 
 #endif

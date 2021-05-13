@@ -29,6 +29,7 @@ $AS kernel/boot/boot.s -o $BUILD_DIR/boot.o
 $NASM -f elf32 kernel/idt/irq.s -o $BUILD_DIR/irq.o
 # Assemble GDT
 $NASM -f elf32 kernel/boot/gdt.s -o $BUILD_DIR/gdt.o
+$NASM -f elf32 kernel/boot/paging.s -o $BUILD_DIR/paging.o
 
 function compileModule() {
 	for file in $(find kernel/$1 -name '*.c'); do

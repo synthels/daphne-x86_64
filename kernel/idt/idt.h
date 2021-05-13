@@ -37,6 +37,6 @@ void *irq_handlers[16];
 void idt_install_irq_handler(void (*handler)(void), int i);
 
 /* Initialise the IDT */
-void gen_lidt(void);
+void init_idt(void);
 
 #endif
