@@ -10,37 +10,11 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Symbols used throughout the kernel
  */
 
-#ifndef KERNEL_
-#define KERNEL_
+#include <tty/printk.h>
+#include <modules/time/PIT.h>
+#include <stdint.h>
 
-#include <stddef.h>
-
-#define KERNEL_COPYRIGHT_YEAR 2021
-
-#define UNUSED(x) (void) (x)
-#define WORD sizeof(size_t)
-
-#define SIGOK 0x0
-#define SIGERR 0xA
-#define SIGWARN 0x14
-
-/*
- * Kernel mode works only with a VGA text mode
- * and no user input
- */
-#define KERNEL_MODE 0x10
-
-/*
- * OS mode supports user input
- * and may or may not have set up a proper video mode
- */
-#define OS_MODE 0x11
-
-/* Current kernel mode */
-int kernel_mode;
-
-#endif
+/* Logs a message */
+void logk(char *msg);

@@ -16,8 +16,11 @@
 #define ALLOC_MODULE
 
 #include <modules/module.h>
+#include <logger/logk.h>
 #include <memory/mm.h>
 #include <kernel.h>
+
+#define MODULE_MEM_END MODULES * sizeof(struct module_interface)
 
 /* Initialise module */
 void __mm_init_alloc_module__(void);

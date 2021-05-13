@@ -21,6 +21,8 @@
 #include <kernel.h>
 #include <memory/init_module/init_module.h>
 
+#define MODULES 3
+
 #define MODULE_EXPECTING_NEXT_WRITE 1
 #define MODULE_WRITE_OK 0
 #define MODULE_NO_WRITE -1

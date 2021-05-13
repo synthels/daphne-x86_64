@@ -11,36 +11,21 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * Symbols used throughout the kernel
+ * Logger
  */
 
-#ifndef KERNEL_
-#define KERNEL_
+#include "logk.h"
 
-#include <stddef.h>
-
-#define KERNEL_COPYRIGHT_YEAR 2021
-
-#define UNUSED(x) (void) (x)
-#define WORD sizeof(size_t)
-
-#define SIGOK 0x0
-#define SIGERR 0xA
-#define SIGWARN 0x14
-
-/*
- * Kernel mode works only with a VGA text mode
- * and no user input
- */
-#define KERNEL_MODE 0x10
-
-/*
- * OS mode supports user input
- * and may or may not have set up a proper video mode
- */
-#define OS_MODE 0x11
-
-/* Current kernel mode */
-int kernel_mode;
-
-#endif
+void logk(char *msg)
+{
+    uint32_t ticks;
+    pit_interface->read(&ticks);
+    switch (kernel_mode) {
+        case KERNEL_MODE:
+            printk("[%is] %s", ticks, msg);
+            break;
+        case OS_MODE:
+            /* Redirect to a log file once we have an fs... */
+            break;
+    }
+}

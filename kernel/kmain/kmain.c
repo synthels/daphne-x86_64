@@ -19,6 +19,10 @@
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
+	/* Set kernel mode */
+	kernel_mode = KERNEL_MODE;
+
+	/* Init page directory */
 	init_page_directory();
 
 	/* Init tty */
@@ -30,10 +34,10 @@ void kmain(multiboot_info_t *info)
 	/* Init IDT */
 	init_idt();
 
+	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
+
 	/* Init all kernel modules */
 	init_modules();
-
-	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
 
 	/* "Welcome" Jingle */
 	spk_interface->write(400, MODULE_WRITE);

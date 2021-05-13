@@ -44,6 +44,7 @@ compileModule "idt"
 compileModule "modules"
 compileModule "tty"
 compileModule "memory"
+compileModule "logger"
 
 echo "Linking..."
 

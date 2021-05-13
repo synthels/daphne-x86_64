@@ -26,6 +26,11 @@ void __mm_init_alloc_module__(void)
 
 struct module_interface *init_module(void)
 {
+	/* Ran out of module memory */
+	if ((lower - mm_get_lower()) >= MODULE_MEM_END) {
+		logk("mm/init_module: cannot allocate any more more modules!");
+	}
+
 	struct module_interface *mem_ptr;
 	if (free_addr == NULL) {
 		mem_ptr = (struct module_interface *) lower;
