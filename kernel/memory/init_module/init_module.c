@@ -29,7 +29,7 @@ struct module_interface *init_module(void)
 	/* Ran out of module memory */
 	if ((lower - mm_get_lower()) >= MODULE_MEM_END) {
 		logk("mm/init_module: cannot allocate any more more modules!");
-		return;
+		return NULL;
 	}
 
 	struct module_interface *mem_ptr;

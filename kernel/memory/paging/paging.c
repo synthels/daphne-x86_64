@@ -25,6 +25,14 @@ extern void init_paging(void);
 
 void append_page_table(uint32_t *table)
 {
+	/*
+	 * We should just crash on real hw
+	 * in case of a badly aligned PT, but just in case we do not...
+	 */
+	if (((uint32_t) table) % 4096 != 0) {
+		panic("page table is not 4KiB aligned!");
+	}
+
 	for(int i = 0; i < 1024; i++) {
 		/* supervisor, r&w, present */
 		table[i] = (i * 0x1000) | 3;

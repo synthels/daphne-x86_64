@@ -10,15 +10,40 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * Kernel panic
  */
 
-#ifndef PAGING
-#define PAGING
 
-#include <stdint.h>
-#include <logger/panic.h>
+#include "panic.h"
 
-/* Init page directory */
-void init_page_directory(void);
+/* Print a border */
+void print_border(void)
+{
+	for (int i = 0; i < 30; i++) {
+		tty_putc('!', VGA_COLOR_LIGHT_RED);
+	}
+	printk("");
+}
 
-#endif
+/* Print a seperator */
+void print_sep(void)
+{
+	for (int i = 0; i < 30; i++) {
+		tty_putc('-', VGA_COLOR_LIGHT_RED);
+	}
+	printk("");
+}
+
+void panic(char *msg)
+{
+	tty_clear(VGA_COLOR_BLACK);
+	print_border();
+	tty_puts("// What? It's not my fault!", VGA_COLOR_LIGHT_GRAY);
+	print_sep();
+	printk("kernel panic: %s", msg);
+	print_border();
+
+	/* TODO: Add debug info here */
+	for(;;);
+}

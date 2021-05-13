@@ -10,15 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * Kernel Panic
  */
 
-#ifndef PAGING
-#define PAGING
+#ifndef PANIC
+#define PANIC
 
-#include <stdint.h>
-#include <logger/panic.h>
+#include <tty/tty_io.h>
+#include <tty/printk.h>
 
-/* Init page directory */
-void init_page_directory(void);
+/* Throws a tantrum */
+void panic(char *msg);
 
 #endif

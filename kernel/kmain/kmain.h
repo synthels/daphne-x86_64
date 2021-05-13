@@ -29,5 +29,6 @@
 #include <memory/paging/paging.h>
 
 #include <tty/printk.h>
+#include <logger/panic.h>
 
 #endif
