@@ -16,6 +16,7 @@
 #define FRAME_TREE
 
 #include <memory/mm.h>
+#include <memory/init_module/init_module.h>
 #include <stdint.h>
 #include <kernel.h>
 
@@ -38,5 +39,8 @@ struct frame_tree_node {
 
 /* Get the frame tree for the memory range (from, from + 512) */
 void get_frame_tree(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree);
+
+/* Get the start of the part of memory that can actually be used */
+uint32_t *get_usable_mem(uint32_t lower, uint32_t upper);
 
 #endif

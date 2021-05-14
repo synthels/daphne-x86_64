@@ -35,7 +35,16 @@ static void anode(struct frame_tree_node *tree)
 	ALLOC_NODE(tree->right->right);
 }
 
-/* Get the frame tree for the memory range (from, from + 512) */
+/* Get the start of the part of memory that can actually be used */
+uint32_t *get_usable_mem(uint32_t lower, uint32_t upper)
+{
+	/* Calculate how much memory we will use for trees */
+	uint32_t i = lower + MODULE_MEM_END;
+	for(; (i+512) < upper; i+=512);
+	return (uint32_t *) i;
+}
+
+/* Get the frame tree for memory frame (from, from + 512) */
 void get_frame_tree(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree)
 {
 	/* Range out of bounds */

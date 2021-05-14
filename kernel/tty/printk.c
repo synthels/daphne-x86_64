@@ -70,6 +70,7 @@ int printk(const char *fmt, ...)
 
 /*
  * Not too bad, right?
+ * FIXME: Using more than one %i can crash the system?
  */
 int vsprintf(char **buf, va_list args)
 {
