@@ -14,7 +14,6 @@
  * Kernel panic
  */
 
-
 #include "panic.h"
 
 /* Print a border */

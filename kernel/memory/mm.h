@@ -17,6 +17,8 @@
 
 #include <stdint.h>
 #include <memory/init_module/init_module.h>
+#include <memory/heap/kmalloc.h>
+#include <memory/heap/palloc.h>
 
 /* Init mm */
 void mm_init(uint32_t upper, uint32_t lower);

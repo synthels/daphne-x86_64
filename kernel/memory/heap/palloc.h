@@ -10,31 +10,21 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Memory manager
  */
 
-#include "mm.h"
+#ifndef PALLOC
+#define PALLOC
 
-static uint32_t mem_upper;
-static uint32_t mem_lower;
+#include <stdint.h>
+#include <stddef.h>
+#include <logger/panic.h>
+#include <memory/init_module/init_module.h>
 
-void mm_init(uint32_t upper, uint32_t lower)
-{
-	mem_upper = upper;
-	mem_lower = lower;
+/* Init palloc */
+void __mm_init_palloc__(void);
 
-	__mm_init_alloc_module__();
-	__mm_init_palloc__();
-	__mm_init_heap__();
-}
+/* Allocates n bytes */
+/* Only used by mm, not the rest of the kernel */
+uint32_t *palloc(size_t n);
 
-uint32_t mm_get_upper()
-{
-	return mem_upper;
-}
-
-uint32_t mm_get_lower()
-{
-	return mem_lower;
-}
+#endif

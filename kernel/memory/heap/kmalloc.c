@@ -11,30 +11,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * Memory manager
+ * kmalloc
  */
 
-#include "mm.h"
+#include "kmalloc.h"
 
-static uint32_t mem_upper;
-static uint32_t mem_lower;
+static uint32_t lower;
+static uint32_t upper;
 
-void mm_init(uint32_t upper, uint32_t lower)
+void __mm_init_heap__(void)
 {
-	mem_upper = upper;
-	mem_lower = lower;
-
-	__mm_init_alloc_module__();
-	__mm_init_palloc__();
-	__mm_init_heap__();
+	lower = mm_get_lower();
+	upper = mm_get_upper();
 }
 
-uint32_t mm_get_upper()
+uint32_t *kmalloc(size_t n)
 {
-	return mem_upper;
-}
-
-uint32_t mm_get_lower()
-{
-	return mem_lower;
+	UNUSED(n);
+	return NULL;
 }

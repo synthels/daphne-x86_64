@@ -103,6 +103,13 @@ void tty_print(const char *data, const unsigned char color)
 	const size_t size = strlen(data);
 	size_t k = 0;
 	for (size_t i = 0; i < size; i++) {
+		/* Skip spaces on newline */
+		if (data[i] == ' ') {
+			if (data[i-1] == '\n') {
+				continue;
+			}
+		}
+		
 		/* Go to next line when this line is filled up */
 		if (k >= VGA_WIDTH && data[i] != '\n') {
 			tty_putc('\n', color);

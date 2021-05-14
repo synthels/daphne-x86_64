@@ -11,30 +11,29 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * Memory manager
+ * palloc
  */
 
-#include "mm.h"
+#include "palloc.h"
 
-static uint32_t mem_upper;
-static uint32_t mem_lower;
+static uint32_t palloc_ptr = MODULE_MEM_END;
+static uint32_t lower;
+static uint32_t upper;
 
-void mm_init(uint32_t upper, uint32_t lower)
+void __mm_init_palloc__(void)
 {
-	mem_upper = upper;
-	mem_lower = lower;
-
-	__mm_init_alloc_module__();
-	__mm_init_palloc__();
-	__mm_init_heap__();
+	lower = mm_get_lower();
+	upper = mm_get_upper();
 }
 
-uint32_t mm_get_upper()
+uint32_t *palloc(size_t n)
 {
-	return mem_upper;
-}
+	/* No memory left */
+	if (palloc_ptr > upper) {
+		panic("ran out of memory!");
+	}
 
-uint32_t mm_get_lower()
-{
-	return mem_lower;
+	uint32_t *mem = (uint32_t *) palloc_ptr;
+	palloc_ptr += n;
+	return mem;
 }

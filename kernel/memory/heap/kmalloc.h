@@ -10,31 +10,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * Memory manager
  */
 
-#include "mm.h"
+#ifndef KMALLOC
+#define KMALLOC
 
-static uint32_t mem_upper;
-static uint32_t mem_lower;
+#include <stdint.h>
+#include <kernel.h>
+#include "frame_tree.h"
 
-void mm_init(uint32_t upper, uint32_t lower)
-{
-	mem_upper = upper;
-	mem_lower = lower;
+/* Initialise module */
+void __mm_init_heap__(void);
 
-	__mm_init_alloc_module__();
-	__mm_init_palloc__();
-	__mm_init_heap__();
-}
+/* Allocate >= n bytes of memory */
+uint32_t *kmalloc(size_t n);
 
-uint32_t mm_get_upper()
-{
-	return mem_upper;
-}
-
-uint32_t mm_get_lower()
-{
-	return mem_lower;
-}
+#endif
