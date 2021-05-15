@@ -29,8 +29,10 @@ void __mm_init_heap__(void)
 	upper = mm_get_upper();
 
 	/* It's the start but whatever */
-	usable_mem_end = lower + (MAX_TREES * sizeof(struct frame_tree_node) * NODES_PER_FRAME);
+	/* End of module memory */
 	map_mem_start = lower + MODULE_MEM_END;
+	/* module memory + map memory */
+	usable_mem_end = map_mem_start + (MAX_TREES * sizeof(struct frame_tree_node) * NODES_PER_FRAME);
 }
 
 uint32_t *kmalloc(size_t n)
