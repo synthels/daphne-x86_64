@@ -22,7 +22,7 @@ void logk(char *msg)
 	pit_interface->read(&ticks);
 	switch (kernel_mode) {
 		case KERNEL_MODE:
-			printk("[%is] %s", ticks, msg);
+			printk("[%i] %s", ticks, msg);
 			break;
 		case OS_MODE:
 			/* Redirect to a log file once we have an fs... */

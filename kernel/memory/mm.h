@@ -15,6 +15,18 @@
 #ifndef MEMORY
 #define MEMORY
 
+/*
+ * Our memory map is very simple on x86-32:
+ *
+ * +---------------+----------------------+------------------------------------+
+ * | Module memory |      Map region      |            Kernel memory           |
+ * +---------------+----------------------+------------------------------------+
+ *
+ * - Module memory: Memory occupied by kernel modules
+ * - Map region: Memory occupied by frame_tree_node structures (palloc memory)
+ * - Kernel memory: Usable memory
+ */
+
 #include <stdint.h>
 #include <memory/init_module/init_module.h>
 #include <memory/heap/kmalloc.h>

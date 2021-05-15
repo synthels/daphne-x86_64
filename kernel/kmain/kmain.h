@@ -27,6 +27,7 @@
 #include <modules/time/sleep.h>
 #include <memory/mm.h>
 #include <memory/paging/paging.h>
+#include <memory/heap/kmalloc.h>
 
 #include <tty/printk.h>
 #include <logger/panic.h>

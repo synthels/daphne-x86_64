@@ -16,6 +16,8 @@
 
 #include "frame_tree.h"
 
+static size_t trees_allocated = 0;
+
 /* Configures a single tree node */
 static void fnode(uint32_t from, uint32_t size, uint32_t i, struct frame_tree_node *node)
 {
@@ -27,25 +29,22 @@ static void fnode(uint32_t from, uint32_t size, uint32_t i, struct frame_tree_no
 /* Allocate all nodes of a tree */
 static void anode(struct frame_tree_node *tree)
 {
+	if (trees_allocated > MAX_TREES) {
+		logk("memory/heap: couldn't allocate tree!");
+		return;
+	}
+
 	ALLOC_NODE(tree->left);
 	ALLOC_NODE(tree->right);
 	ALLOC_NODE(tree->left->left);
 	ALLOC_NODE(tree->left->right);
 	ALLOC_NODE(tree->right->left);
 	ALLOC_NODE(tree->right->right);
-}
-
-/* Get the start of the part of memory that can actually be used */
-uint32_t *get_usable_mem(uint32_t lower, uint32_t upper)
-{
-	/* Calculate how much memory we will use for trees */
-	uint32_t i = lower + MODULE_MEM_END;
-	for(; (i+512) < upper; i+=512);
-	return (uint32_t *) i;
+	trees_allocated++;
 }
 
 /* Get the frame tree for memory frame (from, from + 512) */
-void get_frame_tree(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree)
+void tmap(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree)
 {
 	/* Range out of bounds */
 	if (from < lower || (from + 512 > upper)) {

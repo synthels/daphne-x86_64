@@ -16,7 +16,7 @@
 
 #include "palloc.h"
 
-static uint32_t palloc_ptr = MODULE_MEM_END;
+static uint32_t palloc_ptr;
 static uint32_t lower;
 static uint32_t upper;
 
@@ -24,6 +24,9 @@ void __mm_init_palloc__(void)
 {
 	lower = mm_get_lower();
 	upper = mm_get_upper();
+	palloc_ptr = lower + MODULE_MEM_END;
+
+	MAX_TREES = (upper - palloc_ptr) / 4;
 }
 
 uint32_t *palloc(size_t n)

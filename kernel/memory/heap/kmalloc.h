@@ -17,10 +17,15 @@
 
 #include <stdint.h>
 #include <kernel.h>
+#include <stddef.h>
+#include <memory/init_module/init_module.h>
 #include "frame_tree.h"
 
 /* Initialise module */
 void __mm_init_heap__(void);
+
+/* extend memory space map by n addresses */
+uint32_t *kbrk(size_t n);
 
 /* Allocate >= n bytes of memory */
 uint32_t *kmalloc(size_t n);

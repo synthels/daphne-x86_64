@@ -18,7 +18,11 @@
 #include <memory/mm.h>
 #include <memory/init_module/init_module.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <kernel.h>
+
+/* Max number of trees that will be allocated */
+size_t MAX_TREES;
 
 /*
  * A frame tree is a tree that keeps track of whole 512B frames of memory.
@@ -38,9 +42,6 @@ struct frame_tree_node {
 #define ALLOC_NODE(node) node = (struct frame_tree_node *) palloc(sizeof(struct frame_tree_node) * NODES_PER_FRAME)
 
 /* Get the frame tree for the memory range (from, from + 512) */
-void get_frame_tree(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree);
-
-/* Get the start of the part of memory that can actually be used */
-uint32_t *get_usable_mem(uint32_t lower, uint32_t upper);
+void tmap(uint32_t from, uint32_t lower, uint32_t upper, struct frame_tree_node *tree);
 
 #endif
