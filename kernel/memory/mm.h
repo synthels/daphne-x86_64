@@ -32,6 +32,9 @@
 #include <memory/heap/kmalloc.h>
 #include <memory/heap/palloc.h>
 
+#define STACK_SIZE 16384
+#define mem(x) STACK_SIZE + x
+
 /* Init mm */
 void mm_init(uint32_t upper, uint32_t lower);
 

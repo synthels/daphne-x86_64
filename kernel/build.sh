@@ -24,7 +24,7 @@ menuentry \"phiOS\" {
 }" > $BUILD_DIR/boot/grub/grub.cfg
 
 # Assemble bootloader
-$AS kernel/boot/boot.s -o $BUILD_DIR/boot.o
+$NASM -f elf32 kernel/boot/boot.s -o $BUILD_DIR/boot.o
 # Assemble IDT
 $NASM -f elf32 kernel/idt/irq.s -o $BUILD_DIR/irq.o
 # Assemble GDT

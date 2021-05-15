@@ -22,7 +22,7 @@ static uint32_t mem_lower;
 void mm_init(uint32_t upper, uint32_t lower)
 {
 	mem_upper = upper;
-	mem_lower = lower;
+	mem_lower = mem(lower);
 
 	__mm_init_alloc_module__();
 	__mm_init_palloc__();
