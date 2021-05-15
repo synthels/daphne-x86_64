@@ -19,20 +19,26 @@
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
+	/* Init tty */
+	tty_init();
+
 	/* Set kernel mode */
 	kernel_mode = KERNEL_MODE;
+
+	/* Check if grub can give us a memory map */
+	if ((info->flags & 0x1) == 0) {
+		panic("couldn't detect memory!");
+		/* TODO: Detect manually */
+	}
+
+	/* Init mm */
+	mm_init(info->mem_upper, info->mem_lower);
 
 	/* Init all kernel modules */
 	init_modules();
 
 	/* Init page directory */
 	init_page_directory();
-
-	/* Init tty */
-	tty_init();
-
-	/* Init mm */
-	mm_init(info->mem_upper, info->mem_lower);
 
 	/* Init IDT */
 	init_idt();
