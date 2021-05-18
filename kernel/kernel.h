@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Symbols used throughout the kernel
@@ -18,6 +18,7 @@
 #define KERNEL_
 
 #include <stddef.h>
+#include <stdint.h>
 
 #define KERNEL_COPYRIGHT_YEAR 2021
 
@@ -27,6 +28,15 @@
 #define SIGOK 0x0
 #define SIGERR 0xA
 #define SIGWARN 0x14
+
+struct mmap_entry {
+	uint32_t size;
+	uint32_t base_addr_low, base_addr_high;
+	uint32_t length_low, length_high;
+	uint32_t type;
+}  __attribute__((packed));
+
+typedef struct mmap_entry mmap_entry_t;
 
 /*
  * Kernel mode works only with a VGA text mode

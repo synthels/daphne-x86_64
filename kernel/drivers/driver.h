@@ -8,33 +8,21 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
-#ifndef MODULE_SPEAKER
-#define MODULE_SPEAKER
+#ifndef DRIVER
+#define DRIVER
 
 #include <stdint.h>
-#include <io/io.h>
 #include <kernel.h>
-#include <modules/time/sleep.h>
-#include <modules/module.h>
 
-struct module_interface *spk_interface;
+#include <drivers/keyboard/keyboard.h>
+#include <drivers/sound/speaker/speaker.h>
+#include <drivers/time/PIT.h>
 
-void spk_init(void);
-
-/* Play a certain frequency through the PC speaker */
-void spk_play_freq(uint16_t freq);
-
-/*  
- * Play a certain frequency through the PC speaker 
- * for a certain amount of ticks
- */
-int spk_play_freq_tm(uint32_t data, int commit);
-
-/* Stop the speaker */
-void spk_stop(void);
+/* Init drivers */
+void init_drivers(void);
 
 #endif

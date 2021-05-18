@@ -8,26 +8,25 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
-#ifndef KMALLOC
-#define KMALLOC
+#ifndef DRIVER_PIT
+#define DRIVER_PIT
 
-#include <stdint.h>
+#include <io/io.h>
 #include <kernel.h>
-#include <stddef.h>
-#include <memory/init_module/init_module.h>
-#include "frame_tree.h"
 
-/* Initialise module */
-void __mm_init_heap__(void);
+#define TIMER_FREQ 100
 
-/* extend memory space map by n addresses */
-uint32_t *kbrk(size_t n);
+/* Initialize PIT */
+void pit_init(void);
 
-/* Allocate >= n bytes of memory */
-uint32_t *kmalloc(size_t n);
+/* Tick */
+void pit_tick(void);
+
+/* Read tick counter */
+void pit_get_ticks(uint32_t *data);
 
 #endif

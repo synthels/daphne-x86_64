@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * PIT driver
@@ -19,13 +19,6 @@
 static uint32_t ticks = 0;
 static uint32_t real_ticks = 1;
 
-int pit_no_write(uint32_t data, int commit)
-{
-	UNUSED(data);
-	UNUSED(commit);
-	return MODULE_NO_WRITE;
-}
-
 /* Initialize PIT */
 void pit_init(void)
 {
@@ -34,20 +27,13 @@ void pit_init(void)
 	outb(0x43, 0x36);
 	outb(0x40, div & 0xff);
 	outb(0x40, (div >> 8) & 0xff);
-
-	pit_interface = init_module();
-
-	pit_interface->enabled = 1;
-	pit_interface->event = 0;
-	pit_interface->write = &pit_no_write;
-	pit_interface->read = &pit_get_ticks;
 }
 
 /* Tick approx. every sec */
 void pit_tick(void)
 {
 	real_ticks++;
-	if (pit_interface->enabled && (real_ticks % 96 == 0)) {
+	if (real_ticks % 96 == 0) {
 		ticks++;
 		real_ticks = 0;
 	}

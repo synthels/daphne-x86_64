@@ -8,15 +8,28 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
  */
 
-#include "module.h"
+#ifndef DRIVER_SPEAKER
+#define DRIVER_SPEAKER
 
-void init_modules(void)
-{
-	kbd_init();
-	pit_init();
-	spk_init();
-}
+#include <stdint.h>
+#include <io/io.h>
+#include <drivers/time/PIT.h>
+#include <drivers/time/sleep.h>
+
+/* Play a certain frequency through the PC speaker */
+void spk_play_freq(uint16_t freq);
+
+/*  
+ * Play a certain frequency through the PC speaker 
+ * for a certain amount of ticks
+*/
+void spk_play_freq_tm(uint16_t freq, uint16_t ticks);
+
+/* Stop the speaker */
+void spk_stop(void);
+
+#endif

@@ -24,7 +24,7 @@ menuentry \"phiOS\" {
 }" > $BUILD_DIR/boot/grub/grub.cfg
 
 # Assemble bootloader
-$NASM -f elf32 kernel/boot/boot.s -o $BUILD_DIR/boot.o
+$AS kernel/boot/boot.s -o $BUILD_DIR/boot.o
 # Assemble IDT
 $NASM -f elf32 kernel/idt/irq.s -o $BUILD_DIR/irq.o
 # Assemble GDT
@@ -41,7 +41,7 @@ function compileModule() {
 compileModule "kmain"
 compileModule "io"
 compileModule "idt"
-compileModule "modules"
+compileModule "drivers"
 compileModule "tty"
 compileModule "memory"
 compileModule "logger"

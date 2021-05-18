@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Main function
@@ -16,40 +16,44 @@
 
 #include "kmain.h"
 
+static void info_begin(const char *str)
+{
+	tty_puts("------------", VGA_COLOR_LIGHT_RED);
+	tty_puts(str, VGA_COLOR_LIGHT_RED);
+	tty_puts("------------", VGA_COLOR_LIGHT_RED);
+}
+
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
 	/* Init tty */
 	tty_init();
 
+	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
+
 	/* Set kernel mode */
 	kernel_mode = KERNEL_MODE;
 
 	/* Check if grub can give us a memory map */
-	if ((info->flags & 0x1) == 0) {
-		panic("couldn't detect memory!");
-		/* TODO: Detect manually */
+	/* TODO: Detect manually */
+	if (!(info->flags & (1<<6))) {
+		panic("couldn't get memory map!");
 	}
 
-	/* Init mm */
-	mm_init(info->mem_upper, info->mem_lower);
-
-	/* Init all kernel modules */
-	init_modules();
-
 	/* Init page directory */
-	init_page_directory();
+	/* init_page_directory(); */
+
+	/* Init mm */
+	info_begin("Memory info");
+	mm_init((mmap_entry_t *) info->mmap_addr, info->mmap_length);
+
+	/* Init all drivers */
+	init_drivers();
 
 	/* Init IDT */
 	init_idt();
 
-	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
+	spk_play_freq_tm(123, 2);
 
-	for(;;) {
-		uint32_t key;
-		if (kbd_interface->event) {
-			kbd_interface->event = 0;
-			kbd_interface->read(&key);
-		}
-	}
+	for(;;);
 }

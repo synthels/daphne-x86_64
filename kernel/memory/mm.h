@@ -8,38 +8,28 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
 #ifndef MEMORY
 #define MEMORY
 
-/*
- * Our memory map is very simple on x86-32:
- *
- * +---------------+----------------------+------------------------------------+
- * | Module memory |      Map region      |            Kernel memory           |
- * +---------------+----------------------+------------------------------------+
- *
- * - Module memory: Memory occupied by kernel modules
- * - Map region: Memory occupied by frame_tree_node structures (palloc memory)
- * - Kernel memory: Usable memory
- */
-
 #include <stdint.h>
-#include <memory/init_module/init_module.h>
-#include <memory/heap/kmalloc.h>
-#include <memory/heap/palloc.h>
-
-#define STACK_SIZE 16384
-#define mem(x) STACK_SIZE + x
+#include <tty/printk.h>
+#include <kernel.h>
 
 /* Init mm */
-void mm_init(uint32_t upper, uint32_t lower);
+void mm_init(mmap_entry_t *mmap_addr, uint32_t length);
 
-/* mm getter functions */
-uint32_t mm_get_upper();
-uint32_t mm_get_lower();
+/* Get memory map */
+mmap_entry_t *mm_get_mmap();
+
+#define MEMORY_AVAILABLE 1
+#define MEMORY_RESERVED 2
+#define MEMORY_ACPI 3
+#define MEMORY_NVS 4
+#define MEMORY_BADRAM 5
+#define MEMORY_INVALID 6
 
 #endif

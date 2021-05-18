@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Logger
@@ -19,7 +19,7 @@
 void logk(char *msg)
 {
 	uint32_t ticks;
-	pit_interface->read(&ticks);
+	pit_get_ticks(&ticks);
 	switch (kernel_mode) {
 		case KERNEL_MODE:
 			printk("[%i] %s", ticks, msg);

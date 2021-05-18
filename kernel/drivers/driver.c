@@ -8,23 +8,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
-#ifndef PALLOC
-#define PALLOC
+#include "driver.h"
 
-#include <stdint.h>
-#include <stddef.h>
-#include <logger/panic.h>
-#include <memory/init_module/init_module.h>
-
-/* Init palloc */
-void __mm_init_palloc__(void);
-
-/* Allocates n bytes */
-/* Only used by mm, not the rest of the kernel */
-uint32_t *palloc(size_t n);
-
-#endif
+void init_drivers(void)
+{
+	kbd_init();
+	pit_init();
+}

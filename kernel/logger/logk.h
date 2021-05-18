@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
@@ -16,7 +16,7 @@
 #define LOGGER
 
 #include <tty/printk.h>
-#include <modules/time/PIT.h>
+#include <drivers/time/PIT.h>
 #include <stdint.h>
 
 /* Logs a message */

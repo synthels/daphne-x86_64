@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Kernel main code
@@ -24,10 +24,10 @@
 #include <idt/idt.h>
 #include <kernel.h>
 
-#include <modules/time/sleep.h>
+#include <drivers/time/sleep.h>
+#include <drivers/driver.h>
 #include <memory/mm.h>
 #include <memory/paging/paging.h>
-#include <memory/heap/kmalloc.h>
 
 #include <tty/printk.h>
 #include <logger/panic.h>

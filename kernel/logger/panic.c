@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * Kernel panic
@@ -17,7 +17,7 @@
 #include "panic.h"
 
 /* Print a border */
-void print_border(void)
+static void print_border(void)
 {
 	for (int i = 0; i < 30; i++) {
 		tty_putc('!', VGA_COLOR_LIGHT_RED);
@@ -26,7 +26,7 @@ void print_border(void)
 }
 
 /* Print a seperator */
-void print_sep(void)
+static void print_sep(void)
 {
 	for (int i = 0; i < 30; i++) {
 		tty_putc('-', VGA_COLOR_LIGHT_RED);
