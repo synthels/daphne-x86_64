@@ -29,15 +29,6 @@
 #define SIGERR 0xA
 #define SIGWARN 0x14
 
-struct mmap_entry {
-	uint32_t size;
-	uint32_t base_addr_low, base_addr_high;
-	uint32_t length_low, length_high;
-	uint32_t type;
-}  __attribute__((packed));
-
-typedef struct mmap_entry mmap_entry_t;
-
 /*
  * Kernel mode works only with a VGA text mode
  * and no user input

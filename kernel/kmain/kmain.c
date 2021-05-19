@@ -53,7 +53,5 @@ void kmain(multiboot_info_t *info)
 	/* Init IDT */
 	init_idt();
 
-	spk_play_freq_tm(123, 2);
-
 	for(;;);
 }
