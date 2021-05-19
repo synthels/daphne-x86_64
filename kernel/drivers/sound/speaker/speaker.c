@@ -17,7 +17,7 @@
 /*
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
-*/
+ */
 void spk_play_freq_tm(uint16_t freq, uint16_t ticks)
 {
 	spk_play_freq(freq);

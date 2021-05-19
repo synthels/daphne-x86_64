@@ -47,11 +47,11 @@ void kmain(multiboot_info_t *info)
 	info_begin("Memory info");
 	mm_init((mmap_entry_t *) info->mmap_addr, info->mmap_length);
 
-	/* Init all drivers */
-	init_drivers();
-
 	/* Init IDT */
 	init_idt();
+
+	/* Init all drivers */
+	init_drivers();
 
 	for(;;);
 }

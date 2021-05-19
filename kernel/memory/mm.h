@@ -30,8 +30,19 @@ typedef struct mmap_entry mmap_entry_t;
 /* Init mm */
 void mm_init(mmap_entry_t *mmap_addr, uint32_t length);
 
-/* Get memory map */
-mmap_entry_t *mm_get_mmap();
+/*
+ * Get GRUB memory map
+ * The map pointed to by the return value
+ * is not guranteed to be intact
+ */
+mmap_entry_t *mm_get_grub_mmap();
+
+/*
+ * Get actual memory map
+ * Use this function to get the
+ * memory map
+ */
+mmap_entry_t *mm_get_kernel_mmap();
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2
