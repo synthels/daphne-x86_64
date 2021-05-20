@@ -39,7 +39,7 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		for (size_t i = 0; i < kmmap_size; i++) {
 			if (!(mmap->base_addr_low < kmmap[i].base_addr_low) && 
 				(mmap->base_addr_low < (kmmap[i].base_addr_low + kmmap[i].length_low))) {
-				kmmap->type = MEMORY_INVALID;
+				mmap->type = MEMORY_INVALID;
 			}
 		}
 
@@ -64,6 +64,7 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		/* Append entry to kmmap */
 		if (mmap->type != MEMORY_INVALID) {
 			kmmap[kmmap_size] = *mmap;
+			kmmap_size++;
 		}
 
 		/* Next entry */
