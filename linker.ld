@@ -3,6 +3,8 @@ ENTRY(_start)
 
 SECTIONS
 {
+	kstart = .;
+
 	/* Begin sections at 1 MiB, since lower memory is used by GRUB */
 	. = 1M;
 
@@ -31,4 +33,6 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 	}
+
+	kend = .;
 }

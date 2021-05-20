@@ -22,6 +22,10 @@ static mmap_entry_t *mmap_begin;
 static mmap_entry_t kmmap[256];
 static size_t kmmap_size = 0;
 
+/* From linker.ld */
+extern uint32_t kstart;
+extern uint32_t kend;
+
 void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 {
 	uint32_t total_ram = 0;
@@ -56,8 +60,6 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 				break;
 			case MEMORY_BADRAM:
 				printk("[bad] starting from: 0x%ux, with a length of %uiB", mmap->base_addr_low, mmap->length_low);
-				break;
-			case MEMORY_INVALID:
 				break;
 		}
 
