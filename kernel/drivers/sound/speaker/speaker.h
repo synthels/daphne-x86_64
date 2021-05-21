@@ -17,19 +17,13 @@
 
 #include <stdint.h>
 #include <io/io.h>
-#include <drivers/time/PIT.h>
+#include <drivers/driver.h>
 #include <drivers/time/sleep.h>
-
-/* Play a certain frequency through the PC speaker */
-void spk_play_freq(uint16_t freq);
 
 /*  
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
 */
-void spk_play_freq_tm(uint16_t freq, uint16_t ticks);
-
-/* Stop the speaker */
-void spk_stop(void);
+void spk_beep(uint16_t freq, uint16_t ticks);
 
 #endif

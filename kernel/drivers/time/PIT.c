@@ -16,6 +16,9 @@
 
 #include "PIT.h"
 
+MODULE_NAME("pit");
+MODULE_AUTH("synthels");
+
 static uint32_t ticks = 0;
 static uint32_t real_ticks = 1;
 

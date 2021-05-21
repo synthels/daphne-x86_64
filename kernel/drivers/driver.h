@@ -17,10 +17,16 @@
 
 #include <stdint.h>
 #include <kernel.h>
+#include <tty/printk.h>
 
 #include <drivers/keyboard/keyboard.h>
 #include <drivers/sound/speaker/speaker.h>
 #include <drivers/time/PIT.h>
+
+#define MODULE_NAME(x) static char *__mod_name __attribute((unused)) = x
+#define MODULE_AUTH(x) static char *__mod_auth __attribute((unused)) = x
+
+#define mprint(x) printk("%s: %s", __mod_name, x)
 
 /* Init drivers */
 void init_drivers(void);

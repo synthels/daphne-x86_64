@@ -16,6 +16,9 @@
 
 #include "keyboard.h"
 
+MODULE_NAME("ps2_keyboard");
+MODULE_AUTH("synthels");
+
 static int kbd_enabled = 0;
 static int kbd_last_key_pressed;
 static uint8_t kbd_last_key;

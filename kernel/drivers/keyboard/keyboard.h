@@ -16,6 +16,7 @@
 #define DRIVER_KEYBOARD
 
 #include <io/io.h>
+#include <drivers/driver.h>
 #include <stdint.h>
 
 /* Init keyboard */

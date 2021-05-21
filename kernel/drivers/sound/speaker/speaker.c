@@ -14,19 +14,11 @@
 
 #include "speaker.h"
 
-/*
- * Play a certain frequency through the PC speaker 
- * for a certain amount of ticks
- */
-void spk_play_freq_tm(uint16_t freq, uint16_t ticks)
-{
-	spk_play_freq(freq);
-	sleep(ticks);
-	spk_stop();
-}
+MODULE_NAME("pcspk");
+MODULE_AUTH("synthels");
 
 /* Play a certain frequency through the PC speaker */
-void spk_play_freq(uint16_t freq)
+static void _spk_beep(uint16_t freq)
 {
 	if (freq == 0) { return; }	
 
@@ -44,7 +36,14 @@ void spk_play_freq(uint16_t freq)
 }
 
 /* Stop the speaker */
-void spk_stop(void)
+static void spk_stop(void)
 {
 	outb(0x61, inb(0x61) & 0xfc);
+}
+
+void spk_beep(uint16_t freq, uint16_t ticks)
+{
+	_spk_beep(freq);
+	sleep(ticks);
+	spk_stop();
 }

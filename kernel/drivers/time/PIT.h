@@ -16,6 +16,7 @@
 #define DRIVER_PIT
 
 #include <io/io.h>
+#include <drivers/driver.h>
 #include <kernel.h>
 
 #define TIMER_FREQ 100
