@@ -22,11 +22,10 @@ static uint32_t real_ticks = 1;
 /* Initialize PIT */
 void pit_init(void)
 {
-	int div = 1193180 / TIMER_FREQ;
-	/* Mode 4, hibyte, channel 0 */
-	outb(0x43, 0x36);
-	outb(0x40, div & 0xff);
-	outb(0x40, (div >> 8) & 0xff);
+    int div = 1193180 / TIMER_FREQ;
+    outb(0x43, 0x36);
+    outb(0x40, div & 0xFF);
+    outb(0x40, div >> 8);
 }
 
 /* Tick approx. every sec */

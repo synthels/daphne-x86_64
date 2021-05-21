@@ -49,7 +49,7 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 	size_t regions = 0;
 	mmap_entry_t *mmap = mmap_addr;
 	mmap_begin = mmap_addr;
-	/* Process mmap */
+	/* Validate mmap */
 	for (size_t i = 0; mmap < (mmap_addr + length); i++) {
 		/* 0 length entries */
 		if (mmap->length_low == 0x0) {

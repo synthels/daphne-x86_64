@@ -53,5 +53,7 @@ void kmain(multiboot_info_t *info)
 	/* Init all drivers */
 	init_drivers();
 
+	spk_play_freq_tm(120, 1);
+
 	for(;;);
 }

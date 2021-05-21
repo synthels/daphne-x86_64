@@ -22,6 +22,14 @@
 
 #define KERNEL_COPYRIGHT_YEAR 2021
 
+struct regs {
+	uint32_t _unused, fs, es, ds;
+	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+	uint32_t eip, cs, eflags, useresp, ss;
+};
+
+typedef struct regs regs_t;
+
 #define UNUSED(x) (void) (x)
 #define WORD sizeof(size_t)
 

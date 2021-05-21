@@ -27,46 +27,27 @@ void idt_install_handlers()
 {
 	extern void irq0(void);
 	extern void irq1(void);
-	extern void irq2(void);
-	extern void irq3(void);
-	extern void irq4(void);
-	extern void irq5(void);
-	extern void irq6(void);
-	extern void irq7(void);
-	extern void irq8(void);
-	extern void irq9(void);
-	extern void irq10(void);
-	extern void irq11(void);
-	extern void irq12(void);
-	extern void irq13(void);
-	extern void irq14(void);
-	extern void irq15(void);
+	extern void _syscall(void);
+	extern void generic_irq(void);
 
+	/* PIT */
 	idt_install_irq_handler(irq0, 0);
+	/* Keyboard */
 	idt_install_irq_handler(irq1, 1);
-	idt_install_irq_handler(irq2, 2);
-	idt_install_irq_handler(irq3, 3);
-	idt_install_irq_handler(irq4, 4);
-	idt_install_irq_handler(irq5, 5);
-	idt_install_irq_handler(irq6, 6);
-	idt_install_irq_handler(irq7, 7);
-	idt_install_irq_handler(irq8, 8);
-	idt_install_irq_handler(irq9, 9);
-	idt_install_irq_handler(irq10, 10);
-	idt_install_irq_handler(irq11, 11);
-	idt_install_irq_handler(irq12, 12);
-	idt_install_irq_handler(irq13, 13);
-	idt_install_irq_handler(irq14, 14);
-	idt_install_irq_handler(irq15, 15);
+	/* 127 Generic IRQs */
+	for (int i = 2; i < 128; i++) {
+		idt_install_irq_handler(generic_irq, i);
+	}
+	/* syscall */
+	idt_install_irq_handler(_syscall, 128);
 }
 
 /* Generate & load an IDT */
 void init_idt(void)
 {
 	extern int load_idt();
-	uint32_t irq_addresses[16];
+	uint32_t irq_addresses[129];
 	uint32_t idt_address;
-	/* IDT ptr */
 	unsigned long idt_ptr[2];
 
 	/* Install the handlers */
@@ -75,7 +56,7 @@ void init_idt(void)
 	remap_pic();
 
 	/* Fill the IDT */ 
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 129; i++) {
 		irq_addresses[i] = (uint32_t) irq_handlers[i];
 		IDT_buffer[32 + i].offset_lowerbits = irq_addresses[i] & 0xffff;
 		IDT_buffer[32 + i].selector = 0x08;
