@@ -18,6 +18,8 @@
 #include <stdint.h>
 #include <tty/printk.h>
 
+#define MiB(n) 1048576 * n 
+
 struct mmap_entry {
 	uint32_t size;
 	uint32_t base_addr_low, base_addr_high;
