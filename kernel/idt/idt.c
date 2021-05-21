@@ -34,7 +34,7 @@ void idt_install_handlers()
 	idt_install_irq_handler(irq0, 0);
 	/* Keyboard */
 	idt_install_irq_handler(irq1, 1);
-	/* 127 Generic IRQs */
+	/* 126 Generic IRQs */
 	for (int i = 2; i < 128; i++) {
 		idt_install_irq_handler(generic_irq, i);
 	}

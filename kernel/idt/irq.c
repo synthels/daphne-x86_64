@@ -25,7 +25,6 @@
 /* PIT IRQ */
 void pit_irq_handler(void)
 {
-	printk("syscall: EAX");
 	pit_tick();
 	IRQ_END;
 }

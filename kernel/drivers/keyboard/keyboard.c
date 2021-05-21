@@ -26,8 +26,6 @@ static int kbd_keyev = 0;
 /* Init keyboard */
 void kbd_init(void)
 {
-	/* Enable keyboard IRQ */
-	outb(0x21, 0xfd);
 	kbd_enabled = 1;
 }
 
