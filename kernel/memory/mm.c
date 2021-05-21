@@ -26,6 +26,23 @@ static size_t kmmap_size = 0;
 extern uint32_t kstart;
 extern uint32_t kend;
 
+/* Dump mmap entry */
+static void dump_entry(mmap_entry_t *entry)
+{
+	switch (entry->type) {
+		case MEMORY_AVAILABLE:
+			printk("[available memory] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			break;
+		case MEMORY_ACPI:
+		case MEMORY_NVS:
+			printk("[acpi] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			break;
+		case MEMORY_BADRAM:
+			printk("[bad] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			break;
+	}
+}
+
 void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 {
 	uint32_t total_ram = 0;
@@ -47,28 +64,17 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 			}
 		}
 
-		/* Print region info */
-		switch (mmap->type) {
-			case MEMORY_AVAILABLE:
-				printk("[available memory] starting from: 0x%ux, with a length of %uiB", mmap->base_addr_low, mmap->length_low);
-				total_ram += mmap->length_low;
-				regions++;
-				break;
-			case MEMORY_ACPI:
-			case MEMORY_NVS:
-				printk("[acpi] starting from: 0x%ux, with a length of %uiB", mmap->base_addr_low, mmap->length_low);
-				break;
-			case MEMORY_BADRAM:
-				printk("[bad] starting from: 0x%ux, with a length of %uiB", mmap->base_addr_low, mmap->length_low);
-				break;
-		}
-
 		/* Append entry to kmmap */
 		if (mmap->type != MEMORY_INVALID) {
+			if (mmap->type == MEMORY_AVAILABLE) {
+				total_ram += mmap->length_low;
+				regions++;
+			}
 			kmmap[kmmap_size] = *mmap;
 			kmmap_size++;
 		}
 
+		dump_entry(mmap);
 		/* Next entry */
 		mmap = (mmap_entry_t *) ((uint32_t) mmap + mmap->size + sizeof(mmap->size));
 	}
