@@ -70,8 +70,8 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 				mmap->type = MEMORY_INVALID;
 			} else {
 				/* If only a part of it does, keep the part that doesn't */
-				mmap->base_addr_low += klength;
-				mmap->length_low -= klength;
+				mmap->base_addr_low += klength + 1;
+				mmap->length_low -= klength + 1;
 			}
 		}
 

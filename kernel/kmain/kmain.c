@@ -53,7 +53,5 @@ void kmain(multiboot_info_t *info)
 	/* Init all drivers */
 	init_drivers();
 
-	spk_beep(100, 2);
-
 	for(;;);
 }
