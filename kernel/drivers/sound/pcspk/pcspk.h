@@ -24,6 +24,6 @@
  * Play a certain frequency through the PC speaker 
  * for a certain amount of ticks
 */
-void spk_beep(uint16_t freq, uint16_t ticks);
+void pcspk_beep(uint16_t freq, uint16_t ticks);
 
 #endif

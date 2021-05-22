@@ -20,7 +20,7 @@
 #include <tty/printk.h>
 
 #include <drivers/keyboard/keyboard.h>
-#include <drivers/sound/speaker/speaker.h>
+#include <drivers/sound/pcspk/pcspk.h>
 #include <drivers/time/PIT.h>
 
 #define MODULE_NAME(x) static char *__mod_name __attribute((unused)) = x

@@ -10,15 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
+ *
+ * PC Speaker driver
  */
 
-#include "speaker.h"
+#include "pcspk.h"
 
 MODULE_NAME("pcspk");
 MODULE_AUTH("synthels");
 
 /* Play a certain frequency through the PC speaker */
-static void _spk_beep(uint16_t freq)
+static void _beep(uint16_t freq)
 {
 	if (freq == 0) { return; }	
 
@@ -36,14 +38,14 @@ static void _spk_beep(uint16_t freq)
 }
 
 /* Stop the speaker */
-static void spk_stop(void)
+static void _stop(void)
 {
 	outb(0x61, inb(0x61) & 0xfc);
 }
 
-void spk_beep(uint16_t freq, uint16_t ticks)
+void pcspk_beep(uint16_t freq, uint16_t ticks)
 {
-	_spk_beep(freq);
+	_beep(freq);
 	sleep(ticks);
-	spk_stop();
+	_stop();
 }
