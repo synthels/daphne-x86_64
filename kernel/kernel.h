@@ -41,13 +41,13 @@ typedef struct regs regs_t;
  * Kernel mode works only with a VGA text mode
  * and no user input
  */
-#define KERNEL_MODE 0x10
+#define TTY_MODE 0x10
 
 /*
  * OS mode supports user input
  * and may or may not have set up a proper video mode
  */
-#define OS_MODE 0x11
+#define GFX_MODE 0x11
 
 /* Current kernel mode */
 int kernel_mode;

@@ -32,7 +32,7 @@ void kmain(multiboot_info_t *info)
 	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
 
 	/* Set kernel mode */
-	kernel_mode = KERNEL_MODE;
+	kernel_mode = TTY_MODE;
 
 	/* Check if grub can give us a memory map */
 	/* TODO: Detect manually */

@@ -10,22 +10,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Logger
  */
 
-#include "logk.h"
+#ifndef PCI
+#define PCI
 
-void logk(char *msg)
-{
-	uint32_t ticks;
-	pit_get_ticks(&ticks);
-	switch (kernel_mode) {
-		case TTY_MODE:
-			printk("[%i] %s", ticks, msg);
-			break;
-		case GFX_MODE:
-			/* Redirect to a log file once we have an fs... */
-			break;
-	}
-}
+#include <drivers/driver.h>
+#include <io/io.h>
+
+#endif
