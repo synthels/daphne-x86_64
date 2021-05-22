@@ -49,7 +49,7 @@ compileModule "logger"
 echo "Linking..."
 
 # Link everything together
-$GCC -g -T linker.ld -o $BUILD_DIR/boot/kernel.bin -ffreestanding -O2 -nostdlib $BUILD_DIR/*.o -lgcc
+$GCC -g -T kernel/linker.ld -o $BUILD_DIR/boot/kernel.bin -ffreestanding -O2 -nostdlib $BUILD_DIR/*.o -lgcc
 
 # Clean build directory
 rm $BUILD_DIR/*.o
