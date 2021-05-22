@@ -14,6 +14,8 @@ AS="i686-elf-as"
 
 # Build directory name
 BUILD_DIR="build"
+# Set this to your target platform
+ARCH_TARGET="x86_32"
 
 # Overwrite grub.cfg
 echo "default=0
@@ -23,13 +25,14 @@ menuentry \"phiOS\" {
 	multiboot /boot/kernel.bin
 }" > $BUILD_DIR/boot/grub/grub.cfg
 
-# Assemble bootloader
-$AS kernel/boot/boot.s -o $BUILD_DIR/boot.o
+# Assemble bootsector
+$AS kernel/arch/$ARCH_TARGET/boot/boot.s -o $BUILD_DIR/boot.o
 # Assemble IDT
 $NASM -f elf32 kernel/idt/irq.s -o $BUILD_DIR/irq.o
 # Assemble GDT
-$NASM -f elf32 kernel/boot/gdt.s -o $BUILD_DIR/gdt.o
-$NASM -f elf32 kernel/boot/paging.s -o $BUILD_DIR/paging.o
+$NASM -f elf32 kernel/arch/$ARCH_TARGET/boot/gdt.s -o $BUILD_DIR/gdt.o
+# Assemble paging code
+$NASM -f elf32 kernel/arch/$ARCH_TARGET/boot/paging.s -o $BUILD_DIR/paging.o
 
 function compileModule() {
 	for file in $(find kernel/$1 -name '*.c'); do
@@ -38,6 +41,7 @@ function compileModule() {
 	done
 }
 
+compileModule "arch/$ARCH_TARGET"
 compileModule "kmain"
 compileModule "io"
 compileModule "idt"
