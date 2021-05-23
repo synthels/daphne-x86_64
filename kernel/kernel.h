@@ -33,9 +33,10 @@ typedef struct regs regs_t;
 #define UNUSED(x) (void) (x)
 #define WORD sizeof(size_t)
 
-#define SIGOK 0x0
-#define SIGERR 0xA
-#define SIGWARN 0x14
+/* Invalid argument error */
+#define EINVAL -12
+/* OK "Error" */
+#define EOK -13
 
 /*
  * Kernel mode works only with a VGA text mode

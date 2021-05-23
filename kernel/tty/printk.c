@@ -142,7 +142,7 @@ int vsprintf(char **buf, va_list args)
 				/* Unknown type */
 				default:
 					*buf = "";
-					return SIGERR;
+					return EINVAL;
 			}
 			/* Skip '%' sign */
 			i--;
@@ -154,5 +154,5 @@ int vsprintf(char **buf, va_list args)
 	}
 
 	*buf = printk_buf;
-	return SIGOK;
+	return EOK;
 }
