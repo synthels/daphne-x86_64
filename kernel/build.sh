@@ -23,6 +23,7 @@ timeout=15
 
 menuentry \"phiOS\" {
 	multiboot /boot/kernel.bin
+	boot
 }" > $BUILD_DIR/boot/grub/grub.cfg
 
 # Assemble bootsector
