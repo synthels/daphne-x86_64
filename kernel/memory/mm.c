@@ -31,17 +31,18 @@ static void dump_entry(mmap_entry_t *entry)
 {
 	switch (entry->type) {
 		case MEMORY_AVAILABLE:
-			printk("[available memory] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			printk("base_addr=0x%ux, length=%uiB - available", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_RESERVED:
-			printk("[reserved memory] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			printk("base_addr=0x%ux, length=%uiB - reserved", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_ACPI:
 		case MEMORY_NVS:
-			printk("[acpi] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			printk("base_addr=0x%ux, length=%uiB - acpi", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_BADRAM:
-			printk("[bad] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+		case MEMORY_INVALID:
+			printk("base_addr=0x%ux, length=%uiB - bad", entry->base_addr_low, entry->length_low);
 			break;
 	}
 }
@@ -92,8 +93,6 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		/* Next entry */
 		mmap = (mmap_entry_t *) ((uint32_t) mmap + mmap->size + sizeof(mmap->size));
 	}
-
-	printk("[mm] total available memory: %uiB, %i available regions detected", total_ram, regions);
 }
 
 mmap_entry_t *mm_get_grub_mmap()
