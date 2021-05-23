@@ -33,6 +33,9 @@ static void dump_entry(mmap_entry_t *entry)
 		case MEMORY_AVAILABLE:
 			printk("[available memory] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
 			break;
+		case MEMORY_RESERVED:
+			printk("[reserved memory] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
+			break;
 		case MEMORY_ACPI:
 		case MEMORY_NVS:
 			printk("[acpi] starting from: 0x%ux, with a length of %uiB", entry->base_addr_low, entry->length_low);
@@ -57,22 +60,22 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		}
 
 		/* Overlapping entries */
-		for (size_t i = 0; i < kmmap_size; i++) {
+		for (size_t j = 0; i < kmmap_size; j++) {
 			/* Entry overlaps with another */
-			if (!(mmap->base_addr_low < kmmap[i].base_addr_low) && 
-				(mmap->base_addr_low < (kmmap[i].base_addr_low + kmmap[i].length_low))) {
+			if (!(mmap->base_addr_low < kmmap[j].base_addr_low) && 
+				(mmap->base_addr_low < (kmmap[j].base_addr_low + kmmap[j].length_low))) {
 				mmap->type = MEMORY_INVALID;
 			}
+		}
 
-			/* Entry overlaps with grub/kernel code */
-			size_t klength = MiB(1) + (&kend - &kstart);
-			if (mmap->base_addr_low + mmap->length_low <= klength) {
-				mmap->type = MEMORY_INVALID;
-			} else {
-				/* If only a part of it does, keep the part that doesn't */
-				mmap->base_addr_low += klength + 1;
-				mmap->length_low -= klength + 1;
-			}
+		/* Entry overlaps with grub/kernel code */
+		size_t klength = MiB(1) + (&kend - &kstart);
+		if (mmap->base_addr_low + mmap->length_low <= klength) {
+			mmap->type = MEMORY_INVALID;
+		} else if ((mmap->base_addr_low <= klength) && mmap->type == MEMORY_AVAILABLE) {
+			/* If only a part of it does, keep the part that doesn't */
+			mmap->base_addr_low += klength + 1;
+			mmap->length_low -= klength + 1;
 		}
 
 		/* Append entry to kmmap */
