@@ -19,6 +19,7 @@
 #include <tty/printk.h>
 
 #define MiB(n) 1048576 * n 
+#define KERN_END (uint32_t) (MiB(1) + (&kend - &kstart))
 
 struct mmap_entry {
 	uint32_t size;

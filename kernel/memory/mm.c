@@ -64,13 +64,12 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		}
 
 		/* Entry overlaps with grub/kernel code */
-		size_t klength = MiB(1) + (&kend - &kstart);
-		if (mmap->base_addr_low + mmap->length_low <= klength) {
+		if (mmap->base_addr_low + mmap->length_low <= KERN_END) {
 			mmap->type = MEMORY_INVALID;
-		} else if ((mmap->base_addr_low <= klength) && mmap->type == MEMORY_AVAILABLE) {
+		} else if ((mmap->base_addr_low <= KERN_END) && mmap->type == MEMORY_AVAILABLE) {
 			/* If only a part of it does, keep the part that doesn't */
-			mmap->base_addr_low += klength + 1;
-			mmap->length_low -= klength + 1;
+			mmap->base_addr_low += KERN_END + 1;
+			mmap->length_low -= KERN_END + 1;
 		}
 
 		/* Overlapping entries */

@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 #include <logger/panic.h>
+#include <memory/mm.h>
 
 /* Init page directory */
 void init_page_directory(void);

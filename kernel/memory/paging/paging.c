@@ -20,8 +20,20 @@ static uint32_t page_directory[1024] __attribute__((aligned(4096)));
 static uint32_t page_table[1024] __attribute__((aligned(4096)));
 static int page_table_index = 0;
 
+/* From linker.ld */
+extern uint32_t kstart;
+extern uint32_t kend;
+
 extern void load_page_dir(uint32_t *);
 extern void init_paging(void);
+
+static void id_map(uint32_t *first_pte, uint32_t from, int size)
+{
+	from = from & 0xfffff000;
+	for(; size>0; from += 4096, size -= 4096, first_pte++){
+		*first_pte = from | 1;
+	}
+}
 
 void append_page_table(uint32_t *table)
 {
@@ -32,11 +44,6 @@ void append_page_table(uint32_t *table)
 	if (((uint32_t) table) % 4096 != 0) {
 		panic("page table is not 4KiB aligned!");
 	}
-
-	for(int i = 0; i < 1024; i++) {
-		/* supervisor, r&w, present */
-		table[i] = (i * 0x1000) | 3;
-	}
 	page_directory[page_table_index++] = ((unsigned int) table) | 3;
 }
 
@@ -46,6 +53,7 @@ void init_page_directory(void)
 		/* supervisor, r&w, not present */
 		page_directory[i] = 0x00000002;
 	}
+	id_map(page_table, 0x0, KERN_END);
 	append_page_table(page_table);
 	load_page_dir(page_directory);
 	init_paging();

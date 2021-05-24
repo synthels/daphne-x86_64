@@ -41,7 +41,7 @@ void kmain(multiboot_info_t *info)
 	}
 
 	/* Init page directory */
-	/* init_page_directory(); */
+	init_page_directory();
 
 	/* Init mm */
 	info_begin("Memory info");
