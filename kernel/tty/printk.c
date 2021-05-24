@@ -23,7 +23,7 @@ static char printk_buf[1024];
  * Written by Lukas Chmela
  * Released under GPLv3
  */
-static char *itoa(int value, char *result, int base) {
+static char *itoa(int32_t value, char *result, int base) {
 	/* Check that base is valid */
 	if (base < 2 || base > 36) { *result = '\0'; return result; }
 	char* ptr = result, *ptr1 = result, tmp_char;
@@ -48,11 +48,11 @@ static char *itoa(int value, char *result, int base) {
 	return result;
 }
 
-static char *itoa_unsigned(unsigned value, char *result, int base) {
+static char *itoa_unsigned(uint32_t value, char *result, int base) {
 	/* Check that base is valid */
 	if (base < 2 || base > 36) { *result = '\0'; return result; }
 	char* ptr = result, *ptr1 = result, tmp_char;
-	unsigned tmp;
+	uint32_t tmp;
 
 	do {
 		tmp = value;
