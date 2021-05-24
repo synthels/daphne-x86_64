@@ -1,4 +1,4 @@
-![Where is the logo?](https://github.com/synthels/phiOS/images/logo.png?raw=true)
+![Where is the logo?](https://github.com/synthels/phiOS/blob/master/images/logo.png)
 # <p style="text-align:center"> phiOS </p>
 A non-UNIX x86-32 (and hopefully x86-64 in the future) operating system just like all others.
 
