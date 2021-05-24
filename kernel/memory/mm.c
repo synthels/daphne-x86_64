@@ -18,9 +18,14 @@
 
 /* mmap as given by grub */
 static mmap_entry_t *mmap_begin;
+
 /* mmap as sanity checked by the kernel */
 static mmap_entry_t kmmap[256];
 static size_t kmmap_size = 0;
+
+/* RAM info */
+static uint32_t total_ram = 0;
+static size_t regions = 0;
 
 /* From linker.ld */
 extern uint32_t kstart;
@@ -49,8 +54,6 @@ static void dump_entry(mmap_entry_t *entry)
 
 void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 {
-	uint32_t total_ram = 0;
-	size_t regions = 0;
 	mmap_entry_t *mmap = mmap_addr;
 	mmap_begin = mmap_addr;
 	/* Validate mmap */
@@ -58,15 +61,6 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 		/* 0 length entries */
 		if (mmap->length_low == 0x0) {
 			mmap->type = MEMORY_INVALID;
-		}
-
-		/* Overlapping entries */
-		for (size_t j = 0; i < kmmap_size; j++) {
-			/* Entry overlaps with another */
-			if (!(mmap->base_addr_low < kmmap[j].base_addr_low) && 
-				(mmap->base_addr_low < (kmmap[j].base_addr_low + kmmap[j].length_low))) {
-				mmap->type = MEMORY_INVALID;
-			}
 		}
 
 		/* Entry overlaps with grub/kernel code */
@@ -77,6 +71,15 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 			/* If only a part of it does, keep the part that doesn't */
 			mmap->base_addr_low += klength + 1;
 			mmap->length_low -= klength + 1;
+		}
+
+		/* Overlapping entries */
+		for (size_t j = 0; i < kmmap_size; j++) {
+			/* Entry overlaps with another */
+			if (!(mmap->base_addr_low < kmmap[j].base_addr_low) && 
+				(mmap->base_addr_low < (kmmap[j].base_addr_low + kmmap[j].length_low))) {
+				mmap->type = MEMORY_INVALID;
+			}
 		}
 
 		/* Append entry to kmmap */
