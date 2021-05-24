@@ -1,9 +1,9 @@
-# phiOS
-Just another 32bit hobby operating system!
-Check it out over at my [YouTube channel](https://www.youtube.com/channel/UCzXuqt4_pAogDUzy3RpN9nQ), I guess?
+![Where is the logo?](https://github.com/synthels/phiOS/images/logo.png?raw=true)
+# <p style="text-align:center"> phiOS </p>
+A non-UNIX x86-32 (and hopefully x86-64 in the future) operating system just like all others.
 
 # Building from source
-The only dependency for building phiOS is the `i686-elf-*` GCC toolchain and a UNIX-like environment. See `./phiOS.sh -help` for assistance.
+The only dependency for building phiOS is the `i686-elf-*` GCC toolchain and a UNIX-like environment. To build this toolchain from source, run `./scripts/toolchain.sh`. To build the kernel, see `./phiOS.sh -help`.
 
-# Get in contact
-You can talk to me over at my [email](mailto:synthels.me@gmail.com), or my [discord server](https://discord.gg/UUwvkyr).
+# Contribute
+In order to contribute code, you must open a pull request. See `CONTRIBUTING.md` before doing anything.
