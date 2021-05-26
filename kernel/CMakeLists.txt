@@ -1,0 +1,10 @@
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel)
+
+add_subdirectory(${SRCROOT}/arch)
+add_subdirectory(${SRCROOT}/drivers)
+add_subdirectory(${SRCROOT}/idt)
+add_subdirectory(${SRCROOT}/io)
+add_subdirectory(${SRCROOT}/kmain)
+add_subdirectory(${SRCROOT}/logger)
+add_subdirectory(${SRCROOT}/memory)
+add_subdirectory(${SRCROOT}/tty)
