@@ -46,6 +46,7 @@ mmap_entry_t *mm_get_grub_mmap();
  * memory map
  */
 mmap_entry_t *mm_get_kernel_mmap();
+size_t mm_get_kmmap_size();
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2

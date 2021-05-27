@@ -15,6 +15,7 @@
  */
 
 #include "kmain.h"
+#include <memory/malloc.h>
 
 static void info_begin(const char *str)
 {
@@ -41,7 +42,8 @@ void kmain(multiboot_info_t *info)
 	}
 
 	/* Init page directory */
-	init_page_directory();
+	/* TODO: Set up proper id paging */
+	/* init_page_directory(); */
 
 	/* Init mm */
 	info_begin("Memory info");

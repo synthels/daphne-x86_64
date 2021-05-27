@@ -5,7 +5,7 @@ if(NOT ARCH)
 endif()
 
 if (NOT ARCH STREQUAL "x86_32")
-	message( FATAL_ERROR "The target ${ARCH} does not exist!")
+	message(FATAL_ERROR "The target ${ARCH} does not exist!")
 endif()
 
 add_subdirectory(${SRCROOT}/${ARCH})

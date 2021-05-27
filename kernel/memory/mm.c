@@ -106,3 +106,8 @@ mmap_entry_t *mm_get_kernel_mmap()
 {
 	return kmmap;
 }
+
+size_t mm_get_kmmap_size()
+{
+	return kmmap_size;
+}
