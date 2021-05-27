@@ -21,8 +21,12 @@
 /* Offset for each mmap entry */
 static size_t mmap_offs[256];
 
+/* __new mutex lock */
+static mutex_t __new_mutex = 0;
+
 static uint32_t *__new(size_t n)
 {
+	acquire_mutex(&__new_mutex);
 	int entry_found = 0;
 	size_t i = 0;
 	mmap_entry_t *mmap = mm_get_kernel_mmap();
@@ -43,6 +47,7 @@ static uint32_t *__new(size_t n)
 	if (!entry_found)
 		panic("__new: Ran out of memory!");
 
+	release_mutex(&__new_mutex);
 	return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];
 }
 

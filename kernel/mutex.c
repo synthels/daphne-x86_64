@@ -10,18 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Spin lock implementation
  */
 
-#ifndef MALLOC
-#define MALLOC
+#include "mutex.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <logger/panic.h>
-#include <memory/mm.h>
-#include <mutex.h>
+void acquire_mutex(mutex_t *mutex)
+{
+	while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
+		asm("pause");
+	}
+}
 
-/* Allocate n bytes (16 bit aligned) */
-void *kmalloc(size_t n);
-
-#endif
+void release_mutex(mutex_t *mutex)
+{
+	*mutex = 0;
+}

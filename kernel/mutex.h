@@ -12,16 +12,15 @@
  * GNU General Public License for more details.
  */
 
-#ifndef MALLOC
-#define MALLOC
+#ifndef MUTEX
+#define MUTEX
 
-#include <stddef.h>
-#include <stdint.h>
-#include <logger/panic.h>
-#include <memory/mm.h>
-#include <mutex.h>
+typedef volatile int mutex_t;
 
-/* Allocate n bytes (16 bit aligned) */
-void *kmalloc(size_t n);
+/* Acquire lock */
+void acquire_mutex(mutex_t *mutex);
+
+/* Release lock */
+void release_mutex(mutex_t *mutex);
 
 #endif

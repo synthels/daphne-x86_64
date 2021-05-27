@@ -9,3 +9,10 @@ add_subdirectory(${SRCROOT}/logger)
 add_subdirectory(${SRCROOT}/memory)
 add_subdirectory(${SRCROOT}/tty)
 add_subdirectory(${SRCROOT}/libk)
+
+set(SRC
+	${SRCROOT}/mutex.c
+	${SRCROOT}/mutex.h
+)
+
+target_sources(kernel.bin PRIVATE ${SRC})
