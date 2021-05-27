@@ -50,20 +50,13 @@ static uint32_t *__new(size_t n)
 void *kmalloc(size_t n)
 {	
 	/* Align n to 32 bits */
-	if (n <= 32) {
-		n = 32;
-	} else {
-		n = 32 * ((n / 32) + 1);
+	if (n % 32 != 0) {
+		if (n <= 32) {
+			n = 32;
+		} else {
+			n = 32 * ((n / 32) + 1);
+		}
 	}
 
-	uint32_t *ptr = __new(n);
-	/* Clear free byte */
-	*ptr = 0x0;
-	return (void *) ptr++;
-}
-
-void kfree(void *ptr)
-{
-	/* Set free byte */
-	*(uint32_t *) ptr-- = 0x0;
+	return (void *) __new(n);
 }
