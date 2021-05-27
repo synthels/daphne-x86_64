@@ -19,7 +19,7 @@
 void do_malloc_test(void)
 {
 	for (int i = 0; i < 20; i++) {
-		struct test_struct *ptr = kmalloc(sizeof(struct test_struct));
+		struct test_struct *ptr = malloc(sizeof(struct test_struct));
 		ptr->a = i;
 		ptr->b = i + 1;
 		ptr->c = i + 2;
@@ -28,5 +28,7 @@ void do_malloc_test(void)
 		TEST_ASSERT(ptr->a == i, "Malloc test (a)");
 		TEST_ASSERT(ptr->b == i + 1, "Malloc test (b)");
 		TEST_ASSERT(ptr->c == i + 2, "Malloc test (c)");
+
+		free(ptr);
 	}
 }

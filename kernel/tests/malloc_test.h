@@ -15,7 +15,7 @@
 #ifndef MALLOC_TEST
 #define MALLOC_TEST
 
-#include <memory/malloc.h>
+#include <libk/malloc.h>
 #include "tests.h"
 
 void do_malloc_test(void);
