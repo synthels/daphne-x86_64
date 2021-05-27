@@ -13,6 +13,12 @@ add_executable(${KERNEL_BIN})
 set(SRCROOT ${PROJECT_SOURCE_DIR})
 set(CMAKE_C_FLAGS "-std=gnu99 -ffreestanding -O2 -Wall -Wextra -Ilib/include -Ikernel -Wno-maybe-uninitialized")
 
+# Build tests if needed
+if (BUILD_TESTS)
+	add_subdirectory(${SRCROOT}/kernel/tests)
+	add_compile_definitions(BUILD_TESTS)
+endif()
+
 # Build kernel
 target_include_directories(${KERNEL_BIN} PRIVATE ${SRCROOT}/kernel)
 add_subdirectory(${SRCROOT}/kernel)

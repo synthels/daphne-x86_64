@@ -11,29 +11,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel main code
+ * Malloc test
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "malloc_test.h"
 
-#include <multiboot.h>
+void do_malloc_test(void)
+{
+	for (int i = 0; i < 20; i++) {
+		struct test_struct *ptr = kmalloc(sizeof(struct test_struct));
+		ptr->a = i;
+		ptr->b = i + 1;
+		ptr->c = i + 2;
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <idt/idt.h>
-#include <kernel.h>
-
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
-#include <memory/paging/paging.h>
-
-#include <tty/printk.h>
-#include <logger/panic.h>
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
-
-#endif
+		/* Check if values are correct */
+		TEST_ASSERT(ptr->a == i, "Malloc test (a)");
+		TEST_ASSERT(ptr->b == i + 1, "Malloc test (b)");
+		TEST_ASSERT(ptr->c == i + 2, "Malloc test (c)");
+	}
+}

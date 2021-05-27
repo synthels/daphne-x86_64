@@ -10,30 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef MALLOC_TEST
+#define MALLOC_TEST
 
-#include <multiboot.h>
+#include <memory/malloc.h>
+#include "tests.h"
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <idt/idt.h>
-#include <kernel.h>
+void do_malloc_test(void);
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
-#include <memory/paging/paging.h>
-
-#include <tty/printk.h>
-#include <logger/panic.h>
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+struct test_struct {
+	int a;
+	int b;
+	int c;
+};
 
 #endif

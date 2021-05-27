@@ -14,6 +14,8 @@
  * Malloc
  */
 
+/* NOTE: Free bytes don't do much as of now and kfree is useless. They might get removed soon */
+
 #include "malloc.h"
 
 /* Offset for each mmap entry */

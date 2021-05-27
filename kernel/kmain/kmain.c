@@ -55,5 +55,10 @@ void kmain(multiboot_info_t *info)
 	/* Init all drivers */
 	init_drivers();
 
+	#ifdef BUILD_TESTS
+		/* Start tests */
+		do_tests();
+	#endif
+
 	for(;;);
 }

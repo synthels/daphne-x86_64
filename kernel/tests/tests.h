@@ -10,30 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
-
-#include <multiboot.h>
-
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <idt/idt.h>
-#include <kernel.h>
-
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
-#include <memory/paging/paging.h>
+#ifndef TESTS
+#define TESTS
 
 #include <tty/printk.h>
-#include <logger/panic.h>
+#include "malloc_test.h"
 
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+#define TEST_ASSERT(cond, test) if (cond) { printk("Success: %s", test); } else { printk("Failed test: %s", test); return; }
+
+/* Run all tests */
+void do_tests(void);
 
 #endif

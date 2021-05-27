@@ -17,6 +17,12 @@ cd build
 cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=i686-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_32 ..
 ```
 
+If by any chance you want to build with testing enabled, use this command instead
+
+```
+cmake -G "Unix Makefiles" -DBUILD_TESTS=all -DCMAKE_C_COMPILER=i686-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_32 ..
+```
+
 ```
 cmake --build .
 ```
