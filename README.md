@@ -27,7 +27,7 @@ cmake -G "Unix Makefiles" -DBUILD_TESTS=all -DCMAKE_C_COMPILER=i686-elf-gcc -DCM
 cmake --build .
 ```
 
-After all that, you should have a `kernel.bin` in the `build` directory. Together with the `boot` directory, you should be able to compile an ISO with `grub-mkrescue -o phiOS.iso iso`. This has been tested on both Windows (under MinGW) and Linux.
+After all that, you should have a `kernel.bin` in the `build` directory. Together with the `boot` directory, you should be able to compile an ISO with `grub-mkrescue -o phiOS.iso iso` (After moving `kernel.bin` to the `iso` directory). This has been tested on both Windows (under MinGW) and Linux.
 
 # Contribute
 In order to contribute code, you must open a pull request. See `CONTRIBUTING.md` before doing anything.
