@@ -32,10 +32,9 @@ static uint32_t *__new(size_t n)
 			 * Check how much of this entry we
 			 * have already used
 			 */
-			/* We add 4 because of the free byte (32 bits reserved) */
-			if (mmap->length_low - mmap_offs[i] >= (n + 4)) {
+			if (mmap->length_low - mmap_offs[i] >= n) {
 				entry_found = 1;
-				mmap_offs[i] += n + 4;
+				mmap_offs[i] += n;
 				break;
 			}
 		}
