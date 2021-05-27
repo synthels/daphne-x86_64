@@ -19,8 +19,7 @@
 MODULE_NAME("pit");
 MODULE_AUTH("synthels");
 
-static uint32_t ticks = 0;
-static uint32_t real_ticks = 1;
+static uint64_t ticks = 0;
 
 /* Initialize PIT */
 void pit_init(void)
@@ -31,14 +30,10 @@ void pit_init(void)
     outb(0x40, div >> 8);
 }
 
-/* Tick approx. every sec */
+/* Tick */
 void pit_tick(void)
 {
-	real_ticks++;
-	if (real_ticks % 96 == 0) {
-		ticks++;
-		real_ticks = 0;
-	}
+	ticks++;
 }
 
 /* Read tick counter */
