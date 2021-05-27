@@ -22,6 +22,7 @@ static mmap_entry_t *mmap_begin;
 /* mmap as sanity checked by the kernel */
 static mmap_entry_t kmmap[256];
 static size_t kmmap_size = 0;
+static uint32_t mmap_length = 0;
 
 /* RAM info */
 static uint32_t total_ram = 0;
@@ -56,6 +57,7 @@ void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
 {
 	mmap_entry_t *mmap = mmap_addr;
 	mmap_begin = mmap_addr;
+	mmap_length = length;
 	/* Validate mmap */
 	for (size_t i = 0; mmap < (mmap_addr + length); i++) {
 		/* 0 length entries */
@@ -108,6 +110,11 @@ mmap_entry_t *mm_get_kernel_mmap()
 }
 
 size_t mm_get_kmmap_size()
+{
+	return kmmap_size;
+}
+
+uint32_t mm_get_mmap_length()
 {
 	return kmmap_size;
 }

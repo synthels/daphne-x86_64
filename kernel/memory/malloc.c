@@ -49,11 +49,11 @@ static uint32_t *__new(size_t n)
 
 void *kmalloc(size_t n)
 {	
-	/* Align n to 16 bits */
-	if (n <= 16) {
-		n = 16;
+	/* Align n to 32 bits */
+	if (n <= 32) {
+		n = 32;
 	} else {
-		n = 16 * ((n / 16) + 1);
+		n = 32 * ((n / 32) + 1);
 	}
 
 	uint32_t *ptr = __new(n);
