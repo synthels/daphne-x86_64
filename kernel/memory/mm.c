@@ -113,8 +113,3 @@ size_t mm_get_kmmap_size()
 {
 	return kmmap_size;
 }
-
-uint32_t mm_get_mmap_length()
-{
-	return kmmap_size;
-}

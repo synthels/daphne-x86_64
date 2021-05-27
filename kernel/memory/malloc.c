@@ -26,7 +26,7 @@ static uint32_t *__new(size_t n)
 	int entry_found = 0;
 	size_t i = 0;
 	mmap_entry_t *mmap = mm_get_kernel_mmap();
-	for (; i < mmap[0].size; i++) {
+	for (; i < mm_get_kmmap_size(); i++) {
 		if (mmap[i].type == MEMORY_AVAILABLE) {
 			/* 
 			 * Check how much of this entry we
