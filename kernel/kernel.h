@@ -20,7 +20,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define KERNEL_COPYRIGHT_YEAR 2021
+#define KERNEL_VERSION_STRING "v1.0-Alpha"
 
 struct regs {
 	uint32_t _unused, fs, es, ds;

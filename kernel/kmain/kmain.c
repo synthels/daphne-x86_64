@@ -17,22 +17,15 @@
 #include "kmain.h"
 #include <memory/malloc.h>
 
-static void info_begin(const char *str)
-{
-	tty_puts("------------", VGA_COLOR_LIGHT_RED);
-	tty_puts(str, VGA_COLOR_LIGHT_RED);
-	tty_puts("------------", VGA_COLOR_LIGHT_RED);
-}
-
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
-	/* Init tty */
+	// /* Init tty */
 	tty_init();
 
-	printk("phiOS - (C) Synthels %i, All rights reserved", KERNEL_COPYRIGHT_YEAR);
+	printk("phiOS %s", KERNEL_VERSION_STRING);
 
-	/* Set kernel mode */
+	// /* Set kernel mode */
 	kernel_mode = TTY_MODE;
 
 	/* Check if grub can give us a memory map */
@@ -41,14 +34,15 @@ void kmain(multiboot_info_t *info)
 		panic("couldn't get memory map!");
 	}
 
-	/* Init page directory */
-	/* TODO: Set up proper id paging */
-	/* init_page_directory(); */
+	// /* Init page directory */
+	// /* TODO: Set up proper id paging */
+	// /* init_page_directory(); */
 
+	printk("\nScan memory");
 	/* Init mm */
-	info_begin("Memory info");
 	mm_init((mmap_entry_t *) info->mmap_addr, info->mmap_length);
 
+	printk("\nEnable IRQs");
 	/* Init IDT */
 	init_idt();
 
