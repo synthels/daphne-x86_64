@@ -13,6 +13,8 @@ add_subdirectory(${SRCROOT}/libk)
 set(SRC
 	${SRCROOT}/mutex.c
 	${SRCROOT}/mutex.h
+	${SRCROOT}/kernel.c
+	${SRCROOT}/kernel.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

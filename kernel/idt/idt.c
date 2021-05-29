@@ -14,7 +14,15 @@
  * IDT
  */
 
+/* TODO: Fix those nasty warnings */
+
 #include "idt.h"
+
+/* IDT structure */
+static struct IDT_entry IDT_buffer[256];
+
+/* IRQ handlers */
+static void *irq_handlers[129];
 
 /* Install an IRQ handler to the IDT */
 void idt_install_irq_handler(void (*handler)(void), int i)

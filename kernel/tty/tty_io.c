@@ -16,6 +16,13 @@
 
 #include "tty_io.h"
 
+/* tty variables */
+static size_t tty_row;
+static size_t tty_column;
+static uint8_t tty_color;
+static uint8_t tty_bg;
+static uint16_t *tty_buffer;
+
 /* TODO: Move this to lib */
 static size_t strlen(const char *str)
 {

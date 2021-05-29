@@ -23,9 +23,10 @@
 #define KERNEL_VERSION_STRING "v1.0-Alpha"
 
 struct regs {
-	uint32_t _unused, fs, es, ds;
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-	uint32_t eip, cs, eflags, useresp, ss;
+    uint32_t gs, fs, es, ds;
+    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    uint32_t int_no, err_code;
+    uint32_t eip, cs, eflags, useresp, ss;
 };
 
 typedef struct regs regs_t;
@@ -38,19 +39,20 @@ typedef struct regs regs_t;
 /* OK "Error" */
 #define EOK -13
 
+/* Kernel mode getters/setters */
+void set_kernel_mode(int mode);
+int get_kernel_mode(void);
+
 /*
- * Kernel mode works only with a VGA text mode
+ * TTY mode works only with a VGA text mode
  * and no user input
  */
 #define TTY_MODE 0x10
 
 /*
- * OS mode supports user input
+ * GFX mode supports user input
  * and may or may not have set up a proper video mode
  */
 #define GFX_MODE 0x11
-
-/* Current kernel mode */
-int kernel_mode;
 
 #endif

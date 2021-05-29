@@ -20,7 +20,7 @@ void logk(char *msg)
 {
 	uint32_t ticks;
 	pit_get_ticks(&ticks);
-	switch (kernel_mode) {
+	switch (get_kernel_mode()) {
 		case TTY_MODE:
 			printk("[%i] %s", ticks, msg);
 			break;

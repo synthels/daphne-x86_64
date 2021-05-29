@@ -12,28 +12,17 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_TTY
-#define KERNEL_x86_TTY
+#include "kernel.h"
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+/* Current kernel mode */
+static int kernel_mode;
 
-#include "vga.h"
+void set_kernel_mode(int mode)
+{
+	kernel_mode = mode;
+}
 
-/* Initialise the terminal */
-void tty_init();
-
-/* Clears the terminal & fills it with a certain color */
-void tty_clear(uint8_t color);
-
-/* Print single character */
-void tty_putc(char c, unsigned char color);
-
-/* Print string */
-void tty_print(const char *data, const unsigned char color);
-
-/* Print string & append newline */
-void tty_puts(const char *data, const unsigned char color);
-
-#endif
+int get_kernel_mode(void)
+{
+	return kernel_mode;
+}

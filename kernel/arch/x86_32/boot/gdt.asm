@@ -17,41 +17,46 @@
 [bits 32]
 
 global load_gdt
-extern setcs
 
 gdt_start:
-	gdt_null: ; null descriptor
-		dd 0x0
-		dd 0x0
+gdt_null:
+    dd 0x0
+    dd 0x0
 
-	gdt_code: ; code segment descriptor
-		dw 0xffff ; limit (bits 0-15)
-		dw 0x0 ; base (bits 0-15)
-		db 0x0 ; base (bits 16 -23)
-		db 10011010b ; 1st flags, type flags
-		db 11001111b ; 2nd flags, Limit (bits 16-19)
-		db 0x0 ; base (bits 24 - 31)
+gdt_code:
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10011010b
+    db 11001111b
+    db 0x0
 
-	gdt_data: ; data segment descriptor
-		dw 0xffff ; limit (bits 0-15)
-		dw 0x0 ; base (bits 0-15)
-		db 0x0 ; base (bits 16 -23)
-		db 10010010b ; 1st flags, type flags
-		db 11001111b ; 2nd flags, Limit (bits 16-19)
-		db 0x0 ; base (bits 24 - 31)
+gdt_data:
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10010010b
+    db 11001111b
+    db 0x0
+gdt_end:
 
-	gdt_end:
-		gdt_descriptor:
-			dw gdt_end - gdt_start - 1 ; size of the gdt
-			dd gdt_start ; gdt start address
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1
+    dd gdt_start
 
-; load gdt
+CODE_SEG equ gdt_code - gdt_start
+DATA_SEG equ gdt_data - gdt_start
+
 load_gdt:
-	lgdt [gdt_descriptor] ; load GDT
-	mov ax, 0x10
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov ss, ax
-	jmp 0x08:setcs
+	cli
+	lgdt [gdt_descriptor]
+	jmp CODE_SEG:.setcs
+	.setcs:
+		mov eax, DATA_SEG
+		mov ds, eax
+		mov es, eax
+		mov fs, eax
+		mov gs, eax
+		mov ss, eax
+		sti
+		ret

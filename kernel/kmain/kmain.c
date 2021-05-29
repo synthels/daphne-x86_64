@@ -20,13 +20,17 @@
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
-	// /* Init tty */
+	/* Init tty */
 	tty_init();
 
 	printk("phiOS %s", KERNEL_VERSION_STRING);
 
-	// /* Set kernel mode */
-	kernel_mode = TTY_MODE;
+	/* Set kernel mode */
+	set_kernel_mode(TTY_MODE);
+
+	printk("\nEnable IRQs");
+	/* Init IDT */
+	init_idt();
 
 	/* Check if grub can give us a memory map */
 	/* TODO: Detect manually */
@@ -34,17 +38,13 @@ void kmain(multiboot_info_t *info)
 		panic("couldn't get memory map!");
 	}
 
-	// /* Init page directory */
-	// /* TODO: Set up proper id paging */
-	// /* init_page_directory(); */
+	/* Init page directory */
+	/* TODO: Set up proper id paging */
+	/* init_page_directory(); */
 
 	printk("\nScan memory");
 	/* Init mm */
 	mm_init((mmap_entry_t *) info->mmap_addr, info->mmap_length);
-
-	printk("\nEnable IRQs");
-	/* Init IDT */
-	init_idt();
 
 	/* Init all drivers */
 	init_drivers();

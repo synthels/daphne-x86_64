@@ -18,6 +18,7 @@
 #include <tty/printk.h>
 #include <drivers/time/PIT.h>
 #include <stdint.h>
+#include <kernel.h>
 
 /* Logs a message */
 void logk(char *msg);
