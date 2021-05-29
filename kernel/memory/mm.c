@@ -37,29 +37,29 @@ static void dump_entry(mmap_entry_t *entry)
 {
 	switch (entry->type) {
 		case MEMORY_AVAILABLE:
-			printk("base_addr=0x%ux, length=%uiB - available", entry->base_addr_low, entry->length_low);
+			printk("base_addr=%ui, length=%uiB - available", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_RESERVED:
-			printk("base_addr=0x%ux, length=%uiB - reserved", entry->base_addr_low, entry->length_low);
+			printk("base_addr=%ui, length=%uiB - reserved", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_ACPI:
 		case MEMORY_NVS:
-			printk("base_addr=0x%ux, length=%uiB - acpi", entry->base_addr_low, entry->length_low);
+			printk("base_addr=%ui, length=%uiB - acpi", entry->base_addr_low, entry->length_low);
 			break;
 		case MEMORY_BADRAM:
 		case MEMORY_INVALID:
-			printk("base_addr=0x%ux, length=%uiB - bad", entry->base_addr_low, entry->length_low);
 			break;
 	}
 }
 
-void mm_init(mmap_entry_t *mmap_addr, uint32_t length)
+void mm_init(multiboot_info_t *info)
 {
-	mmap_entry_t *mmap = mmap_addr;
-	mmap_begin = mmap_addr;
-	mmap_length = length;
+	mmap_entry_t *mmap = (mmap_entry_t *) info->mmap_addr;
+	mmap_begin = (mmap_entry_t *) info->mmap_addr;
+	mmap_length = info->mmap_length;
+
 	/* Validate mmap */
-	for (size_t i = 0; mmap < (mmap_addr + length); i++) {
+	for (size_t i = 0; (uint32_t) mmap < (info->mmap_addr + info->mmap_length); i++) {
 		/* 0 length entries */
 		if (mmap->length_low == 0x0) {
 			mmap->type = MEMORY_INVALID;

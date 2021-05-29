@@ -17,6 +17,7 @@
 
 #include <stdint.h>
 #include <tty/printk.h>
+#include <multiboot.h>
 
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) (MiB(1) + (&kend - &kstart))
@@ -31,7 +32,7 @@ struct mmap_entry {
 typedef struct mmap_entry mmap_entry_t;
 
 /* Init mm */
-void mm_init(mmap_entry_t *mmap_addr, uint32_t length);
+void mm_init(multiboot_info_t *info);
 
 /*
  * Get GRUB memory map

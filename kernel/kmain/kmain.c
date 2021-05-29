@@ -29,8 +29,6 @@ void kmain(multiboot_info_t *info)
 	set_kernel_mode(TTY_MODE);
 
 	printk("\nEnable IRQs");
-	/* Init IDT */
-	init_idt();
 
 	/* Check if grub can give us a memory map */
 	/* TODO: Detect manually */
@@ -44,7 +42,10 @@ void kmain(multiboot_info_t *info)
 
 	printk("\nScan memory");
 	/* Init mm */
-	mm_init((mmap_entry_t *) info->mmap_addr, info->mmap_length);
+	mm_init(info);
+
+	/* Init IDT */
+	init_idt();
 
 	/* Init all drivers */
 	init_drivers();

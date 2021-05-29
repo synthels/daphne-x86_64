@@ -21,12 +21,14 @@ STACKSIZE equ 16384
 
 section .bss
 align 16
-stack: resb STACKSIZE
+stack_bottom:
+resb STACKSIZE
+stack_top:
 
 section .text
 ; kernel entry point
 _start:
-	mov esp, stack + STACKSIZE
+	mov esp, stack_top
 	push eax
 	push ebx
 	call load_gdt

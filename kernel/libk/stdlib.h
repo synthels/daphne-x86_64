@@ -12,20 +12,15 @@
  * GNU General Public License for more details.
  */
 
-#ifndef PRINTK
-#define PRINTK
+#ifndef LIBK_STDLIB
+#define LIBK_STDLIB
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <tty/tty_io.h>
-#include <kernel.h>
+#include "string.h"
 
-#include <libk/stdlib.h>
+/* Int to string */
+void itoa(int n, char s[]);
 
-/* Prints a formatted string to a buffer */
-int vsprintf(char **buf, va_list args);
-
-/* Prints a formatted string to the screen using tty functions */
-int printk(const char *fmt, ...);
+/* Unsigned int to string */
+void uitoa(unsigned n, char s[]);
 
 #endif

@@ -10,22 +10,45 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * stdlib.h functions
  */
 
-#ifndef PRINTK
-#define PRINTK
+#include "stdlib.h"
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <tty/tty_io.h>
-#include <kernel.h>
+static void reverse(char s[])
+{
+	int i, j;
+	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
+		char c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
+}
 
-#include <libk/stdlib.h>
+void itoa(int n, char s[])
+{
+	int i, sign;
+	if ((sign = n) < 0)
+		n = -n;
+	i = 0;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
 
-/* Prints a formatted string to a buffer */
-int vsprintf(char **buf, va_list args);
+	if (sign < 0)
+		s[i++] = '-';
+	s[i] = '\0';
+	reverse(s);
+}
 
-/* Prints a formatted string to the screen using tty functions */
-int printk(const char *fmt, ...);
-
-#endif
+void uitoa(unsigned n, char s[])
+{
+	unsigned i;
+	i = 0;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
+	s[i] = '\0';
+	reverse(s);
+}

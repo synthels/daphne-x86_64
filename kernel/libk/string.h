@@ -21,7 +21,7 @@
 	#define NULL (void *) 0x0
 #endif
 
-int memcmp(const void *str1, const void *str2, size_t n);
-void *memcpy(void *dst, const void *src, size_t n);
+/* Count string length */
+size_t strlen(const char *str);
 
 #endif

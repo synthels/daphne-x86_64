@@ -19,57 +19,6 @@
 /* Don't let anyone see this... */
 static char printk_buf[1024];
 
-/*
- * Written by Lukas Chmela
- * Released under GPLv3
- */
-static char *itoa(int32_t value, char *result, int base) {
-	/* Check that base is valid */
-	if (base < 2 || base > 36) { *result = '\0'; return result; }
-	char* ptr = result, *ptr1 = result, tmp_char;
-	int32_t tmp;
-
-	do {
-		tmp = value;
-		value /= base;
-		*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + (tmp - value * base)];
-	} while (value);
-
-	/* Apply negative sign */
-	if (tmp < 0) *ptr++ = '-';
-	*ptr-- = '\0';
-
-	while(ptr1 < ptr) {
-		tmp_char = *ptr;
-		*ptr-- = *ptr1;
-		*ptr1++ = tmp_char;
-	}
-
-	return result;
-}
-
-static char *itoa_unsigned(uint32_t value, char *result, int base) {
-	/* Check that base is valid */
-	if (base < 2 || base > 36) { *result = '\0'; return result; }
-	char* ptr = result, *ptr1 = result, tmp_char;
-	uint32_t tmp;
-
-	do {
-		tmp = value;
-		value /= base;
-		*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz"[35 + (tmp - value * base)];
-	} while (value);
-	*ptr-- = '\0';
-
-	while(ptr1 < ptr) {
-		tmp_char = *ptr;
-		*ptr-- = *ptr1;
-		*ptr1++ = tmp_char;
-	}
-
-	return result;
-}
-
 int printk(const char *fmt, ...)
 {
 	/* Empty buffer */
@@ -112,28 +61,28 @@ int vsprintf(char **buf, va_list args)
 				case 'u':
 					switch (*fmt++) {
 						case 'i':
-							itoa_unsigned(va_arg(args, uint32_t), str, 10);
+							uitoa(va_arg(args, uint32_t), str);
 							break;
 						/* Hex */
 						case 'x':
-							itoa_unsigned(va_arg(args, uint32_t), str, 16);
+							/* TODO */
 							break;
 						/* Binary */
 						case 'b':
-							itoa_unsigned(va_arg(args, uint32_t), str, 2);
+							/* TODO */
 							break;
 					}
 					break;
 				case 'i':
-					itoa(va_arg(args, int32_t), str, 10);
+					itoa(va_arg(args, int32_t), str);
 					break;
 				/* Hex */
 				case 'x':
-					itoa(va_arg(args, int32_t), str, 16);
+					/* TODO */
 					break;
 				/* Binary */
 				case 'b':
-					itoa(va_arg(args, int32_t), str, 2);
+					/* TODO */
 					break;
 				/* Just print a '%' */
 				case '%':
