@@ -28,8 +28,6 @@ void kmain(multiboot_info_t *info)
 	/* Set kernel mode */
 	set_kernel_mode(TTY_MODE);
 
-	printk("\nEnable IRQs");
-
 	/* Check if grub can give us a memory map */
 	/* TODO: Detect manually */
 	if (!(info->flags & (1<<6))) {
@@ -40,11 +38,12 @@ void kmain(multiboot_info_t *info)
 	/* TODO: Set up proper id paging */
 	/* init_page_directory(); */
 
-	printk("\nScan memory");
 	/* Init mm */
+	printk("\nMemory map:");
 	mm_init(info);
 
 	/* Init IDT */
+	printk("\nIRQ info:");
 	init_idt();
 
 	/* Init all drivers */

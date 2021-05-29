@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/idt)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/arch/x86_32/idt)
 
 set(SRC
 	${SRCROOT}/irq.asm

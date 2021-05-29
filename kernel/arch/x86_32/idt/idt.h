@@ -12,11 +12,12 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_IDT
-#define KERNEL_x86_IDT
+#ifndef KERNEL_x86_32_IDT
+#define KERNEL_x86_32_IDT
 
-#include <idt/PIC.h>
+#include "PIC.h"
 #include <stdint.h>
+#include <tty/printk.h>
 
 #define IRQ_HANDLERS 4
 

@@ -21,7 +21,6 @@
 
 #include <tty/tty_io.h>
 #include <io/io.h>
-#include <idt/idt.h>
 #include <kernel.h>
 
 #include <drivers/time/sleep.h>
@@ -31,6 +30,10 @@
 
 #include <tty/printk.h>
 #include <logger/panic.h>
+
+#ifdef ARCH_x86_32
+	#include <arch/x86_32/idt/idt.h>
+#endif
 
 #ifdef BUILD_TESTS
 	#include <tests/tests.h>

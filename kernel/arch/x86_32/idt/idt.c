@@ -27,6 +27,7 @@ static void *irq_handlers[129];
 /* Install an IRQ handler to the IDT */
 void idt_install_irq_handler(void (*handler)(void), int i)
 {
+	printk("installing IRQ handler %i", i);
 	irq_handlers[i] = handler;
 }
 

@@ -19,6 +19,10 @@ if (BUILD_TESTS)
 	add_compile_definitions(BUILD_TESTS)
 endif()
 
+if (ARCH STREQUAL "x86_32")
+	add_compile_definitions(ARCH_x86_32)
+endif()
+
 # Build kernel
 target_include_directories(${KERNEL_BIN} PRIVATE ${SRCROOT}/kernel)
 add_subdirectory(${SRCROOT}/kernel)
