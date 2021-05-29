@@ -11,24 +11,25 @@ FLAGS		equ  MODULEALIGN | MEMINFO
 MAGIC		equ  0x1badb002
 CHECKSUM	equ -(MAGIC + FLAGS)
 
-section .bss
 align 4
+dd MAGIC
+dd FLAGS
+dd CHECKSUM
+
+; reserve stack
+STACKSIZE equ 16384
+
+section .bss
+align 16
 stack: resb STACKSIZE
 
 section .text
-; reserve stack
-STACKSIZE equ 0x4000
 ; kernel entry point
-
 _start:
-	align 4
-	dd MAGIC
-	dd FLAGS
-	dd CHECKSUM
-	call load_gdt
 	mov esp, stack + STACKSIZE
 	push eax
 	push ebx
+	call load_gdt
 	call kmain
 	halt:
 		cli
