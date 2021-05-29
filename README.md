@@ -4,7 +4,7 @@ A non-UNIX x86-32 (and hopefully x86-64 in the future) operating system just lik
 
 # Building from source
 ## Building the toolchain
-The only dependency for building phiOS is the `i686-elf-*` GCC toolchain and a UNIX-like environment. To build this toolchain from source, run `./scripts/toolchain.sh`.
+The only dependency for building phiOS is the `i686-elf-*` GCC toolchain and a UNIX-like environment. To build this toolchain from source, run `./scripts/toolchain.sh`. (WARNING: The script seems to be very broken right now. Please install gcc from here: https://formulae.brew.sh/formula-linux/i686-elf-gcc)
 
 ## Building the kernel
 The kernel uses CMake as its build system. To build the kernel, you must first run `./scripts/setup.sh -mk-grub`. After the `build` directory is created, follow these steps:
