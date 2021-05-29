@@ -1,6 +1,6 @@
 ![Where is the logo?](https://github.com/synthels/phiOS/blob/master/images/logo.png)
 # phiOS
-A non-UNIX x86-32 (and hopefully x86-64 in the future) operating system just like all others.
+A UNIX based x86-32 (and hopefully x86-64 in the future) operating system just like all others.
 
 # Building from source
 ## Building the toolchain
