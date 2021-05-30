@@ -21,7 +21,10 @@
 #include <memory/mm.h>
 #include <mutex.h>
 
+/* Return n aligned to 32 bits */
+size_t kmem_align(size_t n);
+
 /* Allocate n bytes (16 bit aligned) */
-void *kmalloc(size_t n);
+void *alloc_mem_aligned(size_t n);
 
 #endif

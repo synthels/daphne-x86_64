@@ -14,28 +14,24 @@
  * Malloc
  */
 
-/* NOTE: Free bytes don't do much as of now and kfree is useless. They might get removed soon */
-
-#include "malloc.h"
+#include "alloc.h"
 
 /* Offset for each mmap entry */
-static size_t mmap_offs[256];
+static uint32_t mmap_offs[256];
 
-/* __new mutex lock */
-static mutex_t __new_mutex = 0;
+/* alloc_mem mutex lock */
+static mutex_t alloc_mutex = 0;
 
-static uint32_t *__new(size_t n)
+static uint32_t *alloc_mem(size_t n)
 {
-	acquire_mutex(&__new_mutex);
+	acquire_mutex(&alloc_mutex);
 	int entry_found = 0;
 	size_t i = 0;
-	mmap_entry_t *mmap = mm_get_kernel_mmap();
-	for (; i < mm_get_kmmap_size(); i++) {
+	mmap_entry_t *mmap = kmem_get_kernel_mmap();
+
+	for (; i < kmem_get_kmmap_size(); i++) {
 		if (mmap[i].type == MEMORY_AVAILABLE) {
-			/* 
-			 * Check how much of this entry we
-			 * have already used
-			 */
+			/* See how much of this entry we have used */
 			if (mmap->length_low - mmap_offs[i] >= n) {
 				entry_found = 1;
 				mmap_offs[i] += n;
@@ -45,14 +41,14 @@ static uint32_t *__new(size_t n)
 	}
 
 	if (!entry_found)
-		panic("__new: Ran out of memory!");
+		panic("alloc_mem: ran out of memory!");
 
-	release_mutex(&__new_mutex);
+	release_mutex(&alloc_mutex);
 	return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];
 }
 
-void *kmalloc(size_t n)
-{	
+size_t kmem_align(size_t n)
+{
 	/* Align n to 32 bits */
 	if (n % 32 != 0) {
 		if (n <= 32) {
@@ -62,5 +58,10 @@ void *kmalloc(size_t n)
 		}
 	}
 
-	return (void *) __new(n);
+	return n;
+}
+
+void *alloc_mem_aligned(size_t n)
+{	
+	return (void *) alloc_mem(kmem_align(n));
 }

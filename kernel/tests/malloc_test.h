@@ -18,6 +18,8 @@
 #include <libk/malloc.h>
 #include "tests.h"
 
+#define MALLOC_TESTS 50000
+
 void do_malloc_test(void);
 
 struct test_struct {

@@ -20,7 +20,7 @@
 #include <multiboot.h>
 
 #define MiB(n) 1048576 * n 
-#define KERN_END (uint32_t) (MiB(1) + (&kend - &kstart))
+#define KERN_END (uint32_t) &kend
 
 struct mmap_entry {
 	uint32_t size;
@@ -32,22 +32,15 @@ struct mmap_entry {
 typedef struct mmap_entry mmap_entry_t;
 
 /* Init mm */
-void mm_init(multiboot_info_t *info);
-
-/*
- * Get GRUB memory map
- * The map pointed to by the return value
- * is not guranteed to be intact
- */
-mmap_entry_t *mm_get_grub_mmap();
+void kmem_init(multiboot_info_t *info);
 
 /*
  * Get actual memory map
  * Use this function to get the
  * memory map
  */
-mmap_entry_t *mm_get_kernel_mmap();
-size_t mm_get_kmmap_size();
+mmap_entry_t *kmem_get_kernel_mmap();
+size_t kmem_get_kmmap_size();
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2

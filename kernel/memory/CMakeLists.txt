@@ -3,8 +3,8 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/memory)
 set(SRC
 	${SRCROOT}/mm.c
 	${SRCROOT}/mm.h
-	${SRCROOT}/malloc.c
-	${SRCROOT}/malloc.h
+	${SRCROOT}/alloc.c
+	${SRCROOT}/alloc.h
 )
 
 add_subdirectory(${SRCROOT}/paging)

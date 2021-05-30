@@ -15,7 +15,7 @@
  */
 
 #include "kmain.h"
-#include <memory/malloc.h>
+#include <memory/alloc.h>
 
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
@@ -40,7 +40,7 @@ void kmain(multiboot_info_t *info)
 
 	/* Init mm */
 	printk("\nMemory map:");
-	mm_init(info);
+	kmem_init(info);
 
 	/* Init IDT */
 	printk("\nIRQ info:");

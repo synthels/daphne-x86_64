@@ -52,7 +52,7 @@ static void dump_entry(mmap_entry_t *entry)
 	}
 }
 
-void mm_init(multiboot_info_t *info)
+void kmem_init(multiboot_info_t *info)
 {
 	mmap_entry_t *mmap = (mmap_entry_t *) info->mmap_addr;
 	mmap_begin = (mmap_entry_t *) info->mmap_addr;
@@ -65,7 +65,7 @@ void mm_init(multiboot_info_t *info)
 			mmap->type = MEMORY_INVALID;
 		}
 
-		/* Entry overlaps with grub/kernel code */
+		/* Entry overlaps with kernel code */
 		if (mmap->base_addr_low + mmap->length_low <= KERN_END) {
 			mmap->type = MEMORY_INVALID;
 		} else if ((mmap->base_addr_low <= KERN_END) && mmap->type == MEMORY_AVAILABLE) {
@@ -99,17 +99,5 @@ void mm_init(multiboot_info_t *info)
 	}
 }
 
-mmap_entry_t *mm_get_grub_mmap()
-{
-	return mmap_begin;
-}
-
-mmap_entry_t *mm_get_kernel_mmap()
-{
-	return kmmap;
-}
-
-size_t mm_get_kmmap_size()
-{
-	return kmmap_size;
-}
+mmap_entry_t *kmem_get_kernel_mmap() { return kmmap; }
+size_t kmem_get_kmmap_size() { return kmmap_size; }

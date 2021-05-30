@@ -17,29 +17,35 @@
 #ifndef LIBK_MALLOC
 #define LIBK_MALLOC
 
-#include <memory/malloc.h>
+#include <memory/alloc.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <kernel.h>
 
-struct malloc_ptr {
-	void *base_addr;
+#define MAX_PAGES 12 /* Max pages in bin */
+
+struct malloc_page {
+	void *base;
+	struct malloc_page *next_page; /* NULL if last page */
 	uint8_t free;
-	/* 
-	 * Set by free(). Used to differentiate between
-	 * pointers that have been allocated and
-	 * freed from pointers that have not been
-	 * allocated at all. Essentialy, it being
-	 * set means that base_addr can be trusted
-	 */
-	uint8_t freed;
-	uint32_t size;
-} __attribute__((packed));
+};
+
+typedef struct malloc_page malloc_page_t;
+
+struct malloc_bin {
+	struct malloc_bin *next_bin; /* NULL if last node */
+	struct malloc_page *first_page;
+	size_t page_size; /* This bin's page size */
+	size_t pages; /* Number of pages in bin */
+};
+
+typedef struct malloc_bin malloc_bin_t;
 
 /* Attempt to allocate n bytes (4 byte aligned) */
 /* Returns NULL if it fails */
-void *malloc(size_t n);
+void *kmalloc(size_t n);
 
 /* Frees a pointer returned by malloc */
-void free(void *ptr);
+void kfree(void *ptr);
 
 #endif
