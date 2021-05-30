@@ -60,6 +60,7 @@ void init_bin(malloc_bin_t *bin, size_t size)
 	for (int i = 0; i < MAX_PAGES - 1; i++) {
 		page = alloc_mem_aligned(sizeof(malloc_page_t));
 		page->base = alloc_mem_aligned(size); /* Allocate page */
+		page->free = 1;
 		page = page->next_page;
 	}
 	page->next_page = NULL;
@@ -108,6 +109,7 @@ malloc_page_t *add_page(malloc_bin_t *bin, size_t n)
 	}
 
 	page->next_page = alloc_mem_aligned(n);
+	page->next_page->free = 1;
 	return page;
 }
 
