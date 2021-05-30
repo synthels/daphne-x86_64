@@ -22,7 +22,7 @@
  * but if we don't have one, we have to create a new bin and allocate the page there
  * or allocate the page in an existing bin, if not all bins are full
  *
- * (All pages are 32 bit aligned)
+ * (All pages are 32 byte aligned)
  *
  * Our strategy in a diagram:
  *
@@ -101,7 +101,7 @@ malloc_page_t *add_page(malloc_bin_t *bin, size_t n)
 {
 	/* Silently ignore the deafening screams of the kernel */
 	if (bin->pages >= MAX_PAGES) return NULL;
-	if (bin->page_size != (n - 32)) return NULL;
+	if (bin->page_size != (n - 4)) return NULL;
 
 	malloc_page_t *page = bin->first_page;
 	for (size_t i = 0; i < bin->pages - 1; i++) {
@@ -118,8 +118,8 @@ malloc_page_t *add_page(malloc_bin_t *bin, size_t n)
    populate it */
 malloc_page_t *find_best_bin_and_alloc(size_t n)
 {
-	/* Add 32 bits to n */
-	n = kmem_align(n) + 32;
+	/* Add 4 bytes to n */
+	n = kmem_align(n) + 4;
 	malloc_bin_t *b = head_bin;
 	malloc_page_t *page;
 	for (size_t i = 0; i < hbin_size; i++) {
