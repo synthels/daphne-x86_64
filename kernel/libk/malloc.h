@@ -25,9 +25,9 @@
 #define MAX_PAGES 12 /* Max pages in bin */
 
 struct malloc_page {
-	void *base;
 	struct malloc_page *next_page; /* NULL if last page */
-	uint8_t free;
+	size_t free;
+	void *base;
 };
 
 typedef struct malloc_page malloc_page_t;

@@ -50,7 +50,7 @@
 static malloc_bin_t *head_bin = NULL;
 static size_t hbin_size = 0;
 
-/* Init bin EXPECTS BIN TO BE ALLOCATED */
+/* Init bin (EXPECTS BIN TO BE ALLOCATED) */
 void init_bin(malloc_bin_t *bin, size_t size)
 {
 	bin->page_size = kmem_align(size);
@@ -58,9 +58,12 @@ void init_bin(malloc_bin_t *bin, size_t size)
 	/* Fill bin */
 	malloc_page_t *page = bin->first_page;
 	for (int i = 0; i < MAX_PAGES - 1; i++) {
-		page = alloc_mem_aligned(sizeof(malloc_page_t));
-		page->base = alloc_mem_aligned(size); /* Allocate page */
-		page->free = 1;
+		malloc_page_t *node = alloc_mem_aligned(sizeof(malloc_page_t));
+		node->base = alloc_mem_aligned(size);
+		node->free = 1;
+
+		/* Copy page */
+		*page = *node;
 		page = page->next_page;
 	}
 	page->next_page = NULL;
@@ -156,11 +159,13 @@ void *kmalloc(size_t n)
 		bin = alloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(bin, n);
 		add_bin(bin);
+		bin->first_page->free = 0x0;
 		return bin->first_page->base;
 	}
 
 	/* TODO: memory checks */
 	/* TODO: include malloc info to page */
+	page->free = 0x0;
 	return page->base;
 }
 

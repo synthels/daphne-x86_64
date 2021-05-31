@@ -47,6 +47,8 @@ static uint32_t *alloc_mem(size_t n)
 	return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];
 }
 
+/* We align memory to 32 bytes for performance gains with bins
+   NOT because we like to waste memory (well, most of us don't) */
 size_t kmem_align(size_t n)
 {
 	/* Align n to 32 bits */
