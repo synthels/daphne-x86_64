@@ -27,7 +27,7 @@
 struct malloc_page {
 	struct malloc_page *next_page; /* NULL if last page */
 	size_t free;
-	void *base;
+	uint32_t *base;
 };
 
 typedef struct malloc_page malloc_page_t;

@@ -41,21 +41,29 @@
  * +------------------------------+
  *                         ^~~~ ptr returned
  *
- * TODO: kmalloc() might be failing after ~500000 allocations
- * check if that's the case and if so fix urgently
+ * TOmaybeDO: kmalloc() might be failing after ~500000 allocations
+ * check if that's the case and if so fix urgently (possibly resolved)
  */
 
 #include "malloc.h"
 
 static malloc_bin_t *head_bin = NULL;
-static size_t hbin_size = 0;
+
+/* Actual size is 0, but kmalloc doesn't bother to increment,
+   so initialising to 1 is a clean solution */
+static size_t hbin_size = 1;
 
 /* Init bin (EXPECTS BIN TO BE ALLOCATED) */
 void init_bin(malloc_bin_t *bin, size_t size)
 {
 	bin->page_size = kmem_align(size);
 
-	/* Fill bin */
+	/* Init first page */
+	bin->first_page = alloc_mem_aligned(sizeof(malloc_page_t));
+	bin->first_page->base = alloc_mem_aligned(size);
+	bin->first_page->free = 1;
+
+	/* Fill rest of bin */
 	malloc_page_t *page = bin->first_page;
 	for (int i = 0; i < MAX_PAGES - 1; i++) {
 		malloc_page_t *node = alloc_mem_aligned(sizeof(malloc_page_t));
@@ -63,7 +71,7 @@ void init_bin(malloc_bin_t *bin, size_t size)
 		node->free = 1;
 
 		/* Copy page */
-		*page = *node;
+		page->next_page = node;
 		page = page->next_page;
 	}
 	page->next_page = NULL;
@@ -76,7 +84,7 @@ void add_bin(malloc_bin_t *bin)
 	/* Add a new bin */
 	malloc_bin_t *b = head_bin;
 	for (size_t i = 0; i < hbin_size - 1; i++) {
-		b = head_bin->next_bin;
+		b = b->next_bin;
 	}
 	b->next_bin = bin;
 	++hbin_size;
@@ -86,34 +94,17 @@ void add_bin(malloc_bin_t *bin)
    populate it with a new page of size n */
 malloc_page_t *find_free_page_and_alloc(malloc_bin_t *bin, size_t n)
 {
-	if (bin->page_size < n) return NULL;
+	if ((n - 4) > bin->page_size) return NULL;
 	malloc_page_t *page = bin->first_page;
 	for (size_t i = 0; i < bin->pages; i++) {
 		if (page->free) {
-			page->free = 0;			
+			page->free = 0;
 			return page;
 		}
 		page = page->next_page;
 	}
 
 	return NULL;
-}
-
-/* Attempt to add page to bin */
-malloc_page_t *add_page(malloc_bin_t *bin, size_t n)
-{
-	/* Silently ignore the deafening screams of the kernel */
-	if (bin->pages >= MAX_PAGES) return NULL;
-	if (bin->page_size != (n - 4)) return NULL;
-
-	malloc_page_t *page = bin->first_page;
-	for (size_t i = 0; i < bin->pages - 1; i++) {
-		page = page->next_page;
-	}
-
-	page->next_page = alloc_mem_aligned(n);
-	page->next_page->free = 1;
-	return page;
 }
 
 /* Attempt to find non full bin and add page there,
@@ -128,15 +119,10 @@ malloc_page_t *find_best_bin_and_alloc(size_t n)
 	for (size_t i = 0; i < hbin_size; i++) {
 		/* Whether or not bin is full, try to fit page
 		   in existing free page */
-		if ((page = find_free_page_and_alloc(b, n)) == NULL) {
-			/* If we can't and bin is not full, add page */
-			if (b->pages < MAX_PAGES) {
-				return add_page(b, n);
-			}
-		} else {
+		if ((page = find_free_page_and_alloc(b, n)) != NULL) {
 			return page;
 		}
-		b = head_bin->next_bin;
+		b = b->next_bin;
 	}
 
 	return NULL;
@@ -153,19 +139,18 @@ void *kmalloc(size_t n)
 	malloc_bin_t *bin;
 	malloc_page_t *page;
 	if ((page = find_best_bin_and_alloc(n)) == NULL) {
-		/* We couldn't find a bin to add our page to
-		   nor could we find an existing page large enough
+		/* We couldn't find an existing page large enough
 		   to accommodate our page */
 		bin = alloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(bin, n);
 		add_bin(bin);
-		bin->first_page->free = 0x0;
+		bin->first_page->free = 0;
 		return bin->first_page->base;
 	}
 
 	/* TODO: memory checks */
 	/* TODO: include malloc info to page */
-	page->free = 0x0;
+	page->free = 0;
 	return page->base;
 }
 

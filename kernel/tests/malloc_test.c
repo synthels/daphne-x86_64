@@ -18,7 +18,7 @@
 
 void do_malloc_test(void)
 {
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < MALLOC_TESTS; i++) {
 		struct test_struct *ptr = kmalloc(sizeof(struct test_struct));
 		ptr->a = i;
 		ptr->b = i + 1;
@@ -26,16 +26,37 @@ void do_malloc_test(void)
 
 		struct test_struct *ptr1 = kmalloc(sizeof(struct test_struct));
 		ptr1->a = i;
-		ptr1->b = i + 3;
-		ptr1->c = i + 45;
+		ptr1->b = i + 2;
+		ptr1->c = i + 3;
+
+		struct test_struct *ptr2 = kmalloc(sizeof(struct test_struct));
+		ptr2->a = i;
+		ptr2->b = i + 3;
+		ptr2->c = i + 4;
+
+		struct test_struct *ptr3 = kmalloc(sizeof(struct test_struct));
+		ptr3->a = i;
+		ptr3->b = i + 4;
+		ptr3->c = i + 5;
 
 		/* Check if values are correct */
-		TEST_ASSERT(ptr->a == i, "Malloc test (a)");
-		TEST_ASSERT(ptr->b == i + 1, "Malloc test (b)");
-		TEST_ASSERT(ptr->c == i + 2, "Malloc test (c)");
+		TEST_ASSERT(ptr->a == i, "kmalloc() test (a1)");
+		TEST_ASSERT(ptr->b == i + 1, "kmalloc() test (b1)");
+		TEST_ASSERT(ptr->c == i + 2, "kmalloc() test (c1)");
 
-		TEST_ASSERT(ptr1->a == i, "Malloc test (a)");
-		TEST_ASSERT(ptr1->b == i + 3, "Malloc test (b)");
-		TEST_ASSERT(ptr1->c == i + 45, "Malloc test (c)");
+		TEST_ASSERT(ptr1->a == i, "kmalloc() test (a2)");
+		TEST_ASSERT(ptr1->b == i + 2, "kmalloc() test (b2)");
+		TEST_ASSERT(ptr1->c == i + 3, "kmalloc() test (c2)");
+
+		TEST_ASSERT(ptr2->a == i, "kmalloc() test (a3)");
+		TEST_ASSERT(ptr2->b == i + 3, "kmalloc() test (b3)");
+		TEST_ASSERT(ptr2->c == i + 4, "kmalloc() test (c3)");
+
+		TEST_ASSERT(ptr3->a == i, "kmalloc() test (a4)");
+		TEST_ASSERT(ptr3->b == i + 4, "kmalloc() test (b4)");
+		TEST_ASSERT(ptr3->c == i + 5, "kmalloc() test (c4)");
+
+		/* Allocate another arbitrarily sized page as a sanity check */
+		kmalloc(sizeof(struct test_struct) * 23);
 	}
 }
