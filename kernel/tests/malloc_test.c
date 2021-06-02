@@ -80,4 +80,5 @@ void do_malloc_test(void)
 	str[10] = 'D';
 
 	printk("If the following string: \"%s\" reads \"TEST PASSED\", kmalloc is probably working!", str);
+	kfree(str);
 }

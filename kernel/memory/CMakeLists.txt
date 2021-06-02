@@ -8,5 +8,6 @@ set(SRC
 )
 
 add_subdirectory(${SRCROOT}/paging)
+add_subdirectory(${SRCROOT}/heap)
 
 target_sources(kernel.bin PRIVATE ${SRC})

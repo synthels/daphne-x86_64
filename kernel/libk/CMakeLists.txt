@@ -5,8 +5,6 @@ set(SRC
 	${SRCROOT}/string.h
 	${SRCROOT}/stdlib.c
 	${SRCROOT}/stdlib.h
-	${SRCROOT}/malloc.c
-	${SRCROOT}/malloc.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})
