@@ -86,13 +86,13 @@ void kmem_init(multiboot_info_t *info)
 		/* Append entry to kmmap */
 		if (mmap->type != MEMORY_INVALID) {
 			if (mmap->type == MEMORY_AVAILABLE) {
-				total_ram += mmap->length_low;
 				regions++;
 			}
 			kmmap[kmmap_size] = *mmap;
 			kmmap_size++;
 		}
 
+		total_ram += mmap->length_low;
 		dump_entry(mmap);
 		/* Next entry */
 		mmap = (mmap_entry_t *) ((uint32_t) mmap + mmap->size + sizeof(mmap->size));
@@ -101,3 +101,4 @@ void kmem_init(multiboot_info_t *info)
 
 mmap_entry_t *kmem_get_kernel_mmap() { return kmmap; }
 size_t kmem_get_kmmap_size() { return kmmap_size; }
+uint32_t kmem_get_ram() { return total_ram; }

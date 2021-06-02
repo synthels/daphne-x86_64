@@ -35,12 +35,11 @@ typedef struct mmap_entry mmap_entry_t;
 void kmem_init(multiboot_info_t *info);
 
 /*
- * Get actual memory map
- * Use this function to get the
- * memory map
+ * mm getters
  */
 mmap_entry_t *kmem_get_kernel_mmap();
 size_t kmem_get_kmmap_size();
+uint32_t kmem_get_ram();
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2

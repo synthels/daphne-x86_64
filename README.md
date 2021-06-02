@@ -29,6 +29,8 @@ Then, to build the binary run
 cmake --build .
 ```
 
+If you then want to build a release binary, also run `strip --strip-debug kernel.bin`
+
 After all that, you should have a `kernel.bin` in the `build` directory. Together with the `boot` directory, you should be able to compile an ISO with `grub-mkrescue -o img-grub.iso iso` (After moving `kernel.bin` to the `iso/boot` directory). This has been tested on both Windows (under MinGW) and Linux.
 
 In order to clean the `build` directory, you can run the `clean.sh` script.

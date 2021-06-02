@@ -15,7 +15,6 @@
  */
 
 #include "kmain.h"
-#include <memory/alloc.h>
 
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
@@ -48,6 +47,8 @@ void kmain(multiboot_info_t *info)
 
 	/* Init all drivers */
 	init_drivers();
+
+	printk("\nWelcome! %uiMiB of RAM detected in total!",  kmem_get_ram() / 1048576);
 
 	#ifdef BUILD_TESTS
 		/* Start tests */
