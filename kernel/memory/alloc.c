@@ -27,11 +27,11 @@ static uint32_t *alloc_mem(size_t n, size_t begin)
 	acquire_mutex(&alloc_mutex);
 	mmap_entry_t *mmap = kmem_get_kernel_mmap();
 
-	size_t i = begin;
+	uint32_t i = begin;
 	for (; i < kmem_get_kmmap_size(); i++) {
 		if (mmap[i].type == MEMORY_AVAILABLE) {
 			/* See how much of this entry we have used */
-			if (mmap->length_low - mmap_offs[i] >= n) {
+			if (mmap[i].length_low - mmap_offs[i] >= n) {
 				mmap_offs[i] += n;
 				release_mutex(&alloc_mutex);
 				return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];

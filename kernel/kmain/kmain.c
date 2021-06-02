@@ -33,13 +33,12 @@ void kmain(multiboot_info_t *info)
 		panic("couldn't get memory map!");
 	}
 
-	/* Init page directory */
-	/* TODO: Set up proper id paging */
-	/* init_page_directory(); */
-
 	/* Init mm */
 	printk("\nMemory map:");
 	kmem_init(info);
+
+	/* Init page directory */
+	init_paging();
 
 	/* Init IDT */
 	printk("\nIRQ info:");

@@ -11,6 +11,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
+ * TODO: Use kmalloc() to allocate PTs
+ *
  * Paging
  */
 
@@ -25,7 +27,7 @@ extern uint32_t kstart;
 extern uint32_t kend;
 
 extern void load_page_dir(uint32_t *);
-extern void init_paging(void);
+extern void set_paging(void);
 
 static void id_map(uint32_t *first_pte, uint32_t from, int size)
 {
@@ -47,7 +49,7 @@ void append_page_table(uint32_t *table)
 	page_directory[page_table_index++] = ((unsigned int) table) | 3;
 }
 
-void init_page_directory(void)
+void init_paging(void)
 {
 	for(int i = 0; i < 1024; i++) {
 		/* supervisor, r&w, not present */
@@ -56,5 +58,5 @@ void init_page_directory(void)
 	id_map(page_table, 0x0, KERN_END);
 	append_page_table(page_table);
 	load_page_dir(page_directory);
-	init_paging();
+	set_paging();
 }

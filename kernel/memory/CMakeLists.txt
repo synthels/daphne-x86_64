@@ -5,9 +5,10 @@ set(SRC
 	${SRCROOT}/mm.h
 	${SRCROOT}/alloc.c
 	${SRCROOT}/alloc.h
+	${SRCROOT}/paging.c
+	${SRCROOT}/paging.h
 )
 
-add_subdirectory(${SRCROOT}/paging)
 add_subdirectory(${SRCROOT}/heap)
 
 target_sources(kernel.bin PRIVATE ${SRC})

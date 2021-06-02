@@ -20,6 +20,6 @@
 #include <memory/mm.h>
 
 /* Init page directory */
-void init_page_directory(void);
+void init_paging(void);
 
 #endif
