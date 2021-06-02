@@ -22,29 +22,33 @@ static uint32_t mmap_offs[256];
 /* alloc_mem mutex lock */
 static mutex_t alloc_mutex = 0;
 
-static uint32_t *alloc_mem(size_t n)
+static uint32_t *alloc_mem(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
-	int entry_found = 0;
-	size_t i = 0;
 	mmap_entry_t *mmap = kmem_get_kernel_mmap();
 
+	size_t i = begin;
 	for (; i < kmem_get_kmmap_size(); i++) {
 		if (mmap[i].type == MEMORY_AVAILABLE) {
 			/* See how much of this entry we have used */
 			if (mmap->length_low - mmap_offs[i] >= n) {
-				entry_found = 1;
 				mmap_offs[i] += n;
-				break;
+				release_mutex(&alloc_mutex);
+				return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];
+			} else {
+				/* If this entry runs out, try going to the next */
+				if (i < 255) {
+					release_mutex(&alloc_mutex);
+					return alloc_mem(n, i + 1);
+				} else {
+					break;
+				}
 			}
 		}
 	}
 
-	if (!entry_found)
-		panic("alloc_mem: ran out of memory!");
-
-	release_mutex(&alloc_mutex);
-	return (uint32_t *) mmap[i].base_addr_low + mmap_offs[i];
+	/* Just so gcc can shut up */
+	return NULL;
 }
 
 /* We align memory to 32 bytes for performance gains with bins
@@ -65,5 +69,5 @@ size_t kmem_align(size_t n)
 
 void *alloc_mem_aligned(size_t n)
 {	
-	return (void *) alloc_mem(kmem_align(n));
+	return (void *) alloc_mem(kmem_align(n), 0);
 }

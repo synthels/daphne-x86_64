@@ -35,7 +35,7 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15
 };
 
-static const int VID_MEM = 0xB8000;
+static const int VID_MEM = 0xb8000;
 
 /* VGA width + height */
 static const size_t VGA_WIDTH = 80;
