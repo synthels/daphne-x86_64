@@ -58,5 +58,26 @@ void do_malloc_test(void)
 
 		/* Allocate another arbitrarily sized page as a sanity check */
 		kmalloc(sizeof(struct test_struct) * 23);
+
+		kfree(ptr);
+		kfree(ptr1);
+		kfree(ptr2);
+		kfree(ptr3);
 	}
+
+	/* String test */
+	char *str = kmalloc(11);
+	str[0] = 'T';
+	str[1] = 'E';
+	str[2] = 'S';
+	str[3] = 'T';
+	str[4] = ' ';
+	str[5] = 'P';
+	str[6] = 'A';
+	str[7] = 'S';
+	str[8] = 'S';
+	str[9] = 'E';
+	str[10] = 'D';
+
+	printk("If the following string: \"%s\" reads \"TEST PASSED\", kmalloc is probably working!", str);
 }

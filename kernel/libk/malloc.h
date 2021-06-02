@@ -26,7 +26,7 @@
 
 struct malloc_page {
 	struct malloc_page *next_page; /* NULL if last page */
-	size_t free;
+	uint8_t free;
 	uint32_t *base;
 };
 
@@ -46,6 +46,7 @@ typedef struct malloc_bin malloc_bin_t;
 void *kmalloc(size_t n);
 
 /* Frees a pointer returned by malloc */
-void kfree(void *ptr);
+/* Returns NULL if it fails */
+void *kfree(void *ptr);
 
 #endif

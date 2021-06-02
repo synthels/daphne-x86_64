@@ -43,6 +43,8 @@
  *
  * TOmaybeDO: kmalloc() might be failing after ~500000 allocations
  * check if that's the case and if so fix urgently (possibly resolved)
+ *
+ * TODO: Optimize kfree (maybe store bin pointer in each page?)
  */
 
 #include "malloc.h"
@@ -128,6 +130,20 @@ malloc_page_t *find_best_bin_and_alloc(size_t n)
 	return NULL;
 }
 
+/* Frees a single page from a bin */
+void *free_page(malloc_bin_t *bin, void *base)
+{
+	malloc_page_t *page = bin->first_page;
+	for (size_t i = 0; i < bin->pages; i++) {
+		if (!(page->free) && (page->base == base)) {
+			page->free = 1;
+			return page->base;
+		}
+		page = page->next_page;
+	}
+	return NULL;
+}
+
 void *kmalloc(size_t n)
 {
 	/* First call, init bin */
@@ -145,17 +161,34 @@ void *kmalloc(size_t n)
 		init_bin(bin, n);
 		add_bin(bin);
 		bin->first_page->free = 0;
-		return bin->first_page->base;
+		/* Set malloc size right behind pointer returned */
+		*(bin->first_page->base) = kmem_align(n);
+		return (bin->first_page->base + 1);
 	}
 
-	/* TODO: memory checks */
-	/* TODO: include malloc info to page */
 	page->free = 0;
-	return page->base;
+	*(page->base) = kmem_align(n);
+	return (page->base + 1);
 }
 
-void kfree(void *ptr)
+void *kfree(void *ptr)
 {
-	UNUSED(ptr);
-	/* TODO: implement kfree */
+	/* Get size of allocated object */
+	uint32_t malloc_size = *((uint32_t *) ptr - 1);
+	malloc_bin_t *b = head_bin;
+	void *page_base;
+	for (size_t i = 0; i < hbin_size; i++) {
+		/* Only bother searching bins with the 
+		   same size as the object */
+		if (b->page_size == malloc_size) {
+			/* Correct bin is found */
+			if ((page_base = free_page(b, (uint32_t *) ptr - 1)) != NULL) {
+				return page_base;
+			}
+		}
+		b = b->next_bin;
+	}
+
+	/* Pointer was not allocated by kmalloc() */
+	return NULL;
 }
