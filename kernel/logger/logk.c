@@ -24,7 +24,7 @@ void logk(char *msg)
 		case TTY_MODE:
 			printk("[%i] %s", ticks, msg);
 			break;
-		case GFX_MODE:
+		case USR_MODE:
 			/* Redirect to a log file once we have an fs... */
 			break;
 	}

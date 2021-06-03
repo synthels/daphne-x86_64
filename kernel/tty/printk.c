@@ -43,7 +43,7 @@ int printk(const char *fmt, ...)
  * Not too bad, right?
  * FIXME: Using more than one %i can crash the system?
  */
-int vsprintf(char **buf, va_list args)
+ERRCODE vsprintf(char **buf, va_list args)
 {
 	const char *fmt = va_arg(args, char *);
 	char c;
@@ -103,5 +103,5 @@ int vsprintf(char **buf, va_list args)
 	}
 
 	*buf = printk_buf;
-	return EOK;
+	return NOERR;
 }

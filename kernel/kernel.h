@@ -14,45 +14,80 @@
  * Symbols used throughout the kernel
  */
 
-#ifndef KERNEL_
-#define KERNEL_
+#ifndef KERNEL
+#define KERNEL
 
 #include <stddef.h>
 #include <stdint.h>
 
+/**
+ * Kernel version string
+ *   fmt: vMajor.minor-Codename 
+ */
 #define KERNEL_VERSION_STRING "v1.0-Alpha"
 
+/**
+ * x86 registers struct
+ */
 struct regs {
     uint32_t gs, fs, es, ds;
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
     uint32_t int_no, err_code;
     uint32_t eip, cs, eflags, useresp, ss;
 };
-
 typedef struct regs regs_t;
 
+/**
+ * Mark a symbol unused
+ */
 #define UNUSED(x) (void) (x)
-#define WORD sizeof(size_t)
 
-/* Invalid argument error */
-#define EINVAL -12
-/* OK "Error" */
-#define EOK -13
+/**
+ * ERRCODE
+ *   brief: function return type 
+ */
+typedef int ERRCODE;
 
-/* Kernel mode getters/setters */
+/**
+ * EINVAL
+ *   brief: invalid argument error
+ */
+#define EINVAL -1
+
+/**
+ * NOERR
+ *   brief: No error
+ */
+#define NOERR 0
+
+/**
+ * set_kernel_mode
+ *   brief: Set current kernel mode
+ *   parameters:
+ *     - mode: new kernel mode
+ */
 void set_kernel_mode(int mode);
+
+/**
+ * set_kernel_mode
+ *   brief: Get current kernel mode
+ */
 int get_kernel_mode(void);
 
-/*
- * TTY mode works only with a VGA text mode
- * and no user input
+/**
+ * TTY_MODE
+ *   brief: tty mode puts the kernel in a state where
+ *          it can only write to the screen, but not
+ *          accept user input.
  */
-#define TTY_MODE 0x10
+#define TTY_MODE 1
 
-/*
- * GFX mode supports user input
- * and may or may not have set up a proper video mode
+/**
+ * USR_MODE
+ *   brief: user mode puts the kernel in a state where
+ *          it can perform all normal 
+ *          user I/O operations.
  */
-#define GFX_MODE 0x11
+#define USR_MODE 2
 
 #endif
