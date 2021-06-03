@@ -101,4 +101,4 @@ void kmem_init(multiboot_info_t *info)
 
 mmap_entry_t *kmem_get_kernel_mmap() { return kmmap; }
 size_t kmem_get_kmmap_size() { return kmmap_size; }
-uint32_t kmem_get_ram() { return total_ram; }
+uint32_t kmem_get_installed_memory() { return total_ram; }

@@ -39,7 +39,7 @@ void kmem_init(multiboot_info_t *info);
  */
 mmap_entry_t *kmem_get_kernel_mmap();
 size_t kmem_get_kmmap_size();
-uint32_t kmem_get_ram();
+uint32_t kmem_get_installed_memory();
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2

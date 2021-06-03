@@ -47,7 +47,7 @@ void kmain(multiboot_info_t *info)
 	/* Init all drivers */
 	init_drivers();
 
-	printk("\nWelcome! %uiMiB of RAM detected in total!",  (kmem_get_ram() / 1048576) + 2);
+	printk("\nWelcome! %uiMiB of RAM detected in total!",  (kmem_get_installed_memory() / 1048576) + 2);
 
 	#ifdef BUILD_TESTS
 		/* Start tests */

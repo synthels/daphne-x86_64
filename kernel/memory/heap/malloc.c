@@ -109,8 +109,7 @@ malloc_page_t *find_free_page_and_alloc(malloc_bin_t *bin, size_t n)
 	return NULL;
 }
 
-/* Attempt to find non full bin and add page there,
-   or find a large enough existing free page and
+/* Attempt to find a large enough existing free page and
    populate it */
 malloc_page_t *find_best_bin_and_alloc(size_t n)
 {
@@ -119,8 +118,7 @@ malloc_page_t *find_best_bin_and_alloc(size_t n)
 	malloc_bin_t *b = head_bin;
 	malloc_page_t *page;
 	for (size_t i = 0; i < hbin_size; i++) {
-		/* Whether or not bin is full, try to fit page
-		   in existing free page */
+		/* Try to fit page in existing free page */
 		if ((page = find_free_page_and_alloc(b, n)) != NULL) {
 			return page;
 		}
