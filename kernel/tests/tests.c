@@ -18,5 +18,8 @@
 
 void do_tests(void)
 {
+	uint32_t time;
 	do_malloc_test();
+	pit_get_ticks(&time);
+	printk("All tests passed succesfully (in %ui ticks)", time);
 }
