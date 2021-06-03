@@ -28,4 +28,10 @@ struct test_struct {
 	int c;
 };
 
+struct test_struct1 {
+	long a;
+	long b;
+	int c;
+};
+
 #endif

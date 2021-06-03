@@ -18,6 +18,11 @@
 
 void do_malloc_test(void)
 {
+	struct test_struct1 *saved_ptr = kmalloc(sizeof(struct test_struct1));
+	saved_ptr->a = 123;
+	saved_ptr->b = 124;
+	saved_ptr->c = 100024;
+
 	for (int i = 0; i < MALLOC_TESTS; i++) {
 		struct test_struct *ptr = kmalloc(sizeof(struct test_struct));
 		ptr->a = i;
@@ -78,6 +83,11 @@ void do_malloc_test(void)
 	str[8] = 'S';
 	str[9] = 'E';
 	str[10] = 'D';
+
+	TEST_ASSERT(saved_ptr->a == 123, "kmalloc() test (saved_ptr)");
+	TEST_ASSERT(saved_ptr->b == 124, "kmalloc() test (saved_ptr)");
+	TEST_ASSERT(saved_ptr->c == 100024, "kmalloc() test (saved_ptr)");
+	kfree(saved_ptr);
 
 	printk("If the following string: \"%s\" reads \"TEST PASSED\", kmalloc is probably working!", str);
 	kfree(str);

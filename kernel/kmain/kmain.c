@@ -37,8 +37,8 @@ void kmain(multiboot_info_t *info)
 	printk("\nMemory map:");
 	kmem_init(info);
 
-	/* Init page directory */
-	init_paging();
+	/* Init page directory (TODO: ID map all of memory) */
+	/* init_paging(); */
 
 	/* Init IDT */
 	printk("\nIRQ info:");
