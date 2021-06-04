@@ -11,52 +11,59 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * TODO: Use kmalloc() to allocate PTs
+ * TODO: Recursive mapping?
  *
  * Paging
  */
 
 #include "paging.h"
 
-static uint32_t page_directory[1024] __attribute__((aligned(4096)));
-static uint32_t page_table[1024] __attribute__((aligned(4096)));
-static int page_table_index = 0;
+static pdir_t *page_directory;
 
 /* From linker.ld */
 extern uint32_t kstart;
 extern uint32_t kend;
 
 extern void load_page_dir(uint32_t *);
-extern void set_paging(void);
+extern void enter_paging(void);
 
 static void id_map(uint32_t *first_pte, uint32_t from, int size)
 {
 	from = from & 0xfffff000;
-	for(; size>0; from += 4096, size -= 4096, first_pte++){
+	for(; size > 0; from += 4096, size -= 4096, first_pte++){
 		*first_pte = from | 1;
 	}
 }
 
-void append_page_table(uint32_t *table)
+void add_pte(uint32_t *table)
 {
-	/*
-	 * We should just crash on real hw
-	 * in case of a badly aligned PT, but just in case we do not...
-	 */
+	static int pte_index = 0;
 	if (((uint32_t) table) % 4096 != 0) {
 		panic("page table is not 4KiB aligned!");
 	}
-	page_directory[page_table_index++] = ((unsigned int) table) | 3;
+	page_directory[pte_index++] = ((unsigned int) table) | 3;
+}
+
+void kbrk(size_t n)
+{
+	static uint32_t paged_high = 0;
+	pte_t *page_table = alloc_mem_page_aligned(1024);
+	id_map(page_table, paged_high, paged_high + n);
+	add_pte(page_table);
+	paged_high += n;
 }
 
 void init_paging(void)
 {
+	/* Allocate page dir */
+	page_directory = alloc_mem_page_aligned(1024);
 	for(int i = 0; i < 1024; i++) {
 		/* supervisor, r&w, not present */
 		page_directory[i] = 0x00000002;
 	}
-	id_map(page_table, 0x0, KERN_END);
-	append_page_table(page_table);
+
+	/* Extend memory space just enough so that we don't crash */
+	kbrk(KERN_END);
 	load_page_dir(page_directory);
-	set_paging();
+	enter_paging();
 }

@@ -75,6 +75,12 @@ void set_kernel_mode(int mode);
 int get_kernel_mode(void);
 
 /**
+ * kernel_hang
+ *   brief: hangs the kernel
+ */
+void kernel_hang(void);
+
+/**
  * TTY_MODE
  *   brief: tty mode puts the kernel in a state where
  *          it can only write to the screen, but not

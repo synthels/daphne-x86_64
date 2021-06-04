@@ -21,6 +21,8 @@
 
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) &kend
+#define PAGE_SIZE 4096
+#define PAGES_END KERN_END + PAGE_SIZE * 100
 
 struct mmap_entry {
 	uint32_t size;

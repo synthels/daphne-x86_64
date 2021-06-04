@@ -22,6 +22,10 @@ static uint32_t mmap_offs[256];
 /* alloc_mem mutex lock */
 static mutex_t alloc_mutex = 0;
 
+/* From linker.ld */
+extern uint32_t kstart;
+extern uint32_t kend;
+
 static uint32_t *alloc_mem(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
@@ -70,4 +74,11 @@ size_t kmem_align(size_t n)
 void *alloc_mem_aligned(size_t n)
 {	
 	return (void *) alloc_mem(kmem_align(n), 0);
+}
+
+void *alloc_mem_page_aligned(size_t n)
+{
+	const size_t mask = PAGE_SIZE - 1;
+	const uintptr_t mem = (uintptr_t) alloc_mem(n + PAGE_SIZE, 0);
+	return (void *) ((mem + mask) & ~mask);
 }

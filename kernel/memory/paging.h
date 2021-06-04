@@ -19,7 +19,21 @@
 #include <logger/panic.h>
 #include <memory/mm.h>
 
-/* Init page directory */
+#include "alloc.h"
+
+typedef uint32_t pte_t;
+typedef uint32_t pdir_t;
+
+/**
+ * init_paging
+ *   brief: Initialise paging
+ */
 void init_paging(void);
+
+/**
+ * kbrk
+ *   brief: extend kernel memory space by n
+ */
+void kbrk(size_t n);
 
 #endif

@@ -44,5 +44,5 @@ void panic(char *msg)
 	print_border();
 
 	/* TODO: Add debug info here */
-	for(;;);
+	kernel_hang();
 }

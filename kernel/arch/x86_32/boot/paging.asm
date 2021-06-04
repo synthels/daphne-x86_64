@@ -15,7 +15,7 @@
 ;;
 
 global load_page_dir
-global set_paging
+global enter_paging
 
 load_page_dir:
 	push ebp
@@ -26,7 +26,7 @@ load_page_dir:
 	pop ebp
 	ret
 
-set_paging:
+enter_paging:
 	push ebp
 	mov ebp, esp
 	mov eax, cr0
