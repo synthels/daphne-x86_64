@@ -7,8 +7,8 @@ set(SRC
 	${SRCROOT}/alloc.h
 	${SRCROOT}/paging.c
 	${SRCROOT}/paging.h
+	${SRCROOT}/malloc.c
+	${SRCROOT}/malloc.h
 )
-
-add_subdirectory(${SRCROOT}/heap)
 
 target_sources(kernel.bin PRIVATE ${SRC})

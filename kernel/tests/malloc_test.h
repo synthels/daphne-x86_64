@@ -15,7 +15,7 @@
 #ifndef MALLOC_TEST
 #define MALLOC_TEST
 
-#include <memory/heap/malloc.h>
+#include <memory/malloc.h>
 #include "tests.h"
 
 #define MALLOC_TESTS 50000
