@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef MALLOC
-#define MALLOC
+#ifndef WM_ALLOC
+#define WM_ALLOC
 
 #include <stddef.h>
 #include <stdint.h>
@@ -27,9 +27,9 @@
 size_t kmem_align(size_t n);
 
 /* Allocate n bytes (aligns n to 32 bytes) */
-void *alloc_mem_aligned(size_t n);
+void *wm_alloc_mem_aligned(size_t n);
 
 /* Allocate n bytes (alignes ptr to page size) */
-void *alloc_mem_page_aligned(size_t n);
+void *wm_alloc_mem_page_aligned(size_t n);
 
 #endif

@@ -61,15 +61,15 @@ void init_bin(malloc_bin_t *bin, size_t size)
 	bin->page_size = kmem_align(size);
 
 	/* Init first page */
-	bin->first_page = alloc_mem_aligned(sizeof(malloc_page_t));
-	bin->first_page->base = alloc_mem_aligned(size);
+	bin->first_page = wm_alloc_mem_aligned(sizeof(malloc_page_t));
+	bin->first_page->base = wm_alloc_mem_aligned(size);
 	bin->first_page->free = 1;
 
 	/* Fill rest of bin */
 	malloc_page_t *page = bin->first_page;
 	for (int i = 0; i < MAX_PAGES - 1; i++) {
-		malloc_page_t *node = alloc_mem_aligned(sizeof(malloc_page_t));
-		node->base = alloc_mem_aligned(size);
+		malloc_page_t *node = wm_alloc_mem_aligned(sizeof(malloc_page_t));
+		node->base = wm_alloc_mem_aligned(size);
 		node->free = 1;
 
 		/* Copy page */
@@ -146,7 +146,7 @@ void *kmalloc(size_t n)
 {
 	/* First call, init bin */
 	if (head_bin == NULL) {
-		head_bin = alloc_mem_aligned(sizeof(malloc_bin_t));
+		head_bin = wm_alloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(head_bin, n);
 	}
 
@@ -155,7 +155,7 @@ void *kmalloc(size_t n)
 	if ((page = find_best_bin_and_alloc(n)) == NULL) {
 		/* We couldn't find an existing page large enough
 		   to accommodate our page */
-		bin = alloc_mem_aligned(sizeof(malloc_bin_t));
+		bin = wm_alloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(bin, n);
 		add_bin(bin);
 		bin->first_page->free = 0;

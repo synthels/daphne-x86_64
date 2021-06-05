@@ -47,7 +47,7 @@ void add_pte(uint32_t *table)
 void kbrk(size_t n)
 {
 	static uint32_t paged_high = 0;
-	pte_t *page_table = alloc_mem_page_aligned(1024);
+	pte_t *page_table = wm_alloc_mem_page_aligned(1024);
 	id_map(page_table, paged_high, paged_high + n);
 	add_pte(page_table);
 	paged_high += n;
@@ -56,7 +56,7 @@ void kbrk(size_t n)
 void init_paging(void)
 {
 	/* Allocate page dir */
-	page_directory = alloc_mem_page_aligned(1024);
+	page_directory = wm_alloc_mem_page_aligned(1024);
 	for(int i = 0; i < 1024; i++) {
 		/* supervisor, r&w, not present */
 		page_directory[i] = 0x00000002;

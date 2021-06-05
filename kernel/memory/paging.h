@@ -19,7 +19,7 @@
 #include <logger/panic.h>
 #include <memory/mm.h>
 
-#include "alloc.h"
+#include "watermark.h"
 
 typedef uint32_t pte_t;
 typedef uint32_t pdir_t;

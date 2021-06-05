@@ -14,13 +14,14 @@
  * Malloc
  */
 
-#ifndef LIBK_MALLOC
-#define LIBK_MALLOC
+#ifndef MALLOC
+#define MALLOC
 
-#include <memory/alloc.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <kernel.h>
+
+#include "watermark.h"
 
 #define MAX_PAGES 12 /* Max pages in bin */
 
