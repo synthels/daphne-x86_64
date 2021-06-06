@@ -1,4 +1,4 @@
-![Where is the logo?](https://github.com/synthels/phiOS/blob/master/.github/logo.png)
+<img align="center" src="https://github.com/synthels/phiOS/blob/master/.github/banner.png" alt="the logo is gone!">
 # phiOS
 A Unix-like x86-32 (and hopefully x86-64 in the future) operating system.
 
