@@ -5,8 +5,6 @@ set(SRC
 	${SRCROOT}/mm.h
 	${SRCROOT}/watermark.c
 	${SRCROOT}/watermark.h
-	${SRCROOT}/paging.c
-	${SRCROOT}/paging.h
 	${SRCROOT}/malloc.c
 	${SRCROOT}/malloc.h
 )

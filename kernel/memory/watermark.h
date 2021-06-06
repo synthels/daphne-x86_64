@@ -21,11 +21,6 @@
 #include <memory/mm.h>
 #include <mutex.h>
 
-#define PAGE_SIZE 4096
-
-/* Return n aligned to 32 bits */
-size_t kmem_align(size_t n);
-
 /* Allocate n bytes (aligns n to 32 bytes) */
 void *wm_alloc_mem_aligned(size_t n);
 

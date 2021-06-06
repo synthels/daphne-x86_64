@@ -38,7 +38,7 @@ void kmain(multiboot_info_t *info)
 	kmem_init(info);
 
 	/* Init paging */
-	init_paging();
+	mm_init_paging();
 
 	/* Init IDT */
 	printk("\nIRQ info:");
@@ -51,8 +51,6 @@ void kmain(multiboot_info_t *info)
 
 	#ifdef BUILD_TESTS
 		/* Start tests */
-		/* TODO: Malloc tests do not work due to
-		   the kernel memory space being too short */
 		do_tests();
 	#endif
 

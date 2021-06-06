@@ -26,7 +26,6 @@
 #include <drivers/time/sleep.h>
 #include <drivers/driver.h>
 #include <memory/mm.h>
-#include <memory/paging.h>
 
 #include <tty/printk.h>
 #include <logger/panic.h>

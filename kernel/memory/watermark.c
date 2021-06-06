@@ -53,22 +53,6 @@ static uint32_t *wm_alloc(size_t n, size_t begin)
 	return NULL;
 }
 
-/* We align memory to 32 bytes for performance gains with bins
-   NOT because we like to waste memory (well, most of us don't) */
-size_t kmem_align(size_t n)
-{
-	/* Align n to 32 bits */
-	if (n % 32 != 0) {
-		if (n <= 32) {
-			n = 32;
-		} else {
-			n = 32 * ((n / 32) + 1);
-		}
-	}
-
-	return n;
-}
-
 void *wm_alloc_mem_aligned(size_t n)
 {	
 	return (void *) wm_alloc(kmem_align(n), 0);

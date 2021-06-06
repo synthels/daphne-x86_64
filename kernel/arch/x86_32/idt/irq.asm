@@ -1,5 +1,3 @@
-; IRQ dummy handlers
-
 global irq0
 global irq1
 global _syscall

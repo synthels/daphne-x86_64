@@ -18,11 +18,17 @@
 #include <stdint.h>
 #include <tty/printk.h>
 #include <multiboot.h>
+#include <logger/panic.h>
+
+#include "watermark.h"
 
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) &kend
 #define PAGE_SIZE 4096
-#define PAGES_END KERN_END + PAGE_SIZE * 100
+
+#define fast_ceil(x, y) ((long long) x + y - 1) / y
+#define kmem_align(n) 32 * fast_ceil(n, 32)
+#define kmem_page_align(n) PAGE_SIZE * fast_ceil(n, PAGE_SIZE)
 
 struct mmap_entry {
 	uint32_t size;
@@ -33,14 +39,38 @@ struct mmap_entry {
 
 typedef struct mmap_entry mmap_entry_t;
 
-/* Init mm */
+/* Paging types */
+typedef uint32_t pte_t;
+typedef uint32_t pdir_t;
+
+/**
+ * kmem_init
+ *   brief: init mm  
+ */
 void kmem_init(multiboot_info_t *info);
 
+/**
+ * mm_init_paging
+ *   brief: init legacy paging
+ */
+void mm_init_paging(void);
+
 /*
- * mm getters
+ * kmem_get_kernel_mmap
+ *   brief: get kernel memory map
  */
 mmap_entry_t *kmem_get_kernel_mmap();
+
+/**
+ * kmem_get_kmmap_size
+ *   brief: get kernel memory map size
+ */
 size_t kmem_get_kmmap_size();
+
+/**
+ * kmem_get_installed_memory
+ *   brief: get total installed memory in bytes
+ */
 uint32_t kmem_get_installed_memory();
 
 #define MEMORY_AVAILABLE 1
