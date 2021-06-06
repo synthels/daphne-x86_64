@@ -22,11 +22,11 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
+	printk("phiOS %s", KERNEL_VERSION_STRING);
+
 	/* Init IDT */
 	printk("\nIRQ info:");
 	init_idt();
-
-	printk("phiOS %s", KERNEL_VERSION_STRING);
 
 	/* Set kernel mode */
 	set_kernel_mode(TTY_MODE);
