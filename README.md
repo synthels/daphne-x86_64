@@ -1,6 +1,7 @@
 <p align="center">
-![the logo is gone!](https://github.com/synthels/phiOS/blob/master/.github/banner.png)
+	<img src="https://github.com/synthels/phiOS/blob/master/.github/banner.png">
 </p>
+
 # phiOS
 A Unix-like x86-32 (and hopefully x86-64 in the future) operating system.
 
