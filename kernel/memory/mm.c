@@ -101,8 +101,8 @@ void kmem_init(multiboot_info_t *info)
 		mmap = (mmap_entry_t *) ((uint32_t) mmap + mmap->size + sizeof(mmap->size));
 	}
 
-	/* You expect this shit to run with less than 32mb ram? */
-	if (total_ram <= MiB(32)) {
+	/* You expect this shit to run with less than 5mb ram? */
+	if (total_ram <= MiB(5)) {
 		panic("Here's a nickel kid. Go buy yourself a real computer");
 	}
 }
