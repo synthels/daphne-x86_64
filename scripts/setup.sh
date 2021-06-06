@@ -17,9 +17,10 @@ fi
 
 # Overwrite grub.cfg
 echo "default=0
-timeout=15
+timeout=0
 
 menuentry \"phiOS\" {
+	echo -n \"Loading kernel...\"
 	multiboot /boot/kernel.bin
 	boot
 }" > $BUILD_DIR/iso/boot/grub/grub.cfg
