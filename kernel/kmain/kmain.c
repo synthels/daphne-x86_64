@@ -22,6 +22,10 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
+	/* Init IDT */
+	printk("\nIRQ info:");
+	init_idt();
+
 	printk("phiOS %s", KERNEL_VERSION_STRING);
 
 	/* Set kernel mode */
@@ -38,11 +42,7 @@ void kmain(multiboot_info_t *info)
 	kmem_init(info);
 
 	/* Init paging */
-	mm_init_paging();
-
-	/* Init IDT */
-	printk("\nIRQ info:");
-	init_idt();
+	kmem_init_paging();
 
 	/* Init all drivers */
 	init_drivers();

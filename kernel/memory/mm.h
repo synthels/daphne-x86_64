@@ -50,10 +50,10 @@ typedef uint32_t pdir_t;
 void kmem_init(multiboot_info_t *info);
 
 /**
- * mm_init_paging
+ * kmem_init_paging
  *   brief: init legacy paging
  */
-void mm_init_paging(void);
+void kmem_init_paging(void);
 
 /*
  * kmem_get_kernel_mmap

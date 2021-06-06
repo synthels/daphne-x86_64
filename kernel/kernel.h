@@ -61,6 +61,13 @@ typedef int ERRCODE;
 #define NOERR 0
 
 /**
+ * kern_queue_calls
+ *   brief: Calls f1 before f2 if cond is true,
+ *          calls f1 after f2 otherwise
+ */
+#define kern_queue_calls(f1, f2, cond) if (cond) { f1; f2; } else { f2; f1; }
+
+/**
  * set_kernel_mode
  *   brief: Set current kernel mode
  *   parameters:

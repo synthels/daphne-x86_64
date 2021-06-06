@@ -92,7 +92,7 @@ void kmem_init(multiboot_info_t *info)
 				regions++;
 			}
 			kmmap[kmmap_size] = *mmap;
-			kmmap_size++;
+			++kmmap_size;
 		}
 
 		total_ram += mmap->length_low;
@@ -101,7 +101,7 @@ void kmem_init(multiboot_info_t *info)
 		mmap = (mmap_entry_t *) ((uint32_t) mmap + mmap->size + sizeof(mmap->size));
 	}
 
-	/* You expect this shit to run with less than 5mb ram? */
+	/* You expect this shit to run with less than 5clmb ram? */
 	if (total_ram <= MiB(5)) {
 		panic("Here's a nickel kid. Go buy yourself a real computer");
 	}
@@ -126,7 +126,7 @@ void kmem_map_pages(uint32_t *first_pte, uint32_t from, int size)
 	}
 }
 
-uint32_t kmem_extend_address_space(size_t n)
+uint32_t kmem_extend_address_space_4mib(size_t n)
 {
 	static uint32_t paged_high = 0;
 	/* Allocate new table */
@@ -138,7 +138,23 @@ uint32_t kmem_extend_address_space(size_t n)
 	return paged_high;
 }
 
-void mm_init_paging(void)
+void kmem_extend_address_space(size_t n)
+{
+	const size_t fmb = MiB(4);
+	/* If size is below 4MiB, only extend
+	   by the size */
+	if (n <= fmb) {
+		kmem_extend_address_space_4mib(n);
+		return;
+	}
+	/* Get number of pages we need to allocate */
+	size_t div = fast_ceil(n, fmb);
+	for (size_t i = 0; i < div; i++) {
+		kmem_extend_address_space_4mib(fmb);
+	}
+}
+
+void kmem_init_paging(void)
 {
 	/* Allocate page dir */
 	page_directory = wm_alloc_mem_page_aligned(1024);
@@ -148,7 +164,7 @@ void mm_init_paging(void)
 	}
 
 	/* Extend just enough so that we don't crash */
-	kmem_extend_address_space(KERN_END);
+	kern_queue_calls(kmem_extend_address_space(MiB(4)), kmem_extend_address_space(KERN_END), KERN_END <= MiB(4));
 	load_page_dir(page_directory);
 	init_paging();
 }
