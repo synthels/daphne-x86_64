@@ -9,4 +9,4 @@ A Unix-like x86-32 (and hopefully x86-64 in the future) operating system.
 Coming soon!
 
 # License
-phiOS is licensed under GPLv3. See [license](https://github.com/synthels/phiOS/blob/master/license) for more details.
+phiOS is licensed under the MIT license. See [license](https://github.com/synthels/phiOS/blob/master/license) for more details.
