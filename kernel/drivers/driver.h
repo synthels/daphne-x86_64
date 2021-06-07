@@ -20,7 +20,7 @@
 #include <tty/printk.h>
 
 #include <drivers/keyboard/keyboard.h>
-#include <drivers/sound/pcspk/pcspk.h>
+#include <drivers/sound/pcspk.h>
 #include <drivers/time/PIT.h>
 #include <drivers/pci/pci.h>
 
