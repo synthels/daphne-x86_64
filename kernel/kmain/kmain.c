@@ -27,9 +27,9 @@ void kmain(multiboot_info_t *info)
 	printk("phiOS %s\n", KERNEL_VERSION_STRING);
 
 	extern void *stack_top;
-	init_tss(0x10, (uint32_t) stack_top);		/* Init TSS */
-	init_gdt();									/* Init GDT */
-	init_idt();									/* Init IDT */
+	init_tss(0x10, (uint32_t) stack_top); /* Init TSS */
+	init_gdt(); /* Init GDT */
+	init_idt(); /* Init IDT */
 
 	/* Set kernel mode */
 	set_kernel_mode(TTY_MODE);
