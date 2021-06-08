@@ -22,3 +22,32 @@ size_t strlen(const char *str)
 	for (s = str; *s; ++s) { }
 	return(s - str);
 }
+
+void *memset(void *s, int c, size_t sz)
+{
+	uint32_t* p;
+	uint32_t x = c & 0xff;
+	byte xx = c & 0xff;
+	byte *pp = (byte *) s;
+	size_t tail;
+
+	while (((unsigned int) pp & 3) && sz--)
+		*pp++ = xx;
+	p = (uint32_t *) pp;
+
+	tail = sz & 3;
+
+	x |= x << 8;
+	x |= x << 16;
+
+	sz >>= 2;
+
+	while (sz--)
+		*p++ = x;
+
+	pp = (byte *) p;
+	while (tail--)
+		*pp++ = xx;
+
+	return s;
+}

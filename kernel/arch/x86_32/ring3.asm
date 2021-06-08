@@ -11,52 +11,32 @@
 ; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ; GNU General Public License for more details.
 ;
-; GDT
+; Ring 3
 ;;
 
 [bits 32]
 
-global load_gdt
+extern user_entry
 
-gdt_start:
-gdt_null:
-    dd 0x0
-    dd 0x0
+global enter_usermode
+global tss_flush
 
-gdt_code:
-    dw 0xffff
-    dw 0x0
-    db 0x0
-    db 10011010b
-    db 11001111b
-    db 0x0
+enter_usermode:
+	mov ax, 0x23
+	mov ds, ax
+	mov es, ax 
+	mov fs, ax 
+	mov gs, ax		; no need for ss
 
-gdt_data:
-    dw 0xffff
-    dw 0x0
-    db 0x0
-    db 10010010b
-    db 11001111b
-    db 0x0
-gdt_end:
+	mov eax, esp	; setup stack frame
+	push 0x23		; ds
+	push eax		; esp
+	pushf			; eflags
+	push 0x23		; cs
+	push user_entry ; instruction address to return to
+	iret
 
-gdt_descriptor:
-    dw gdt_end - gdt_start - 1
-    dd gdt_start
-
-CODE_SEG equ gdt_code - gdt_start
-DATA_SEG equ gdt_data - gdt_start
-
-load_gdt:
-	cli
-	lgdt [gdt_descriptor]
-	jmp CODE_SEG:.setcs
-	.setcs:
-		mov eax, DATA_SEG
-		mov ds, eax
-		mov es, eax
-		mov fs, eax
-		mov gs, eax
-		mov ss, eax
-		sti
-		ret
+tss_flush:
+	mov ax, 0x2b
+	ltr ax
+	ret

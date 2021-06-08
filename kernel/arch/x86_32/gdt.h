@@ -10,35 +10,33 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef KERNEL_x86_32_GDT
+#define KERNEL_x86_32_GDT
 
-#include <multiboot.h>
 #include <stdint.h>
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <kernel.h>
+struct gdt_entry {
+	uint16_t limit_low;
+	uint16_t base_low;
+	uint8_t base_middle;
+	uint8_t access;
+	uint8_t granularity;
+	uint8_t base_high;
+} __attribute__((packed));
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
+struct gdt_ptr {
+	uint16_t limit;
+	uint32_t base;
+} __attribute__((packed));
 
-#include <tty/printk.h>
-#include <logger/panic.h>
+/**
+ * gdt_set_gate
+ *   brief: Setup a new descriptor in kernel GDT
+ */
+void gdt_set_gate(int num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran);
 
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+void init_gdt(void);
 
 #endif

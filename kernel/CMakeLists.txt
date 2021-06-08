@@ -8,6 +8,7 @@ add_subdirectory(${SRCROOT}/logger)
 add_subdirectory(${SRCROOT}/memory)
 add_subdirectory(${SRCROOT}/tty)
 add_subdirectory(${SRCROOT}/libk)
+add_subdirectory(${SRCROOT}/proc)
 
 set(SRC
 	${SRCROOT}/mutex.c

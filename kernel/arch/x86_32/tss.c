@@ -11,34 +11,41 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel main code
+ * TSS
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "tss.h"
 
-#include <multiboot.h>
-#include <stdint.h>
+/* Kernel TSS */
+static struct tss_entry tss;
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <kernel.h>
+/* Init TSS */
+void init_tss(uint16_t ss0, uint32_t esp0)
+{
+	memset(&tss, 0, sizeof(tss));
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
+	/* Add the TSS descriptor to the GDT */
+	gdt_set_gate(5, (uint32_t) &tss, sizeof(tss), 0xE9, 0x00);
 
-#include <tty/printk.h>
-#include <logger/panic.h>
+	tss.ss0 = ss0;
+	tss.esp0 = esp0;
+	tss.cs = 0x0b;
+	tss.ss = 0x13;
+	tss.ds = 0x13;
+	tss.es = 0x13;
+	tss.fs = 0x13;
+	tss.gs = 0x13;
 
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
+	tss.iomap_base = sizeof(tss);
+}
 
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+void tss_set_stack(uint16_t ss0, uint32_t esp0)
+{
+	tss.ss0 = ss0;
+	tss.esp0 = esp0;
+}
 
-#endif
+struct tss_entry *get_tss(void)
+{
+	return &tss;
+}

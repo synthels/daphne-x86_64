@@ -17,10 +17,22 @@
 
 #include "string.h"
 
-/* Int to string */
+/**
+ * itoa 
+ *   brief: Convert n to string and copy to s
+ *   parameters:
+ *     - n: integer to convert
+ *     - s: output string
+ */
 void itoa(int n, char s[]);
 
-/* Unsigned int to string */
+/**
+ * uitoa 
+ *   brief: Convert n to string and copy to s
+ *   parameters:
+ *     - n: unsigned integer to convert
+ *     - s: output string
+ */
 void uitoa(unsigned n, char s[]);
 
 #endif

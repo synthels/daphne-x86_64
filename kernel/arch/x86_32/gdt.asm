@@ -11,29 +11,26 @@
 ; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ; GNU General Public License for more details.
 ;
-; Paging init
+; GDT
 ;;
 
 [bits 32]
 
-global load_page_dir
-global init_paging
+%define KERNEL_DATA_SEGMENT 0x10
+%define CODE_DATA_SEGMENT 0x08
 
-load_page_dir:
-	push ebp
-	mov ebp, esp
-	mov eax, [esp + 8]
-	mov cr3, eax
-	mov esp, ebp
-	pop ebp
-	ret
+global gdt_flush
 
-init_paging:
-	push ebp
-	mov ebp, esp
-	mov eax, cr0
-	or eax, 0x80000000
-	mov cr0, eax
-	mov esp, ebp
-	pop ebp
+gdt_flush:
+	mov eax, [esp + 4]
+	lgdt [eax]
+	mov ax, KERNEL_DATA_SEGMENT
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	jmp CODE_DATA_SEGMENT:flush
+
+flush:
 	ret

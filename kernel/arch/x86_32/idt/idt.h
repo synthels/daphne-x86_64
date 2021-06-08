@@ -21,7 +21,7 @@
 
 #define IRQ_HANDLERS 4
 
-/* Single IDT entry */
+/* IDT entry */
 struct IDT_entry {
 	uint16_t offset_lowerbits;
 	uint16_t selector;
@@ -30,10 +30,19 @@ struct IDT_entry {
 	uint16_t offset_higherbits;
 } __attribute__((packed));
 
-/* Install an IRQ handler to the IDT */
+/**
+ * idt_install_irq_handler
+ *   brief: Install a new IRQ handler
+ *   parameters:
+ *     - handler: pointer to handler
+ *     - i:       IRQ
+ */
 void idt_install_irq_handler(void (*handler)(void), int i);
 
-/* Initialise the IDT */
+/**
+ * init_idt
+ *   brief: Load the kernel IDT
+ */
 void init_idt(void);
 
 #endif

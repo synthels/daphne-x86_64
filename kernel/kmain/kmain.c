@@ -16,17 +16,20 @@
 
 #include "kmain.h"
 
+extern void enter_usermode(void);
+
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
 	/* Init tty */
 	tty_init();
 
-	printk("phiOS %s", KERNEL_VERSION_STRING);
+	printk("phiOS %s\n", KERNEL_VERSION_STRING);
 
-	/* Init IDT */
-	printk("\nIRQ info:");
-	init_idt();
+	extern void *stack_top;
+	init_tss(0x10, (uint32_t) stack_top);		/* Init TSS */
+	init_gdt();									/* Init GDT */
+	init_idt();									/* Init IDT */
 
 	/* Set kernel mode */
 	set_kernel_mode(TTY_MODE);
@@ -53,6 +56,9 @@ void kmain(multiboot_info_t *info)
 		/* Start tests */
 		do_tests();
 	#endif
+
+	/* Ring 3! */
+	//enter_usermode();
 
 	for(;;);
 }

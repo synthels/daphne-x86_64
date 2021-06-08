@@ -16,12 +16,32 @@
 #define LIBK_STRING
 
 #include <stddef.h>
+#include <stdint.h>
+
+typedef uint8_t byte;
 
 #ifndef NULL
 	#define NULL (void *) 0x0
 #endif
 
-/* Count string length */
+/**
+ * strlen 
+ *   brief: return number of characters in
+ *          the null terminated string str
+ *   parameters:
+ *     - str: string
+ */
 size_t strlen(const char *str);
+
+/**
+ * memset
+ *   brief: copy c to to the first sz characters
+ *          pointed to by s
+ *   parameters:
+ *     - s:  string
+ *     - c:  character
+ *     - sz: number of bytes
+ */
+void *memset(void *s, int c, size_t sz);
 
 #endif
