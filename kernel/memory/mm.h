@@ -20,7 +20,7 @@
 #include <multiboot.h>
 #include <logger/panic.h>
 
-#include "watermark.h"
+#include "wm.h"
 
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) &kend

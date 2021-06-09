@@ -14,7 +14,7 @@
  * Watermark allocator
  */
 
-#include "watermark.h"
+#include "wm.h"
 
 /* Offset for each mmap entry */
 static uint32_t mmap_offs[256];

@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <kernel.h>
 
-#include "watermark.h"
+#include "wm.h"
 
 #define MAX_PAGES 12 /* Max pages in bin */
 

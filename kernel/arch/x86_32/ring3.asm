@@ -26,14 +26,14 @@ enter_usermode:
 	mov ds, ax
 	mov es, ax 
 	mov fs, ax 
-	mov gs, ax		; no need for ss
+	mov gs, ax ; no need for ss
 
-	mov eax, esp	; setup stack frame
-	push 0x23		; ds
-	push eax		; esp
-	pushf			; eflags
-	push 0x23		; cs
-	push user_entry ; instruction address to return to
+	mov eax, esp ; setup stack frame
+	push 0x23 ; ds
+	push eax ; esp
+	pushf ; eflags
+	push 0x23 ; cs
+	push user_entry ; return
 	iret
 
 tss_flush:

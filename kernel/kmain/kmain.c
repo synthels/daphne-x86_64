@@ -58,7 +58,7 @@ void kmain(multiboot_info_t *info)
 	#endif
 
 	/* Ring 3! */
-	//enter_usermode();
+	// enter_usermode();
 
 	for(;;);
 }
