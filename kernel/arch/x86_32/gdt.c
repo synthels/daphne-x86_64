@@ -58,10 +58,10 @@ void init_gdt(void)
 	gdt_set_gate(2, 0, 0xffff, 0x92, 0xcf);
 
 	/* user cs */
-	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
-	
+	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xcf);
+
 	/* user ds */
-	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
+	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xcf);
 
 	gdt_flush((uint32_t) &gp);
 	tss_flush();

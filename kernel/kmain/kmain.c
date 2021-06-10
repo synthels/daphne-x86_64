@@ -24,7 +24,7 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
-	printk("phiOS %s\n", KERNEL_VERSION_STRING);
+	printk("TauOS %s\n", KERNEL_VERSION_STRING);
 
 	extern void *stack_top;
 	init_tss(0x10, (uint32_t) stack_top); /* Init TSS */
@@ -58,7 +58,7 @@ void kmain(multiboot_info_t *info)
 	#endif
 
 	/* Ring 3! */
-	// enter_usermode();
+	enter_usermode();
 
 	for(;;);
 }

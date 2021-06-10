@@ -72,5 +72,5 @@ Then, move `kernel.bin` to the `iso/boot` directory.
 
 Next, to build the ISO, just run
 ```
-grub-mkrescue -o phios-img-grub.iso iso
+grub-mkrescue -o TauOS-img-grub.iso iso
 ```

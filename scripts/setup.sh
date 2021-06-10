@@ -19,7 +19,7 @@ fi
 echo "default=0
 timeout=0
 
-menuentry \"phiOS\" {
+menuentry \"TauOS\" {
 	echo -n \"Loading kernel...\"
 	multiboot /boot/kernel.bin
 	boot
