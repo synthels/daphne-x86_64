@@ -12,7 +12,7 @@
 
 We use CMake as our build system, so you will have to install that first of all.
 
-Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use brew and install it by using the toolchain script
+Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use the toolchain script
 
 ```
 ./tools/toolchain.sh

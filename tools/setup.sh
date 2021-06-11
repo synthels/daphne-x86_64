@@ -29,4 +29,4 @@ menuentry \"TauOS\" {
 touch $BUILD_DIR/clean.sh
 
 echo "rm -r ./*
-./../scripts/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
+./../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh

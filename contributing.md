@@ -4,11 +4,11 @@ All contributions to TauOS are very welcome and needed. If you have decided to c
 ## Commit messages
 When writing a commit message, please make sure it is in the format of
 ```
-[category] what you did here...
+category: what you did here...
 ```
 For example, if I fixed a bug in the `printk` function under `tty`, my commit message would be something like this
 ```
-[tty] printk bugfixes
+tty: printk bugfixes
 ```
 You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/TauOS/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
 
