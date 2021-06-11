@@ -20,10 +20,11 @@
 #include <drivers/driver.h>
 #include <drivers/time/sleep.h>
 
-/*  
- * Play a certain frequency through the PC speaker 
- * for a certain amount of ticks
-*/
+/**
+ * pcspk_beep
+ *   brief: play freq through the pc speaker for
+ *          a few ticks
+ */
 void pcspk_beep(uint16_t freq, uint16_t ticks);
 
 #endif

@@ -27,7 +27,7 @@ void kmain(multiboot_info_t *info)
 	printk("TauOS %s\n", KERNEL_VERSION_STRING);
 
 	extern void *stack_top;
-	init_tss(0x10, (uint32_t) stack_top); /* Init TSS */
+	init_tss(0x10, (uintptr_t) stack_top); /* Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */
 
@@ -45,7 +45,7 @@ void kmain(multiboot_info_t *info)
 	kmem_init(info);
 
 	/* Init paging */
-	kmem_init_paging();
+	//kmem_init_paging();
 
 	/* Init all drivers */
 	init_drivers();

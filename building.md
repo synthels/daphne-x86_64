@@ -12,10 +12,10 @@
 
 We use CMake as our build system, so you will have to install that first of all.
 
-Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use brew and install it with the following command
+Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use brew and install it by using the toolchain script
 
 ```
-brew install i686-elf-gcc
+./tools/toolchain.sh
 ```
 
 ### WSL note
@@ -33,7 +33,7 @@ export PATH="$PATH:$BREW_HOME"
 First, run
 
 ```
-./scripts/setup.sh -mk-grub
+./tools/setup.sh -mk-grub
 ```
 
 in order create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.

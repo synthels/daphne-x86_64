@@ -22,10 +22,11 @@ static struct tss_entry tss;
 /* Init TSS */
 void init_tss(uint16_t ss0, uint32_t esp0)
 {
-	memset(&tss, 0, sizeof(tss));
+	memset(&tss, 0x0, sizeof(tss));
+	uintptr_t base = (uintptr_t) &tss;
 
 	/* Add the TSS descriptor to the GDT */
-	gdt_set_gate(5, (uint32_t) &tss, sizeof(tss), 0xE9, 0x00);
+	gdt_set_gate(5, base, sizeof(tss), 0xE9, 0x00);
 
 	tss.ss0 = ss0;
 	tss.esp0 = esp0;
