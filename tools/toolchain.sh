@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd ~
+
 mkdir cross
 cd cross
 
@@ -8,8 +10,6 @@ export TARGET=i686-elf
 export PATH="$PREFIX/bin:$PATH"
 export GCC_VER="11.1.0"
 export BINUTILS_VER="2.36"
-
-cd ~
 
 # build binutils
 echo "building binutils..."
