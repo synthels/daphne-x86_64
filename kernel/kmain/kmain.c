@@ -24,7 +24,7 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
-	printk("TauOS %s\n", KERNEL_VERSION_STRING);
+	printk("eureka %s\n", KERNEL_VERSION_STRING);
 
 	extern void *stack_top;
 	init_tss(0x10, (uintptr_t) stack_top); /* Init TSS */

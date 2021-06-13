@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(TauOS C ASM_NASM)
+project(eureka C ASM_NASM)
 
 # Configure binary
 set(KERNEL_BIN "kernel.bin")
