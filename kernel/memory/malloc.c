@@ -52,14 +52,14 @@
 /* Offset for each mmap entry */
 static uint32_t mmap_offs[256];
 
-/* wm_alloc mutex lock */
+/* kalloc mutex lock */
 static mutex_t alloc_mutex = 0;
 
 /* From linker.ld */
 extern uint32_t kstart;
 extern uint32_t kend;
 
-uint32_t *wm_alloc(size_t n, size_t begin)
+uint32_t *kalloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
 	mmap_entry_t *mmap = kmem_get_kernel_mmap();
@@ -75,7 +75,7 @@ uint32_t *wm_alloc(size_t n, size_t begin)
 			/* If this entry runs out, try going to the next */
 			if (i < 255) {
 				release_mutex(&alloc_mutex);
-				return wm_alloc(n, i + 1);
+				return kalloc(n, i + 1);
 			} else {
 				break;
 			}
@@ -86,15 +86,15 @@ uint32_t *wm_alloc(size_t n, size_t begin)
 	return NULL;
 }
 
-void *wm_alloc_mem_aligned(size_t n)
+void *kalloc_mem_aligned(size_t n)
 {	
-	return (void *) wm_alloc(kmem_align(n), 0);
+	return (void *) kalloc(kmem_align(n), 0);
 }
 
-void *wm_alloc_mem_page_aligned(size_t n)
+void *kalloc_mem_page_aligned(size_t n)
 {
 	const size_t mask = PAGE_SIZE - 1;
-	const uintptr_t mem = (uintptr_t) wm_alloc(n + PAGE_SIZE, 0);
+	const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE, 0);
 	return (void *) ((mem + mask) & ~mask);
 }
 
@@ -110,15 +110,15 @@ void init_bin(malloc_bin_t *bin, size_t size)
 	bin->page_size = kmem_align(size);
 
 	/* Init first page */
-	bin->first_page = wm_alloc_mem_aligned(sizeof(malloc_page_t));
-	bin->first_page->base = wm_alloc_mem_aligned(size);
+	bin->first_page = kalloc_mem_aligned(sizeof(malloc_page_t));
+	bin->first_page->base = kalloc_mem_aligned(size);
 	bin->first_page->free = 1;
 
 	/* Fill rest of bin */
 	malloc_page_t *page = bin->first_page;
 	for (int i = 0; i < MAX_PAGES - 1; i++) {
-		malloc_page_t *node = wm_alloc_mem_aligned(sizeof(malloc_page_t));
-		node->base = wm_alloc_mem_aligned(size);
+		malloc_page_t *node = kalloc_mem_aligned(sizeof(malloc_page_t));
+		node->base = kalloc_mem_aligned(size);
 		node->free = 1;
 
 		/* Copy page */
@@ -195,7 +195,7 @@ void *kmalloc(size_t n)
 {
 	/* First call, init bin */
 	if (head_bin == NULL) {
-		head_bin = wm_alloc_mem_aligned(sizeof(malloc_bin_t));
+		head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(head_bin, n);
 	}
 
@@ -204,7 +204,7 @@ void *kmalloc(size_t n)
 	if ((page = find_best_bin_and_alloc(n)) == NULL) {
 		/* We couldn't find an existing page large enough
 		   to accommodate our page */
-		bin = wm_alloc_mem_aligned(sizeof(malloc_bin_t));
+		bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
 		init_bin(bin, n);
 		add_bin(bin);
 		bin->first_page->free = 0;

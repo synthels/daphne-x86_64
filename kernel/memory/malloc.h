@@ -43,16 +43,35 @@ struct malloc_bin {
 
 typedef struct malloc_bin malloc_bin_t;
 
-/* Attempt to allocate n bytes (4 byte aligned) */
-/* Returns NULL if it fails */
+/**
+ * kmalloc
+ *   brief: attempt to allocate memory of size n
+ */
 void *kmalloc(size_t n);
 
-/* Frees a pointer returned by malloc */
-/* Returns NULL if it fails */
+/**
+ * kfree
+ *   brief: attempt to free memory
+ *          allocated by kmalloc
+ */
 void *kfree(void *ptr);
 
-uint32_t *wm_alloc(size_t n, size_t begin);
-void *wm_alloc_mem_aligned(size_t n);
-void *wm_alloc_mem_page_aligned(size_t n);
+/**
+ * kalloc
+ *   brief: watermark allocator
+ */
+uint32_t *kalloc(size_t n, size_t begin);
+
+/**
+ * kalloc
+ *   brief: watermark allocator
+ */
+void *kalloc_mem_aligned(size_t n);
+
+/**
+ * kalloc
+ *   brief: allocate page
+ */
+void *kalloc_mem_page_aligned(size_t n);
 
 #endif

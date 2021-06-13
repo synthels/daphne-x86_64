@@ -130,7 +130,7 @@ uint32_t kmem_extend_address_space_4mib(size_t n)
 {
 	static uint32_t paged_high = 0;
 	/* Allocate new table */
-	pte_t *table = wm_alloc_mem_page_aligned(1024);
+	pte_t *table = kalloc_mem_page_aligned(1024);
 	/* Map pages as needed */
 	kmem_map_pages(table, paged_high, paged_high + n);
 	add_pte(table);
@@ -157,7 +157,7 @@ void kmem_extend_address_space(size_t n)
 void kmem_init_paging(void)
 {
 	/* Allocate page dir */
-	page_directory = wm_alloc_mem_page_aligned(1024);
+	page_directory = kalloc_mem_page_aligned(1024);
 	for(int i = 0; i < 1024; i++) {
 		/* supervisor, r&w, not present */
 		page_directory[i] = 0x00000002;
