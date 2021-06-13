@@ -20,6 +20,8 @@
 #include <multiboot.h>
 #include <logger/panic.h>
 
+#include "malloc.h"
+
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) &kend
 #define PAGE_SIZE 4096

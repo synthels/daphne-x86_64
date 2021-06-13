@@ -59,7 +59,7 @@ static mutex_t alloc_mutex = 0;
 extern uint32_t kstart;
 extern uint32_t kend;
 
-static uint32_t *wm_alloc(size_t n, size_t begin)
+uint32_t *wm_alloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
 	mmap_entry_t *mmap = kmem_get_kernel_mmap();
