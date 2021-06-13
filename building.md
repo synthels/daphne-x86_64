@@ -12,7 +12,7 @@
 
 We use CMake as our build system, so you will have to install that first of all.
 
-Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use the brew like so
+Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use brew like so
 
 ```
 brew install i686-elf-gcc
@@ -52,13 +52,13 @@ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=i686-elf-gcc -DCMAKE_TOOLCHAIN_FILE
 
 This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
 
-To finally build the binary, you can run the CMake's generic build command
+To finally build the binary, you can run CMake's generic build command
 
 ```
 cmake --build .
 ```
 
-If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in front of you. Congratulations!
+If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 # Building an ISO image
 If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!

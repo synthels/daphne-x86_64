@@ -63,13 +63,13 @@ void *kfree(void *ptr);
 uint32_t *kalloc(size_t n, size_t begin);
 
 /**
- * kalloc
+ * kalloc_mem_aligned
  *   brief: watermark allocator
  */
 void *kalloc_mem_aligned(size_t n);
 
 /**
- * kalloc
+ * kalloc_mem_page_aligned
  *   brief: allocate page
  */
 void *kalloc_mem_page_aligned(size_t n);
