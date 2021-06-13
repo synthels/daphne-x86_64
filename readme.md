@@ -1,12 +1,12 @@
-# TauOS
-A Unix-like x86-32 (and hopefully x86-64 in the future) operating system.
+# eureka
+eureka aims to be a highly portable operating system that can be directly shipped with applications in order to allow them to run on bare metal with high performance.
 
 # Links
-* [Building from source](https://github.com/synthels/TauOS/blob/master/building.md)
-* [Contributing](https://github.com/synthels/TauOS/blob/master/contributing.md)
+* [Building from source](https://github.com/synthels/eureka/blob/master/building.md)
+* [Contributing](https://github.com/synthels/eureka/blob/master/contributing.md)
 
 # Screenshots
 Coming soon!
 
 # License
-TauOS is licensed under the MIT license. See [license](https://github.com/synthels/TauOS/blob/master/license) for more details.
+eureka is licensed under the MIT license. See [license](https://github.com/synthels/eureka/blob/master/license) for more details.

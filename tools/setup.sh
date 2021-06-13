@@ -19,7 +19,7 @@ fi
 echo "default=0
 timeout=0
 
-menuentry \"TauOS\" {
+menuentry \"eureka\" {
 	echo -n \"Loading kernel...\"
 	multiboot /boot/kernel.bin
 	boot
