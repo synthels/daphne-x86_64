@@ -20,8 +20,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <kernel.h>
+#include <mutex.h>
 
-#include "wm.h"
+#include "mm.h"
 
 #define MAX_PAGES 12 /* Max pages in bin */
 
@@ -49,5 +50,9 @@ void *kmalloc(size_t n);
 /* Frees a pointer returned by malloc */
 /* Returns NULL if it fails */
 void *kfree(void *ptr);
+
+static uint32_t *wm_alloc(size_t n, size_t begin);
+void *wm_alloc_mem_aligned(size_t n);
+void *wm_alloc_mem_page_aligned(size_t n);
 
 #endif

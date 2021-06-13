@@ -51,13 +51,13 @@ void init_gdt(void)
 	/* NULL seg */
 	gdt_set_gate(0, 0, 0, 0, 0);
 	/* kernel cs */
-	gdt_set_gate(1, 0x40000000, 0xFFFFFFFF, 0x9A, 0xCF);
+	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 	/* kernel ds */
-	gdt_set_gate(2, 0x40000000, 0xFFFFFFFF, 0x92, 0xCF);
+	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 	/* user cs */
-	gdt_set_gate(3, 0x40000000, 0xFFFFFFFF, 0xFA, 0xCF);
+	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
 	/* user ds */
-	gdt_set_gate(4, 0x40000000, 0xFFFFFFFF, 0xF2, 0xCF);
+	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
 
 	gdt_flush((uintptr_t) &gp);
 	tss_flush();
