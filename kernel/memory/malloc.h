@@ -51,7 +51,7 @@ void *kmalloc(size_t n);
 /* Returns NULL if it fails */
 void *kfree(void *ptr);
 
-static uint32_t *wm_alloc(size_t n, size_t begin);
+uint32_t *wm_alloc(size_t n, size_t begin);
 void *wm_alloc_mem_aligned(size_t n);
 void *wm_alloc_mem_page_aligned(size_t n);
 
