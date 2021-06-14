@@ -15,10 +15,12 @@
 #ifndef KERNEL_x86_32_IDT
 #define KERNEL_x86_32_IDT
 
-#include "PIC.h"
 #include <stdint.h>
 #include <tty/printk.h>
 #include <logger/panic.h>
+#include <kernel.h>
+
+#include "PIC.h"
 
 #define ISR(isr, n) extern void isr(void); \
 	idt_install_raw_handler(isr, n)
