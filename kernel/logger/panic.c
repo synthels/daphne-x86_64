@@ -16,33 +16,9 @@
 
 #include "panic.h"
 
-/* Print a border */
-static void print_border(void)
+void panic(const char *msg)
 {
-	for (int i = 0; i < 30; i++) {
-		tty_putc('!', VGA_COLOR_LIGHT_RED);
-	}
-	printk("");
-}
-
-/* Print a seperator */
-static void print_sep(void)
-{
-	for (int i = 0; i < 30; i++) {
-		tty_putc('-', VGA_COLOR_LIGHT_RED);
-	}
-	printk("");
-}
-
-void panic(char *msg)
-{
-	tty_clear(VGA_COLOR_BLACK);
-	print_border();
-	tty_puts("// What? It's not my fault!", VGA_COLOR_LIGHT_GRAY);
-	print_sep();
-	printk("kernel panic: %s", msg);
-	print_border();
-
+	printk("\nkernel panic: %s", msg);
 	/* TODO: Add debug info here */
 	kernel_hang();
 }

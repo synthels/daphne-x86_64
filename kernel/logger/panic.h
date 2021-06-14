@@ -21,6 +21,6 @@
 #include <tty/printk.h>
 
 /* Throws a tantrum */
-void panic(char *msg);
+void panic(const char *msg);
 
 #endif

@@ -33,17 +33,24 @@ void idt_install_irq_handler(void (*handler)(void), int i)
 
 void idt_install_raw_handler(void (*handler)(void), int i)
 {
-	printk("installing IRQ handler %i", i);
 	irq_handlers[i] = handler;
 }
 
 /* Install all handlers */
 void idt_install_handlers()
 {
+	extern void isr0(void);
+	extern void isr1(void);
+	extern void isr8(void);
+
 	extern void irq0(void);
 	extern void irq1(void);
 	extern void _syscall(void);
 	extern void generic_irq(void);
+
+	idt_install_raw_handler(isr0, 0);
+	idt_install_raw_handler(isr1, 1);
+	idt_install_raw_handler(isr8, 8);
 
 	/* PIT */
 	idt_install_irq_handler(irq0, 0);
@@ -80,4 +87,47 @@ void init_idt(void)
 	idt_ptr[0] = (sizeof (struct IDT_entry) * 256) + ((idt_address & 0xffff) << 16);
 	idt_ptr[1] = idt_address >> 16;
 	load_idt(idt_ptr);
+}
+
+void fault_handler(struct regs *r)
+{
+	const char *exception_messages[] = {
+		"division by zero",
+		"debug",
+		"NMI",
+		"breakpoint",
+		"invalid",
+		"out of bounds",
+		"invalid opcode",
+		"no coprocessor",
+		"double fault",
+		"coprocessor segment overrun",
+		"bad TSS",
+		"segment not present",
+		"stack fault",
+		"GPF",
+		"page fault",
+		"unknown interrupt",
+		"coprocessor fault",
+		"alignment check",
+		"machine check",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved",
+		"reserved"
+	};
+
+	if (r->int_no < 32)
+		panic(exception_messages[r->int_no]);
+	else
+		panic("what the hell?");
 }

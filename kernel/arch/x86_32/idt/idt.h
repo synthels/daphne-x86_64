@@ -18,6 +18,7 @@
 #include "PIC.h"
 #include <stdint.h>
 #include <tty/printk.h>
+#include <logger/panic.h>
 
 #define IRQ_HANDLERS 4
 

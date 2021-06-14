@@ -42,11 +42,3 @@ void syscall_handler(regs_t *r)
 	printk("syscall: EAX = %i", r->eax);
 	IRQ_END;
 }
-
-void generic_irq_handler(regs_t *r)
-{
-	if (r->int_no >= 40) {
-		outb(0xa0, 0x20);
-	}
-	IRQ_END;
-}

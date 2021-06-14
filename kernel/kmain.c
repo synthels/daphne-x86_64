@@ -45,7 +45,7 @@ void kmain(multiboot_info_t *info)
 	kmem_init(info);
 
 	/* Init paging */
-	//kmem_init_paging();
+	kmem_init_paging();
 
 	/* Init all drivers */
 	init_drivers();
@@ -58,7 +58,7 @@ void kmain(multiboot_info_t *info)
 	#endif
 
 	/* Ring 3! */
-	enter_usermode();
+	//enter_usermode();
 
 	for(;;);
 }
