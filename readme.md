@@ -9,4 +9,4 @@ eureka aims to be a highly portable operating system that can be directly shippe
 Coming soon!
 
 # License
-eureka is licensed under the MIT license. See [license](https://github.com/synthels/eureka/blob/master/license) for more details.
+eureka is licensed under the GPLv3 license. See [license](https://github.com/synthels/eureka/blob/master/license) for more details.
