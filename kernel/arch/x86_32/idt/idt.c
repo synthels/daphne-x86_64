@@ -39,25 +39,45 @@ void idt_install_raw_handler(void (*handler)(void), int i)
 /* Install all handlers */
 void idt_install_handlers()
 {
-	extern void isr0(void);
-	extern void isr1(void);
-	extern void isr8(void);
-
-	extern void irq0(void);
-	extern void irq1(void);
-	extern void _syscall(void);
-	extern void generic_irq(void);
-
-	idt_install_raw_handler(isr0, 0);
-	idt_install_raw_handler(isr1, 1);
-	idt_install_raw_handler(isr8, 8);
+	ISR(isr0, 0);
+	ISR(isr1, 1);
+	ISR(isr2, 2);
+	ISR(isr3, 3);
+	ISR(isr4, 4);
+	ISR(isr5, 5);
+	ISR(isr6, 6);
+	ISR(isr7, 7);
+	ISR(isr8, 8);
+	ISR(isr9, 9);
+	ISR(isr10, 10);
+	ISR(isr11, 11);
+	ISR(isr12, 12);
+	ISR(isr13, 13);
+	ISR(isr14, 14);
+	ISR(isr15, 15);
+	ISR(isr16, 16);
+	ISR(isr17, 17);
+	ISR(isr18, 18);
+	ISR(isr19, 19);
+	ISR(isr20, 20);
+	ISR(isr21, 21);
+	ISR(isr22, 22);
+	ISR(isr23, 23);
+	ISR(isr24, 24);
+	ISR(isr25, 25);
+	ISR(isr26, 26);
+	ISR(isr27, 27);
+	ISR(isr28, 28);
+	ISR(isr29, 29);
+	ISR(isr30, 30);
+	ISR(isr31, 31);
+	/* syscall */
+	ISR(_syscall, 128);
 
 	/* PIT */
-	idt_install_irq_handler(irq0, 0);
+	IRQ(irq0, 0);
 	/* Keyboard */
-	idt_install_irq_handler(irq1, 1);
-	/* syscall */
-	idt_install_raw_handler(_syscall, 128);
+	IRQ(irq1, 1);
 }
 
 /* Generate & load an IDT */

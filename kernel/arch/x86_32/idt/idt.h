@@ -20,6 +20,12 @@
 #include <tty/printk.h>
 #include <logger/panic.h>
 
+#define ISR(isr, n) extern void isr(void); \
+	idt_install_raw_handler(isr, n)
+
+#define IRQ(irq, n) extern void irq(void); \
+	idt_install_irq_handler(irq, n)
+
 #define IRQ_HANDLERS 4
 
 /* IDT entry */
