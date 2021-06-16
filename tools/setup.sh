@@ -21,7 +21,6 @@ timeout=0
 
 menuentry \"eureka\" {
 	multiboot /boot/kernel.bin
-	set gfxpayload=1920x1080x32
 	boot
 }" > $BUILD_DIR/iso/boot/grub/grub.cfg
 
