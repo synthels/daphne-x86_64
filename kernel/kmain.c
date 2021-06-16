@@ -26,8 +26,9 @@ void kmain(multiboot_info_t *info)
 
 	printk("eureka %s\n", KERNEL_VERSION_STRING);
 
-	extern void *stack_top;
-	init_tss(0x10, (uintptr_t) stack_top); /* Init TSS */
+	uint32_t esp;
+	asm volatile("mov %%esp, %0" : "=r"(esp));
+	init_tss(0x10, esp); /* Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */
 
@@ -45,7 +46,8 @@ void kmain(multiboot_info_t *info)
 	kmem_init(info);
 
 	/* Init paging */
-	kmem_init_paging();
+	/* TODO: Move away from identity paging */
+	/* kmem_init_paging(); */
 
 	/* Init all drivers */
 	init_drivers();

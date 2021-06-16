@@ -24,17 +24,21 @@ global tss_flush
 enter_usermode:
 	mov ax, 0x23
 	mov ds, ax
-	mov es, ax 
-	mov fs, ax 
-	mov gs, ax ; no need for ss
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
 
-	mov eax, esp ; setup stack frame
-	push 0x23 ; ds
-	push eax ; esp
-	pushf ; eflags
-	push 0x23 ; cs
-	push user_entry ; return
-	iret
+	push 0x23
+	push esp
+	pushfd
+	push 0x1b
+	lea eax, [user_start]
+	push eax
+	iretd
+
+user_start:
+	add esp, 4
+	ret
 
 tss_flush:
 	mov ax, 0x2b

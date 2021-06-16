@@ -7,7 +7,6 @@ set(SRC
 	${SRCROOT}/tss.h
 	${SRCROOT}/gdt.c
 	${SRCROOT}/gdt.h
-	${SRCROOT}/usermode.c
 )
 
 add_subdirectory(${SRCROOT}/boot)

@@ -119,7 +119,7 @@ void fault_handler(struct regs *r)
 		"invalid",
 		"out of bounds",
 		"invalid opcode",
-		"no coprocessor",
+		"invalid",
 		"double fault",
 		"coprocessor segment overrun",
 		"bad TSS",
@@ -128,7 +128,7 @@ void fault_handler(struct regs *r)
 		"GPF",
 		"page fault",
 		"unknown interrupt",
-		"coprocessor fault",
+		"invalid",
 		"alignment check",
 		"machine check",
 		"reserved",
@@ -146,8 +146,10 @@ void fault_handler(struct regs *r)
 		"reserved"
 	};
 
-	if (r->int_no < 32)
+	if (r->int_no < 32) {
 		panic(exception_messages[r->int_no]);
-	else
+	}
+	else {
 		panic("what the hell?");
+	}
 }

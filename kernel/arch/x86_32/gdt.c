@@ -32,11 +32,11 @@ void gdt_set_gate(
 	/* Base address */
 	gdt[num].base_low = (base & 0xffff);
 	gdt[num].base_middle = (base >> 16) & 0xff;
-	gdt[num].base_high = (base >> 24) & 0xff;
+	gdt[num].base_high = (base >> 24 & 0xff);
 
 	/* Limits */
 	gdt[num].limit_low = (limit & 0xffff);
-	gdt[num].granularity = ((limit >> 16) & 0x0f);
+	gdt[num].granularity = (limit >> 16) & 0x0f;
 
 	/* Granularity & access flags */
 	gdt[num].granularity |= (gran & 0xf0);
