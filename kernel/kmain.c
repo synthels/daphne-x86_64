@@ -24,7 +24,7 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
-	printk("eureka %s\n", KERNEL_VERSION_STRING);
+	printk("dahlia %s\n", KERNEL_VERSION_STRING);
 
 	uint32_t esp;
 	asm volatile("mov %%esp, %0" : "=r"(esp));
@@ -52,7 +52,7 @@ void kmain(multiboot_info_t *info)
 	/* Init all drivers */
 	init_drivers();
 
-	printk("\nWelcome! %uiMiB of RAM detected in total!",  (kmem_get_installed_memory() / 1048576) + 2);
+	printk("total_ram=%uiMB",  (kmem_get_installed_memory() / 1048576) + 2);
 
 	#ifdef BUILD_TESTS
 		/* Start tests */
@@ -61,6 +61,8 @@ void kmain(multiboot_info_t *info)
 
 	/* Ring 3! */
 	enter_usermode();
+
+	printk("\nHello user mode! :)");
 
 	for(;;);
 }

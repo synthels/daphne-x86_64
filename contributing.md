@@ -1,5 +1,5 @@
-# Contributing to eureka
-All contributions to eureka are very welcome and needed. If you have decided to contribute to this project, all you have to do is follow a few minor guidelines.
+# Contributing to dahlia
+All contributions to dahlia are very welcome and needed. If you have decided to contribute to this project, all you have to do is follow a few minor guidelines.
 
 ## Commit messages
 When writing a commit message, please make sure it is in the format of
@@ -10,7 +10,7 @@ For example, if I fixed a bug in the `printk` function under `tty`, my commit me
 ```
 tty: printk bugfixes
 ```
-You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/eureka/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
+You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/dahlia/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
 
 ## Code style
 I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use tabs. Please indent your code with tabs and not spaces so things don't get confusing.

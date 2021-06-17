@@ -72,5 +72,5 @@ Then, move `kernel.bin` to the `iso/boot` directory.
 
 Next, to build the ISO, just run
 ```
-grub-mkrescue -o eureka-img-grub.iso iso
+grub-mkrescue -o dahlia-img-grub.iso iso
 ```
