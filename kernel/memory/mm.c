@@ -33,11 +33,6 @@ static size_t regions = 0;
 extern uint32_t kstart;
 extern uint32_t kend;
 
-/* Paging */
-extern void init_paging(void);
-extern void load_page_dir(uint32_t *);
-static pdir_t *page_directory;
-
 /* Dump mmap entry */
 void dump_entry(mmap_entry_t *entry)
 {
@@ -107,87 +102,27 @@ void kmem_init(multiboot_info_t *info)
 	}
 }
 
-void add_pte(uint32_t *table)
-{
-	static int pte_index = 0;
-	if (((uint32_t) table) % 4096 != 0) {
-		panic("page table is not 4KiB aligned!");
-	}
-	
-	page_directory[pte_index++] = ((uint32_t) table) | 3;
-}
-
-void kmem_map_pages(uint32_t *first_pte, uint32_t from, int size)
-{
-	/* Map pages */
-	from = from & 0xfffff000;
-	for(; size > 0; from += 4096, size -= 4096, first_pte++){
-		*first_pte = from | 1;
-	}
-}
-
-uint32_t kmem_extend_address_space_4mib(size_t n)
-{
-	static uint32_t paged_high = 0;
-	/* Allocate new table */
-	pte_t *table = kalloc_mem_page_aligned(1024);
-	/* Map pages as needed */
-	kmem_map_pages(table, paged_high, paged_high + n);
-	add_pte(table);
-	paged_high += n;
-	return paged_high;
-}
-
-void kmem_extend_address_space(size_t n)
-{
-	const size_t fmb = MiB(4);
-	/* If size is below 4MiB, only extend
-	   by the size */
-	if (n <= fmb) {
-		kmem_extend_address_space_4mib(n);
-		return;
-	}
-	/* Get number of pages we need to allocate */
-	size_t div = fast_ceil(n, fmb);
-	for (size_t i = 0; i < div; i++) {
-		kmem_extend_address_space_4mib(fmb);
-	}
-}
-
 void kmem_init_paging(void)
 {
-	/* Allocate page dir */
-	page_directory = kalloc_mem_page_aligned(1024);
-	for(int i = 0; i < 1024; i++) {
-		/* supervisor, r&w, not present */
-		page_directory[i] = 0x00000002;
-	}
-
-	/* Extend just enough so that we don't crash */
-	kern_queue_calls(kmem_extend_address_space(MiB(4)), kmem_extend_address_space(KERN_END), KERN_END <= MiB(4));
-	load_page_dir(page_directory);
-	init_paging();
+	arch_init_paging();
 }
 
-/**************************/
-/**************************/
-
-mmap_entry_t *kmem_get_kernel_mmap()
+mmap_entry_t *kmem_get_kernel_mmap(void)
 {
 	return kmmap;
 }
 
-size_t kmem_get_kmmap_size()
+size_t kmem_get_kmmap_size(void)
 {
 	return kmmap_size;
 }
 
-uint32_t kmem_get_installed_memory()
+uint32_t kmem_get_installed_memory(void)
 {
 	return total_ram;
 }
 
-uint32_t kmem_get_highest_addr()
+uint32_t kmem_get_highest_addr(void)
 {
 	return highest_addr;
 }

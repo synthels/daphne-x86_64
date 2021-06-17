@@ -10,35 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef KERNEL_x86_32_MM
+#define KERNEL_x86_32_MM
 
-#include <multiboot.h>
 #include <stdint.h>
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <kernel.h>
+typedef uint32_t pte_t;
+typedef uint32_t pdir_t;
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
-
-#include <tty/printk.h>
-#include <panic.h>
-
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+/**
+ * arch_init_paging
+ *   brief: init paging on i386
+ */
+void arch_init_paging(void);
 
 #endif

@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <tty/printk.h>
-#include <logger/panic.h>
+#include <panic.h>
 #include <kernel.h>
 
 #include "PIC.h"

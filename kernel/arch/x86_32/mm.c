@@ -11,34 +11,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel main code
+ * i386 Memory manager
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "mm.h"
 
-#include <multiboot.h>
-#include <stdint.h>
+extern void init_paging(void);
+extern void load_page_dir(uint32_t *);
+static pdir_t *page_directory;
 
-#include <tty/tty_io.h>
-#include <io/io.h>
-#include <kernel.h>
+void arch_init_paging(void)
+{
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
-#include <memory/mm.h>
-
-#include <tty/printk.h>
-#include <panic.h>
-
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
-
-#endif
+}

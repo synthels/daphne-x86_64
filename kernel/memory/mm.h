@@ -18,9 +18,13 @@
 #include <stdint.h>
 #include <tty/printk.h>
 #include <multiboot.h>
-#include <logger/panic.h>
+#include <panic.h>
 
 #include "malloc.h"
+
+#ifdef ARCH_x86_32
+	#include <arch/x86_32/mm.h>
+#endif
 
 #define MiB(n) 1048576 * n 
 #define KERN_END (uint32_t) &kend
@@ -59,19 +63,19 @@ void kmem_init_paging(void);
  * kmem_get_kernel_mmap
  *   brief: get kernel memory map
  */
-mmap_entry_t *kmem_get_kernel_mmap();
+mmap_entry_t *kmem_get_kernel_mmap(void);
 
 /**
  * kmem_get_kmmap_size
  *   brief: get kernel memory map size
  */
-size_t kmem_get_kmmap_size();
+size_t kmem_get_kmmap_size(void);
 
 /**
  * kmem_get_installed_memory
  *   brief: get total installed memory in bytes
  */
-uint32_t kmem_get_installed_memory();
+uint32_t kmem_get_installed_memory(void);
 
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED 2
