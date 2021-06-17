@@ -35,7 +35,7 @@ First, run
 ```
 ./tools/setup.sh -mk-grub
 ```
-
+s
 in order create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
 
 Then run
@@ -72,5 +72,5 @@ Then, move `kernel.bin` to the `iso/boot` directory.
 
 Next, to build the ISO, just run
 ```
-grub-mkrescue -o dahlia-img-grub.iso iso
+grub-mkrescue -o daphne-img-grub.iso iso
 ```

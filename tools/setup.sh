@@ -19,7 +19,7 @@ fi
 echo "default=0
 timeout=0
 
-menuentry \"dahlia\" {
+menuentry \"daphne\" {
 	multiboot /boot/kernel.bin
 	boot
 }" > $BUILD_DIR/iso/boot/grub/grub.cfg

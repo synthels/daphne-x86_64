@@ -24,7 +24,7 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
-	printk("dahlia %s\n", KERNEL_VERSION_STRING);
+	printk("daphne %s\n", KERNEL_VERSION_STRING);
 
 	uint32_t esp;
 	asm volatile("mov %%esp, %0" : "=r"(esp));
