@@ -16,6 +16,8 @@
 
 #include "mm.h"
 
+/* TODO: 64 bit addresses */
+
 /* mmap as given by grub */
 static mmap_entry_t *mmap_begin;
 
