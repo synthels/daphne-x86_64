@@ -7,8 +7,8 @@ set(SRC
 	${SRCROOT}/tss.h
 	${SRCROOT}/gdt.c
 	${SRCROOT}/gdt.h
-	${SRCROOT}/mm.c
-	${SRCROOT}/mm.h
+	${SRCROOT}/vmm.c
+	${SRCROOT}/vmm.h
 )
 
 add_subdirectory(${SRCROOT}/boot)

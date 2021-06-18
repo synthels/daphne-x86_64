@@ -35,7 +35,7 @@ First, run
 ```
 ./tools/setup.sh -mk-grub
 ```
-s
+
 in order create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
 
 Then run

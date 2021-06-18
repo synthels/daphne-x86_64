@@ -10,20 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * i386 virtual memory manager
  */
 
-#ifndef KERNEL_x86_32_MM
-#define KERNEL_x86_32_MM
+#include "vmm.h"
 
-#include <stdint.h>
+extern void init_paging(void);
+extern void load_page_dir(uint32_t *);
+static pdir_t *page_directory;
 
-typedef uint32_t pte_t;
-typedef uint32_t pdir_t;
+void arch_init_paging(void)
+{
 
-/**
- * arch_init_paging
- *   brief: init paging on i386
- */
-void arch_init_paging(void);
-
-#endif
+}

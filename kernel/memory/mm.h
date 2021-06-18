@@ -23,7 +23,7 @@
 #include "malloc.h"
 
 #ifdef ARCH_x86_32
-	#include <arch/x86_32/mm.h>
+	#include <arch/x86_32/vmm.h>
 #endif
 
 #define MiB(n) 1048576 * n 
