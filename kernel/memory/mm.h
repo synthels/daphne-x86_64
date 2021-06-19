@@ -27,6 +27,8 @@
 #endif
 
 #define MiB(n) 1048576 * n 
+#define KiB(n) 1024 * n
+
 #define KERN_END (uint32_t) &kend
 #define PAGE_SIZE 4096
 

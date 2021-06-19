@@ -16,9 +16,17 @@
 #define KERNEL_x86_32_VMM
 
 #include <stdint.h>
+#include <stddef.h>
+#include <kernel.h>
+#include <memory/malloc.h>
 
 typedef uint32_t pte_t;
 typedef uint32_t pdir_t;
+
+typedef uint32_t physaddr_t;
+typedef uint32_t virtaddr_t;
+
+#define ADD_PT(pte, i) page_dir[i] = ((uint32_t) pte) | 3
 
 /**
  * arch_init_paging
@@ -26,4 +34,12 @@ typedef uint32_t pdir_t;
  */
 void arch_init_paging(void);
 
+/**
+ * switch_address_space
+ *   brief: switches current address space to 
+ *          [(from, to) -> (0, to - from)]
+ */
+void switch_address_space(physaddr_t from, physaddr_t to);
+
 #endif
+
