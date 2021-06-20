@@ -14,10 +14,7 @@
  * Simple PS/2 keyboard driver
  */
 
-#include "keyboard.h"
-
-MODULE_NAME("ps2_keyboard");
-MODULE_AUTH("synthels");
+#include "kbd.h"
 
 static int kbd_enabled = 0;
 static int kbd_last_key_pressed;
@@ -26,14 +23,12 @@ static uint8_t kbd_last_key;
 /* Key event */
 static int kbd_keyev = 0;
 
-/* Init keyboard */
 void kbd_init(void)
 {
 	kbd_enabled = 1;
 }
 
-/* Read 0x60 */
-void kbd_read()
+void kbd_read(void)
 {
 	if (kbd_enabled) {
 		kbd_keyev = 1;
@@ -41,7 +36,7 @@ void kbd_read()
 		kbd_last_key_pressed = !(kbd_last_key & 0x80);
 		return;
 	}
-	/* Keyboard is disabled */
+
 	/* Read once again from here, so the PIC doesn't think we're stupid
 	   if the keyboard is disabled */
 	kbd_last_key = '\0';
@@ -68,7 +63,7 @@ void kbd_get_last_key(uint8_t *key, int *pressed)
 }
 
 /* Check if there is a key event */
-int kbd_get_event()
+int kbd_get_event(void)
 {
 	return kbd_keyev;
 }
@@ -78,7 +73,6 @@ uint8_t kbd_translate(uint8_t key, uint8_t layout[])
 	return layout[key];
 }
 
-/* Acknowledge that keyboard event was read */
 /* This is fine, since there will always be exactly one recepient of this event,
    the kernel. The kernel can then communicate to user-space */
 void kbd_ack()

@@ -16,7 +16,7 @@
 #define TESTS
 
 #include <tty/printk.h>
-#include <drivers/time/PIT.h>
+#include <dev/pit.h>
 #include "malloc_test.h"
 
 #define TEST_ASSERT(cond, test) if (cond) { printk("Success: %s", test); } else { printk("Failed test: %s", test); return; }

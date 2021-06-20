@@ -16,9 +16,6 @@
 
 #include "pcspk.h"
 
-MODULE_NAME("pcspk");
-MODULE_AUTH("synthels");
-
 /* Play a certain frequency through the PC speaker */
 static void _beep(uint16_t freq)
 {

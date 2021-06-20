@@ -12,13 +12,13 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __SLEEP
-#define __SLEEP
+#ifndef DEV
+#define DEV
 
-#include <drivers/time/PIT.h>
-#include <stdint.h>
+#include "pit.h"
+#include "kbd.h"
+#include "pcspk.h"
 
-/* Sleep n ticks... */
-void sleep(uint32_t ticks);
+void dev_init_essentials();
 
 #endif

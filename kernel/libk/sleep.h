@@ -12,10 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef PCI
-#define PCI
+#ifndef LIBK_SLEEP
+#define LIBK_SLEEP
 
-#include <drivers/driver.h>
-#include <io/io.h>
+#include <dev/pit.h>
+#include <stdint.h>
+
+/**
+ * sleep
+ *   brief: sleep kernel for n ticks 
+ */
+void sleep(uint32_t ticks);
 
 #endif

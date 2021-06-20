@@ -10,8 +10,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel main code
  */
 
 #ifndef KERNEL_INIT
@@ -24,8 +22,8 @@
 #include <io/io.h>
 #include <kernel.h>
 
-#include <drivers/time/sleep.h>
-#include <drivers/driver.h>
+#include <libk/sleep.h>
+#include <dev/dev.h>
 #include <memory/mm.h>
 
 #include <tty/printk.h>

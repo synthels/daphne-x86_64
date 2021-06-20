@@ -12,22 +12,30 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DRIVER_PIT
-#define DRIVER_PIT
+#ifndef DEV_PIT
+#define DEV_PIT
 
 #include <io/io.h>
-#include <drivers/driver.h>
 #include <kernel.h>
 
 #define TIMER_FREQ 100
 
-/* Initialize PIT */
+/**
+ * pit_init
+ *   brief: init pit
+ */
 void pit_init(void);
 
-/* Tick */
+/**
+ * pit_tick
+ *   brief: do one tick
+ */
 void pit_tick(void);
 
-/* Read tick counter */
+/**
+ * pit_get_ticks
+ *   brief: get current tick count
+ */
 void pit_get_ticks(uint32_t *data);
 
 #endif

@@ -15,8 +15,8 @@
  */
 
 #include <io/io.h>
-#include <drivers/keyboard/keyboard.h>
-#include <drivers/time/PIT.h>
+#include <dev/kbd.h>
+#include <dev/pit.h>
 #include <stdint.h>
 #include <tty/printk.h>
 

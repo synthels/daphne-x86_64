@@ -10,20 +10,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Sleep function
  */
 
-#include "sleep.h"
+#include "dev.h"
 
-/* Sleep n ticks... */
-void sleep(uint32_t ticks)
+void dev_init_essentials()
 {
-	uint32_t start;
-	uint32_t now;
-	pit_get_ticks(&start);
-	pit_get_ticks(&now);
-	while ((now - start) < ticks) {
-		pit_get_ticks(&now);
-	}
+	kbd_init();
+	pit_init();
 }

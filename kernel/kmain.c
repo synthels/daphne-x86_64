@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Main function
+ * Kernel main function
  */
 
 #include "kmain.h"
@@ -48,8 +48,8 @@ void kmain(multiboot_info_t *info)
 	/* Init paging */
 	kmem_init_paging();
 
-	/* Init all drivers */
-	init_drivers();
+	/* Init essential devices */
+	dev_init_essentials();
 
 	printk("total_ram=%uiMB",  (kmem_get_installed_memory() / 1048576) + 2);
 

@@ -12,38 +12,56 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DRIVER_KEYBOARD
-#define DRIVER_KEYBOARD
+#ifndef DEV_KBD
+#define DEV_KBD
 
 #include <io/io.h>
-#include <drivers/driver.h>
 #include <stdint.h>
 
-/* Init keyboard */
+/**
+ * kbd_init
+ *   brief: init keyboard driver
+ */
 void kbd_init(void);
 
-/* Get last key */
+/**
+ * kbd_get_last_key
+ *   brief: get latest key event
+ *   parameters:
+ *     - key: pointer to scan code
+ *     - pressed: set if key was pressed,
+ *                0 if released
+ */
 void kbd_get_last_key(uint8_t *key, int *pressed);
 
-/* Read 0x60 */
+/**
+ * kbd_read
+ *   brief: read from PS/2 port
+ */
 void kbd_read();
 
-/* Check if keyboard is enabled */
+/**
+ * kbd_is_enabled
+ *   brief: check if keyboard is enabled
+ */
 int kbd_is_enabled(void);
 
-/* Enable/disable keyboard */
+/**
+ * kbd_set_enabled
+ *   brief: enable/disable keyboard
+ */
 void kbd_set_enabled(int enabled);
 
-/* Check if there is a key event */
+/**
+ * kbd_get_event
+ *   brief: check if there is a keyboard event
+ */
 int kbd_get_event();
 
-/* Acknowledge that keyboard event was read */
+/**
+ * kbd_ack
+ *   brief: flush latest keyboard event
+ */
 void kbd_ack();
-
-/* Translates a key corrensponding to a specific layout */
-uint8_t kbd_translate(uint8_t key, uint8_t layout[]);
-
-/* Check if a key is a printable character */
-int kbd_is_printable(uint8_t key, uint8_t layout[]);
 
 #endif

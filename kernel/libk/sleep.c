@@ -11,28 +11,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * PCI
+ * Sleep function
  */
 
-#include "pci.h"
+#include "sleep.h"
 
-MODULE_NAME("pci");
-MODULE_AUTH("synthels");
-
-uint16_t pci_cfg_readw(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset)
+void sleep(uint32_t ticks)
 {
-	uint32_t addr;
-	uint32_t lbus = (uint32_t) bus;
-	uint32_t lslot = (uint32_t) slot;
-	uint32_t lfunc = (uint32_t) func;
-	uint16_t tmp = 0;
-
-	addr = (uint32_t) (
-		(lbus << 16) | (lslot << 11) | (lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000)
-	);
-
-	outl(0xcfc, addr);
-	/* Read data */
-	tmp = (uint16_t) ((inl(0xcfc) >> ((offset & 2) * 8)) & 0xffff);
-	return tmp;
+	uint32_t start;
+	uint32_t now;
+	pit_get_ticks(&start);
+	pit_get_ticks(&now);
+	while ((now - start) < ticks)
+		pit_get_ticks(&now);
 }

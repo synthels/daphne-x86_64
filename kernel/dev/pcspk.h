@@ -8,28 +8,22 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
  */
 
-#ifndef DRIVER
-#define DRIVER
+#ifndef DEV_PCSPK
+#define DEV_PCSPK
 
 #include <stdint.h>
-#include <kernel.h>
-#include <tty/printk.h>
+#include <io/io.h>
+#include <libk/sleep.h>
 
-#include <drivers/keyboard/keyboard.h>
-#include <drivers/sound/pcspk.h>
-#include <drivers/time/PIT.h>
-#include <drivers/pci/pci.h>
-
-#define MODULE_NAME(x) static char *__mod_name __attribute((unused)) = x
-#define MODULE_AUTH(x) static char *__mod_auth __attribute((unused)) = x
-
-#define mprint(x) printk("%s: %s", __mod_name, x)
-
-/* Init drivers */
-void init_drivers(void);
+/**
+ * pcspk_beep
+ *   brief: play freq through the pc speaker for
+ *          a few ticks
+ */
+void pcspk_beep(uint16_t freq, uint16_t ticks);
 
 #endif

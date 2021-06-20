@@ -16,7 +16,7 @@
 #define LOGGER
 
 #include <tty/printk.h>
-#include <drivers/time/PIT.h>
+#include <dev/pit.h>
 #include <stdint.h>
 #include <kernel.h>
 
