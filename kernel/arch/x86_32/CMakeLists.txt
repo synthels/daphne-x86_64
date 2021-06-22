@@ -9,6 +9,9 @@ set(SRC
 	${SRCROOT}/gdt.h
 	${SRCROOT}/vmm.c
 	${SRCROOT}/vmm.h
+	${SRCROOT}/tty_io.c
+	${SRCROOT}/tty_io.h
+	${SRCROOT}/vga.h
 )
 
 add_subdirectory(${SRCROOT}/boot)

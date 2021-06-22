@@ -21,6 +21,8 @@ endif()
 
 if (ARCH STREQUAL "x86_32")
 	add_compile_definitions(ARCH_x86_32)
+elseif (ARCH STREQUAL "x86_64")
+	add_compile_definitions(ARCH_x86_64)
 endif()
 
 # Build kernel

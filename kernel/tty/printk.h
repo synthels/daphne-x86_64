@@ -17,8 +17,13 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <tty/tty_io.h>
 #include <kernel.h>
+
+#ifdef ARCH_x86_32
+	#include <arch/x86_32/tty_io.h>
+#else
+	#error "x64 support is on the way..."
+#endif
 
 #include <libk/stdlib.h>
 

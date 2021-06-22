@@ -18,7 +18,6 @@
 #include <multiboot.h>
 #include <stdint.h>
 
-#include <tty/tty_io.h>
 #include <io/io.h>
 #include <kernel.h>
 

@@ -24,7 +24,7 @@ void kmain(multiboot_info_t *info)
 	/* Init tty */
 	tty_init();
 
-	printk("daphne %s\n", KERNEL_VERSION_STRING);
+	printk("daphne %s (%s) \n", KERNEL_VERSION_STRING, KERNEL_ARCH_STRING);
 
 	uint32_t esp;
 	asm volatile("mov %%esp, %0" : "=r"(esp));
@@ -60,7 +60,6 @@ void kmain(multiboot_info_t *info)
 
 	/* Ring 3! */
 	enter_usermode();
-
 	printk("\nHello user mode! :)");
 
 	for(;;);

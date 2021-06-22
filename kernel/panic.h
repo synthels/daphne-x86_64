@@ -11,13 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel Panic
+ * Kernel panic
  */
 
 #ifndef PANIC
 #define PANIC
 
-#include <tty/tty_io.h>
 #include <tty/printk.h>
 
 /* Throws a tantrum */
