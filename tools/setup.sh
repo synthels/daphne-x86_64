@@ -7,25 +7,30 @@ then
 	mkdir $BUILD_DIR
 fi
 
+# Add a clean script to build
+touch $BUILD_DIR/clean.sh
+
 if [[ $1 = "-mk-grub" ]]
 then
 	mkdir $BUILD_DIR/iso
 	mkdir $BUILD_DIR/iso/boot
 	mkdir $BUILD_DIR/iso/boot/grub
 	touch $BUILD_DIR/iso/boot/grub/grub.cfg
+	echo "default=0
+	timeout=0
+
+	menuentry \"daphne\" {
+		multiboot /boot/kernel.bin
+		boot
+	}" > $BUILD_DIR/iso/boot/grub/grub.cfg
+
+	echo "rm -r ./*
+	./../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
 fi
 
-# Overwrite grub.cfg
-echo "default=0
-timeout=0
-
-menuentry \"daphne\" {
-	multiboot /boot/kernel.bin
-	boot
-}" > $BUILD_DIR/iso/boot/grub/grub.cfg
-
-# Add a clean script to build
-touch $BUILD_DIR/clean.sh
-
-echo "rm -r ./*
-./../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
+if [[ $1 = "-mk-uefi" ]]
+then
+	mkdir $BUILD_DIR/iso
+	echo "rm -r ./*
+	./../tools/setup.sh -mk-uefi" > $BUILD_DIR/clean.sh
+fi

@@ -67,7 +67,7 @@ The building process is a bit different when targeting x64. First, you should ge
 brew install x86_64-elf-gcc
 ```
 
-Now, you should have the required dependencies, so you can just run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64`. You should also run `./tools/setup.sh` instead of `./tools/setup.sh -mk-grub`.
+Now, you should have the required dependencies, so you can just run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64` and every `-DCMAKE_C_COMPILER=i686-elf-gcc` with `-DCMAKE_C_COMPILER=x86_64-elf-gcc`. You should also run `./tools/setup.sh -mk-uefi` instead of `./tools/setup.sh -mk-grub`.
 
 # Building an ISO image
 If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!
@@ -81,5 +81,41 @@ Then, move `kernel.bin` to the `iso/boot` directory.
 
 Next, to build the ISO, just run
 ```
-grub-mkrescue -o daphne-img-grub.iso iso
+grub-mkrescue -o daphne-img-x32.iso iso
 ```
+
+## x86_64 UEFI
+In order to build an ISO image under x86_64, follow these instructions.
+First, `cd` to `kernel/arch/x86_64/boot`. There, run the following commands
+
+```
+dd if=/dev/zero of=fat.img bs=1k count=1440
+```
+
+```
+mformat -i fat.img -f 1440 ::
+```
+
+to format our FAT image. Next, run
+
+```
+mmd -i fat.img ::/EFI
+```
+
+```
+mmd -i fat.img ::/EFI/BOOT
+```
+
+```
+mcopy -i fat.img BOOTX64.EFI ::/EFI/BOOT
+```
+
+Now, move `fat.img` to `build/iso` and run
+
+```
+xorriso -as mkisofs -R -f -e fat.img -no-emul-boot -o daphne_img_x64.iso iso
+```
+
+from the `build` directory
+
+** TODO: Instructions incomplete, need to show how to include kernel **
