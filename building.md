@@ -29,7 +29,7 @@ export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
 export PATH="$PATH:$BREW_HOME"
 ```
 
-# Let's start the build!
+# Let's start the build! (x86_32 BIOS)
 First, run
 
 ```
@@ -59,6 +59,33 @@ cmake --build .
 ```
 
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
+
+# Let's start the build! (x86_64 UEFI)
+The building process is a bit different when targeting x64. First, you should get your own  `x86_64-elf-gcc`. To get it, run the following command
+
+```
+brew install x86_64-elf-gcc
+```
+
+Now, Before doing anything, you should compile `bootx64.c`. To do that, go to the project root and run the following commands
+
+```
+cd ..
+```
+
+```
+git clone https://gitlab.com/bztsrc/posix-uefi.git
+```
+
+```
+cd daphne/kernel/arch/x86_64/boot
+```
+
+```
+ln -s ../../../../../posix-uefi/uefi
+```
+
+Now, you should have the required dependencies, so you can just run `make` in the `boot` directory. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64`. You should also run `./tools/setup.sh` instead of `./tools/setup.sh -mk-grub`.
 
 # Building an ISO image
 If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!
