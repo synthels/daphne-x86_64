@@ -67,25 +67,7 @@ The building process is a bit different when targeting x64. First, you should ge
 brew install x86_64-elf-gcc
 ```
 
-Now, Before doing anything, you should compile `bootx64.c`. To do that, go to the project root and run the following commands
-
-```
-cd ..
-```
-
-```
-git clone https://gitlab.com/bztsrc/posix-uefi.git
-```
-
-```
-cd daphne/kernel/arch/x86_64/boot
-```
-
-```
-ln -s ../../../../../posix-uefi/uefi
-```
-
-Now, you should have the required dependencies, so you can just run `make` in the `boot` directory. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64`. You should also run `./tools/setup.sh` instead of `./tools/setup.sh -mk-grub`.
+Now, you should have the required dependencies, so you can just run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64`. You should also run `./tools/setup.sh` instead of `./tools/setup.sh -mk-grub`.
 
 # Building an ISO image
 If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!
