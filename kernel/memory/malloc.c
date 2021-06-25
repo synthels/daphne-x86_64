@@ -59,7 +59,7 @@ static mutex_t alloc_mutex = 0;
 extern uint32_t kstart;
 extern uint32_t kend;
 
-uint64_t *kalloc(size_t n, size_t begin)
+addr_t *kalloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
 	mmap_entry_t *mmap = kmem_get_kernel_mmap();
@@ -70,7 +70,7 @@ uint64_t *kalloc(size_t n, size_t begin)
 		if (mmap[i].length - mmap_offs[i] >= n) {
 			mmap_offs[i] += n;
 			release_mutex(&alloc_mutex);
-			return (uint64_t *) mmap[i].base_addr + mmap_offs[i];
+			return (addr_t *) (uintptr_t) (mmap[i].base_addr + mmap_offs[i]);
 		} else {
 			/* If this entry runs out, try going to the next */
 			if (i < 255) {

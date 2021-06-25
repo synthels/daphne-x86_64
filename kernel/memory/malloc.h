@@ -24,6 +24,14 @@
 
 #include "mm.h"
 
+#ifdef ARCH_x86_64
+typedef uint64_t addr_t;
+#endif
+
+#ifdef ARCH_x86_32
+typedef uint32_t addr_t;
+#endif
+
 #define MAX_PAGES 12 /* Max pages in bin */
 
 struct malloc_page {
@@ -60,7 +68,7 @@ void *kfree(void *ptr);
  * kalloc
  *   brief: watermark allocator
  */
-uint64_t *kalloc(size_t n, size_t begin);
+addr_t *kalloc(size_t n, size_t begin);
 
 /**
  * kalloc_mem_aligned

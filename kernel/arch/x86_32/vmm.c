@@ -73,5 +73,8 @@ void arch_init_paging(void)
 	}
 
 	load_page_dir(page_dir);
+
+	#ifndef BUILD_TESTS
 	init_paging();
+	#endif
 }

@@ -26,10 +26,25 @@
 	#include <arch/x86_32/vmm.h>
 #endif
 
+#ifdef ARCH_x86_64
+typedef uint64_t addr_t;
+#endif
+
+#ifdef ARCH_x86_32
+typedef uint32_t addr_t;
+#endif
+
 #define MiB(n) 1048576 * n 
 #define KiB(n) 1024 * n
 
+#ifdef ARCH_x86_64
 #define KERN_END (uint64_t) &kend
+#endif
+
+#ifdef ARCH_x86_32
+#define KERN_END (uint32_t) &kend
+#endif
+
 #define PAGE_SIZE 4096
 
 #define fast_ceil(x, y) ((long long) x + y - 1) / y
