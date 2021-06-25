@@ -31,7 +31,7 @@ void *memset(void *s, int c, size_t sz)
 	byte *pp = (byte *) s;
 	size_t tail;
 
-	while (((unsigned int) pp & 3) && sz--)
+	while (((byte) (uintptr_t) pp & 3) && sz--)
 		*pp++ = xx;
 	p = (uint32_t *) pp;
 

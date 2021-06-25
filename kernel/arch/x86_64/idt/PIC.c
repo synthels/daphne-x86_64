@@ -10,25 +10,23 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * PIC
  */
 
-#ifndef PRINTK
-#define PRINTK
+#include "PIC.h"
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <kernel.h>
-
-//#ifdef ARCH_x86_32
-#include <arch/x86_32/tty_io.h>
-//#endif
-
-#include <libk/stdlib.h>
-
-/* Prints a formatted string to a buffer */
-int vsprintf(char **buf, va_list args);
-
-/* Prints a formatted string to the screen using tty functions */
-int printk(const char *fmt, ...);
-
-#endif
+/* Remap the PIC */
+void remap_pic(void)
+{
+	outb(0x20, 0x11);
+	outb(0xA0, 0x11);
+	outb(0x21, 0x20);
+	outb(0xA1, 0x28);
+	outb(0x21, 0x04);
+	outb(0xA1, 0x02);
+	outb(0x21, 0x01);
+	outb(0xA1, 0x01);
+	outb(0x21, 0x0);
+	outb(0xA1, 0x0);
+}

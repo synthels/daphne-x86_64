@@ -12,23 +12,12 @@
  * GNU General Public License for more details.
  */
 
-#ifndef PRINTK
-#define PRINTK
+#ifndef KERNEL_PIC
+#define KERNEL_PIC
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <kernel.h>
+#include <io/io.h>
 
-//#ifdef ARCH_x86_32
-#include <arch/x86_32/tty_io.h>
-//#endif
-
-#include <libk/stdlib.h>
-
-/* Prints a formatted string to a buffer */
-int vsprintf(char **buf, va_list args);
-
-/* Prints a formatted string to the screen using tty functions */
-int printk(const char *fmt, ...);
+/* Remap the PIC */
+void remap_pic(void);
 
 #endif

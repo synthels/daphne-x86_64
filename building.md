@@ -12,14 +12,21 @@
 
 We use CMake as our build system, so you will have to install that first of all.
 
-Before building, you must also install the `i686-elf-gcc` compiler. The best way to get it is to use brew like so
+If you haven't built gcc already, please run the `tools/gcc_pre.sh` script first.
+Before building, you must also build the `i686-elf-gcc` compiler. The easiest way to build it is to use brew like so
 
 ```
 brew install i686-elf-gcc
 ```
 
+If you're building for x64, use the following command instead
+
+```
+brew install x86_64-elf-gcc
+```
+
 ### WSL note
-On WSL, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
+On WSL/Some linux distros, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
 
 ```
 export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
@@ -61,18 +68,13 @@ cmake --build .
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 # Let's start the build! (x86_64 UEFI)
-The building process is a bit different when targeting x64. First, you should get your own  `x86_64-elf-gcc`. To get it, run the following command
-
-```
-brew install x86_64-elf-gcc
-```
-
-Now, you should have the required dependencies, so you can just run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64` and every `-DCMAKE_C_COMPILER=i686-elf-gcc` with `-DCMAKE_C_COMPILER=x86_64-elf-gcc`. You should also run `./tools/setup.sh -mk-uefi` instead of `./tools/setup.sh -mk-grub`.
+First, in order to build the bootloader, run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`. Now, you should refer to the instructions for `x86_32`, only replacing every `-DARCH=x86_32` with `-DARCH=x86_64` and every `-DCMAKE_C_COMPILER=i686-elf-gcc` with `-DCMAKE_C_COMPILER=x86_64-elf-gcc`. You should also run `./tools/setup.sh -mk-uefi` instead of `./tools/setup.sh -mk-grub`.
 
 # Building an ISO image
 If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!
 
 First of all, run the following command to strip any debug info off the kernel binary
+
 ```
 strip --strip-debug kernel.bin
 ```
@@ -80,6 +82,7 @@ strip --strip-debug kernel.bin
 Then, move `kernel.bin` to the `iso/boot` directory.
 
 Next, to build the ISO, just run
+
 ```
 grub-mkrescue -o daphne-img-x32.iso iso
 ```

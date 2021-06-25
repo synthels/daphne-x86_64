@@ -10,25 +10,35 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Interrupt handlers
  */
 
-#ifndef PRINTK
-#define PRINTK
-
-#include <stdarg.h>
+#include <io/io.h>
+#include <dev/kbd.h>
+#include <dev/pit.h>
 #include <stdint.h>
-#include <kernel.h>
+#include <tty/printk.h>
 
-//#ifdef ARCH_x86_32
-#include <arch/x86_32/tty_io.h>
-//#endif
+#define IRQ_END outb(0x20, 0x20)
 
-#include <libk/stdlib.h>
+/* PIT IRQ */
+void pit_irq_handler(void)
+{
+	pit_tick();
+	IRQ_END;
+}
 
-/* Prints a formatted string to a buffer */
-int vsprintf(char **buf, va_list args);
+/* Keyboard IRQ */
+void kbd_irq_handler(void)
+{
+	kbd_read();
+	IRQ_END;
+}
 
-/* Prints a formatted string to the screen using tty functions */
-int printk(const char *fmt, ...);
-
-#endif
+/* syscall handler */
+void syscall_handler(regs_t *r)
+{
+	printk("syscall: EAX = %i", r->eax);
+	IRQ_END;
+}

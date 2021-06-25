@@ -1,3 +1,5 @@
+#!/bin/sh
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 BUILD_DIR="$SCRIPT_DIR/../build"
 
@@ -24,13 +26,15 @@ then
 		boot
 	}" > $BUILD_DIR/iso/boot/grub/grub.cfg
 
-	echo "rm -r ./*
-	./../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
+	echo "#!/bin/sh
+	rm -r ./*
+	bash ../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
 fi
 
 if [[ $1 = "-mk-uefi" ]]
 then
 	mkdir $BUILD_DIR/iso
-	echo "rm -r ./*
+	echo "#!/bin/sh
+	rm -r ./*
 	./../tools/setup.sh -mk-uefi" > $BUILD_DIR/clean.sh
 fi

@@ -29,7 +29,7 @@
 #define MiB(n) 1048576 * n 
 #define KiB(n) 1024 * n
 
-#define KERN_END (uint32_t) &kend
+#define KERN_END (uint64_t) &kend
 #define PAGE_SIZE 4096
 
 #define fast_ceil(x, y) ((long long) x + y - 1) / y
@@ -38,8 +38,8 @@
 
 struct mmap_entry {
 	uint32_t size;
-	uint32_t base_addr_low, base_addr_high;
-	uint32_t length_low, length_high;
+	uint64_t base_addr;
+	uint64_t length;
 	uint32_t type;
 }  __attribute__((packed));
 

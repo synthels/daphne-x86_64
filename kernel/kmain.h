@@ -34,6 +34,10 @@
 	#include <arch/x86_32/tss.h>
 #endif
 
+#ifdef ARCH_x86_64
+	#include <arch/x86_64/idt/idt.h>
+#endif
+
 #ifdef BUILD_TESTS
 	#include <tests/tests.h>
 #endif

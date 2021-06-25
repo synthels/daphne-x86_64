@@ -31,10 +31,10 @@ int printk(const char *fmt, ...)
 	 * Hack to make gcc point to the first parameter 
 	 * instead of ignoring it
 	 */
-	va_list args = (va_list) &fmt;
-	int err = vsprintf(&buf, args);
+	//va_list args = (va_list) &fmt;
+	int err = vsprintf(&buf, &fmt);
 	tty_puts(buf, VGA_COLOR_WHITE);
-	va_end(args);
+	va_end(&fmt);
 
 	return err;
 }
