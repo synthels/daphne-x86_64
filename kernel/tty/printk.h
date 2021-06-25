@@ -19,9 +19,11 @@
 #include <stdint.h>
 #include <kernel.h>
 
-//#ifdef ARCH_x86_32
+#ifdef ARCH_x86_32
 #include <arch/x86_32/tty_io.h>
-//#endif
+#else
+#error "x64 does not support tty yet!"
+#endif
 
 #include <libk/stdlib.h>
 

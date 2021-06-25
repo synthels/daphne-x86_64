@@ -46,7 +46,7 @@ void gdt_set_gate(
 void init_gdt(void)
 {
 	gp.limit = (sizeof(struct gdt_entry) * 6) - 1;
-	gp.base = (uint32_t) &gdt;
+	gp.base = (uint32_t) &gdt; /* uintptr_t?? */
 
 	/* NULL seg */
 	gdt_set_gate(0, 0, 0, 0, 0);

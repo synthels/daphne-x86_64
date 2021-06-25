@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_32_GDT
-#define KERNEL_x86_32_GDT
+#ifndef KERNEL_x86_64_GDT
+#define KERNEL_x86_64_GDT
 
 #include <stdint.h>
 
