@@ -56,7 +56,6 @@ Now that you're in the `build` directory, we can start fiddling with CMake!
 ```
 cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=i686-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_32 ..
 ```
-cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=i686-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_32 ..
 This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
 
 To finally build the binary, you can run CMake's generic build command
