@@ -57,7 +57,7 @@ void kmem_init(multiboot_info_t *info)
 	mmap_length = info->mmap_length;
 
 	/* Validate mmap */
-	for (size_t i = 0; (uint32_t) (uintptr_t) mmap < (info->mmap_addr + info->mmap_length); i++) {
+	for (size_t i = 0; (addr_t) (uintptr_t) mmap < (info->mmap_addr + info->mmap_length); i++) {
 		/* 0 length entries */
 		if (mmap->length == 0x0) {
 			mmap->type = MEMORY_INVALID;
@@ -93,7 +93,7 @@ void kmem_init(multiboot_info_t *info)
 		total_ram += mmap->length;
 		dump_entry(mmap);
 		/* Next entry */
-		mmap = (mmap_entry_t *) ((uint32_t) (uintptr_t) mmap + mmap->size + sizeof(mmap->size));
+		mmap = (mmap_entry_t *) ((addr_t) (uintptr_t) mmap + mmap->size + sizeof(mmap->size));
 	}
 
 	/* You expect this shit to run with less than 5mb ram? */
