@@ -35,7 +35,7 @@
 #endif
 
 #ifdef ARCH_x86_64
-	#include <arch/x86_64/idt/idt.h>
+	#include <arch/x86_64/gdt.h>
 #endif
 
 #ifdef BUILD_TESTS

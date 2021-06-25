@@ -1,7 +1,8 @@
 set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/arch/x86_64)
 
-# set(SRC
-
-# )
+set(SRC
+    ${SRCROOT}/gdt.c
+    ${SRCROOT}/gdt.h
+)
 
 target_sources(kernel.bin PRIVATE ${SRC})
