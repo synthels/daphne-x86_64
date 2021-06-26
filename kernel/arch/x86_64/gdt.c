@@ -19,9 +19,6 @@
 static struct gdt_entry gdt[6];
 static struct gdt_ptr gp;
 
-extern void gdt_flush(uint64_t);
-extern void tss_flush(void);
-
 void gdt_set_gate(
 	int num,
 	uint32_t base,
@@ -71,5 +68,5 @@ void init_gdt(void)
 		: : "r"(&gp)
 	);
 
-	tss_flush();
+	/* tss_flush(); */
 }

@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_32_IDT
-#define KERNEL_x86_32_IDT
+#ifndef KERNEL_x86_64_IDT
+#define KERNEL_x86_64_IDT
 
 #include <stdint.h>
 #include <tty/printk.h>
