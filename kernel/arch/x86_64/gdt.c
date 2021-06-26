@@ -19,7 +19,7 @@
 static struct gdt_entry gdt[6];
 static struct gdt_ptr gp;
 
-extern void gdt_flush(uint32_t);
+extern void gdt_flush(uint64_t);
 extern void tss_flush(void);
 
 void gdt_set_gate(
@@ -46,7 +46,7 @@ void gdt_set_gate(
 void init_gdt(void)
 {
 	gp.limit = (sizeof(struct gdt_entry) * 6) - 1;
-	gp.base = (uint32_t) &gdt; /* uintptr_t?? */
+	gp.base = (uint64_t) &gdt; /* uintptr_t?? */
 
 	/* NULL seg */
 	gdt_set_gate(0, 0, 0, 0, 0);
@@ -59,6 +59,17 @@ void init_gdt(void)
 	/* user ds */
 	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
 
-	gdt_flush((uintptr_t) &gp);
+	asm volatile (
+		"mov %0, %%rdi\n"
+		"lgdt (%%rdi)\n"
+		"mov $0x10, %%ax\n"
+		"mov %%ax, %%ds\n"
+		"mov %%ax, %%es\n"
+		"mov %%ax, %%ss\n"
+		"mov $0x2b, %%ax\n"
+		"ltr %%ax\n"
+		: : "r"(&gp)
+	);
+
 	tss_flush();
 }

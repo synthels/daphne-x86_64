@@ -1,17 +1,31 @@
-[bits 32]
-
-global load_idt
+[bits 64]
 
 extern pit_irq_handler
 extern kbd_irq_handler
 extern generic_irq_handler
 extern syscall_handler
 
-load_idt:
-	mov edx, [esp + 4]
-	lidt [edx]
-	sti
-	ret
+%macro _pushad 0
+	push rax
+	push rcx
+	push rdx
+	push rbx
+	push rsp
+	push rbp
+	push rsi
+	push rdi
+%endmacro
+
+%macro _popad 0
+	pop rdi
+	pop rsi
+	pop rbp
+	pop rsp
+	pop rbx
+	pop rdx
+	pop rcx
+	pop rax
+%endmacro
 
 %macro ISR_ERR 1
 	global isr%1
@@ -71,47 +85,68 @@ global _syscall
 global generic_irq
 
 irq0:
-	pushad
+	_pushad
 	cld
 	call pit_irq_handler
-	popad
+	_popad
 	iret
 
 irq1:
-	pushad
+	_pushad
 	cld
 	call kbd_irq_handler
-	popad
+	_popad
 	iret
 
 _syscall:
-	pushad
+	_pushad
 	cld
 	call syscall_handler
-	popad
+	_popad
 	iret
 
 extern fault_handler
 isr_common_stub:
-	pusha
-	push ds
-	push es
-	push fs
-	push gs
-	mov ax, 0x10
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	mov eax, esp
-	push eax
-	mov eax, fault_handler
-	call eax
-	pop eax
-	pop gs
-	pop fs
-	pop es
-	pop ds
-	popa
-	add esp, 8
-	iret
+    push rax
+    push rbx
+    push rcx
+    push rdx
+    push rsi
+    push rdi
+    push rbp
+    push r8
+    push r9
+    push r10
+    push r11
+    push r12
+    push r13
+    push r14
+    push r15
+
+    cld
+
+    mov rdi, rsp
+    call fault_handler
+    mov rsp, rax
+
+    pop r15
+    pop r14
+    pop r13
+    pop r12
+    pop r11
+    pop r10
+    pop r9
+    pop r8
+    pop rbp
+    pop rdi
+    pop rsi
+    pop rdx
+    pop rcx
+    pop rbx
+    pop rax
+
+    ; cleanup error code and interrupt
+    add rsp, 16
+
+    ; Return from interrupt
+    iretq
