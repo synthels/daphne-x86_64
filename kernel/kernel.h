@@ -51,10 +51,10 @@ typedef struct regs regs_t;
 #define UNUSED(x) (void) (x)
 
 /**
- * ERRCODE
+ * errcode_t
  *   brief: function return type 
  */
-typedef int ERRCODE;
+typedef int errcode_t;
 
 /**
  * EINVAL
