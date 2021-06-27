@@ -78,12 +78,12 @@ int main(int argc, char **argv)
 
 	/* is it a valid ELF executable for this architecture? */
 	elf = (Elf64_Ehdr *) buff;
-	if(!memcmp(elf->e_ident, ELFMAG, SELFMAG) &&	/* magic match? */
-		elf->e_ident[EI_CLASS] == ELFCLASS64 &&		/* 64 bit? */
-		elf->e_ident[EI_DATA] == ELFDATA2LSB &&		/* LSB? */
-		elf->e_type == ET_EXEC &&					/* executable object? */
-		elf->e_machine == EM_MACH &&				/* architecture match? */
-		elf->e_phnum > 0) {							/* has program headers? */
+	if(!memcmp(elf->e_ident, ELFMAG, SELFMAG) && /* magic match? */
+		elf->e_ident[EI_CLASS] == ELFCLASS64 &&  /* 64 bit? */
+		elf->e_ident[EI_DATA] == ELFDATA2LSB &&  /* LSB? */
+		elf->e_type == ET_EXEC &&                /* executable object? */
+		elf->e_machine == EM_MACH &&             /* architecture match? */
+		elf->e_phnum > 0) {                      /* has program headers? */
 			/* load segments */
 			for(phdr = (Elf64_Phdr *)(buff + elf->e_phoff), i = 0;
 				i < elf->e_phnum;
