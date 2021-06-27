@@ -16,7 +16,6 @@
 
 #include "mm.h"
 
-/* mmap as given by grub */
 static mmap_entry_t *mmap_begin;
 
 /* mmap as sanity checked by the kernel */
@@ -38,14 +37,14 @@ void dump_entry(mmap_entry_t *entry)
 {
 	switch (entry->type) {
 		case MEMORY_AVAILABLE:
-			printk("base_addr=%ui, length=%uiB - available", entry->base_addr, entry->length);
+			printk("base_addr=%ui - available", entry->base_addr, entry->length);
 			break;
 		case MEMORY_RESERVED:
-			printk("base_addr=%ui, length=%uiB - reserved", entry->base_addr, entry->length);
+			printk("base_addr=%ui - reserved", entry->base_addr, entry->length);
 			break;
 		case MEMORY_NVS:
 		case MEMORY_ACPI:
-			printk("base_addr=%ui, length=%uiB - acpi", entry->base_addr, entry->length);
+			printk("base_addr=%ui - acpi", entry->base_addr, entry->length);
 			break;
 	}
 }

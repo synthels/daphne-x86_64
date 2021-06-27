@@ -43,6 +43,8 @@ void kmain(multiboot_info_t *info)
 
 	/* Init mm */
 	printk("\nMemory map:");
+	/* TODO: pass memory map only, in order to make
+	   supporting x64 easier */
 	kmem_init(info);
 
 	/* Init paging */
