@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 synthels <synthels.me@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * UEFI bootloader
+ */
+
 #include <uefi.h>
 
 #define EFI_CONVENTIAL_MEMORY 7
@@ -6,7 +22,6 @@
 #define MEMORY_AVAILABLE 1
 #define MEMORY_RESERVED  2
 
-/*** ELF64 defines and structs ***/
 #define ELFMAG      "\177ELF"
 #define SELFMAG     4
 #define EI_CLASS    4       /* File class byte index */
@@ -82,10 +97,6 @@ void get_mmap(efi_mmap_t *mmap)
 
 	memory_map_size += 4 * desc_size;
 	memory_map = (efi_memory_descriptor_t*) malloc(memory_map_size);
-	if (!memory_map) {
-		err("malloc failed!");
-	}
-
 	status = BS->GetMemoryMap(&memory_map_size, memory_map, &map_key, &desc_size, NULL);
 	if (EFI_ERROR(status)) {
 		err("internal UEFI error");
@@ -113,15 +124,13 @@ void load_kernel(void)
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
 		buff = malloc(size + 1);
-		if (!buff) {
-			err("malloc failed!");
-		}
 		fread(buff, size, 1, f);
 		fclose(f);
 	} else {
 		err("unable to boot to kernel!");
 	}
 
+	/* From posix-uefi gitlab */
 	/* is it a valid ELF executable for this architecture? */
 	elf = (Elf64_Ehdr *) buff;
 	if (!memcmp(elf->e_ident, ELFMAG, SELFMAG) && /* magic match? */
