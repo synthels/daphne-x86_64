@@ -10,6 +10,15 @@
 * Virtualbox
 * VMWare
 
+### Bash note
+The scripts in the `tools` directory seem to be throwing errors when using a shell other than bash. You
+might want to check that your current shell is bash and if you don't want to fiddle with it
+too much, just run all the scripts like this:
+
+```
+bash tools/script_name.sh [args]
+```
+
 We use CMake as our build system, so you will have to install that first of all.
 
 If you haven't built gcc already, please run the `tools/gcc_pre.sh` script first.
