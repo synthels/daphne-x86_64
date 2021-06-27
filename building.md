@@ -129,4 +129,20 @@ xorriso -as mkisofs -R -f -e fat.img -no-emul-boot -o daphne_img_x64.iso iso
 
 from the `build` directory
 
+## Testing x64 images in Virtual box
+First, make sure the "Enable EFI (special OSes only)" checkbox under system is checked. Then, once
+you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
+
+```
+fs1:
+```
+
+```
+cd EFI/BOOT
+```
+
+```
+bootx64.efi
+```
+
 ** TODO: Instructions incomplete, need to show how to include kernel **

@@ -69,23 +69,21 @@ int main(int argc, char **argv)
 		buff = malloc(size + 1);
 		if(!buff) {
 			fprintf(stderr, "boot error: malloc failed!\n");
-			return 1;
 		}
 		fread(buff, size, 1, f);
 		fclose(f);
 	} else {
 		fprintf(stderr, "boot error: unable to boot to kernel!\n");
-		return 0;
 	}
 
 	/* is it a valid ELF executable for this architecture? */
-	elf = (Elf64_Ehdr *)buff;
-	if(!memcmp(elf->e_ident, ELFMAG, SELFMAG) &&    /* magic match? */
-		elf->e_ident[EI_CLASS] == ELFCLASS64 &&     /* 64 bit? */
-		elf->e_ident[EI_DATA] == ELFDATA2LSB &&     /* LSB? */
-		elf->e_type == ET_EXEC &&                   /* executable object? */
-		elf->e_machine == EM_MACH &&                /* architecture match? */
-		elf->e_phnum > 0) {                         /* has program headers? */
+	elf = (Elf64_Ehdr *) buff;
+	if(!memcmp(elf->e_ident, ELFMAG, SELFMAG) &&	/* magic match? */
+		elf->e_ident[EI_CLASS] == ELFCLASS64 &&		/* 64 bit? */
+		elf->e_ident[EI_DATA] == ELFDATA2LSB &&		/* LSB? */
+		elf->e_type == ET_EXEC &&					/* executable object? */
+		elf->e_machine == EM_MACH &&				/* architecture match? */
+		elf->e_phnum > 0) {							/* has program headers? */
 			/* load segments */
 			for(phdr = (Elf64_Phdr *)(buff + elf->e_phoff), i = 0;
 				i < elf->e_phnum;
@@ -100,15 +98,10 @@ int main(int argc, char **argv)
 			entry = elf->e_entry;
 	} else {
 		fprintf(stderr, "boot error: invalid ELF executable\n");
-		return 0;
 	}
-	/* free resources */
+
 	free(buff);
 
-	/* execute the "kernel" */
-	printf("ELF entry point %p\n", entry);
 	i = (*((int(* __attribute__((sysv_abi)))(void))(entry)))();
-	printf("ELF returned %d\n", i);
-
 	return 0;
 }
