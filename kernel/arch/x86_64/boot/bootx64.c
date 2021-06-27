@@ -62,19 +62,19 @@ int main(int argc, char **argv)
 	int i, j;
 
 	/* load the file */
-	if((f = fopen("\\0E_elfload\\kernel.elf", "r"))) {
+	if((f = fopen("kernel.bin", "r"))) {
 		fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
 		buff = malloc(size + 1);
 		if(!buff) {
-			fprintf(stderr, "unable to allocate memory\n");
+			fprintf(stderr, "boot error: malloc failed!\n");
 			return 1;
 		}
 		fread(buff, size, 1, f);
 		fclose(f);
 	} else {
-		fprintf(stderr, "Unable to open file\n");
+		fprintf(stderr, "boot error: unable to boot to kernel!\n");
 		return 0;
 	}
 
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 				}
 			entry = elf->e_entry;
 	} else {
-		fprintf(stderr, "not a valid ELF executable for this architecture\n");
+		fprintf(stderr, "boot error: invalid ELF executable\n");
 		return 0;
 	}
 	/* free resources */

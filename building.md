@@ -109,7 +109,7 @@ mmd -i fat.img ::/EFI/BOOT
 ```
 
 ```
-mcopy -i fat.img BOOTX64.EFI ::/EFI/BOOT
+mcopy -i fat.img bootx64.efi ::/EFI/BOOT
 ```
 
 Now, move `fat.img` to `build/iso` and run
