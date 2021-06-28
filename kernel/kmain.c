@@ -16,53 +16,53 @@
 
 #include "kmain.h"
 
-//extern void enter_usermode(void);
+extern void enter_usermode(void);
 
 /* Kernel main function */
 void kmain(multiboot_info_t *info)
 {
-	// /* Init tty */
-	// tty_init();
+	/* Init tty */
+	tty_init();
 
-	// printk("daphne %s (%s) \n", KERNEL_VERSION_STRING, KERNEL_ARCH_STRING);
+	printk("daphne %s (%s) \n", KERNEL_VERSION_STRING, KERNEL_ARCH_STRING);
 
-	// uint32_t esp;
-	// asm volatile("mov %%esp, %0" : "=r"(esp));
-	// init_tss(0x10, esp); /* Init TSS */
-	// init_gdt(); /* Init GDT */
-	// init_idt(); /* Init IDT */
+	uint32_t esp;
+	asm volatile("mov %%esp, %0" : "=r"(esp));
+	init_tss(0x10, esp); /* Init TSS */
+	init_gdt(); /* Init GDT */
+	init_idt(); /* Init IDT */
 
-	// /* Set kernel mode */
-	// set_kernel_mode(TTY_MODE);
+	/* Set kernel mode */
+	set_kernel_mode(TTY_MODE);
 
-	// /* Check if grub can give us a memory map */
-	// /* TODO: Detect manually */
-	// if (!(info->flags & (1<<6))) {
-	// 	panic("couldn't get memory map!");
-	// }
+	/* Check if grub can give us a memory map */
+	/* TODO: Detect manually */
+	if (!(info->flags & (1<<6))) {
+		panic("couldn't get memory map!");
+	}
 
-	// /* Init mm */
-	// printk("\nMemory map:");
-	// /* TODO: pass memory map only, in order to make
-	//    supporting x64 easier */
-	// kmem_init(info);
+	/* Init mm */
+	printk("\nMemory map:");
+	/* TODO: pass memory map only, in order to make
+	   supporting x64 easier */
+	kmem_init(info);
 
-	// /* Init paging */
-	// kmem_init_paging();
+	/* Init paging */
+	kmem_init_paging();
 
-	// /* Init essential devices */
-	// dev_init_essentials();
+	/* Init essential devices */
+	dev_init_essentials();
 
-	// printk("total_ram=%uiMB",  (kmem_get_installed_memory() / 1048576) + 2);
+	printk("total_ram=%uiMB",  (kmem_get_installed_memory() / 1048576) + 2);
 
-	// #ifdef BUILD_TESTS
-	// 	/* Start tests */
-	// 	do_tests();
-	// #endif
+	#ifdef BUILD_TESTS
+		/* Start tests */
+		do_tests();
+	#endif
 
-	// /* Ring 3! */
-	// enter_usermode();
-	// printk("\nHello user mode! :)");
+	/* Ring 3! */
+	enter_usermode();
+	printk("\nHello user mode! :)");
 
-	// for(;;);
+	for(;;);
 }
