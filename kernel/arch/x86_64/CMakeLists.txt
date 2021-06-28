@@ -3,6 +3,7 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/arch/x86_64)
 set(SRC
     ${SRCROOT}/gdt.c
     ${SRCROOT}/gdt.h
+    ${SRCROOT}/boot.asm
 )
 
 add_subdirectory(${SRCROOT}/idt)

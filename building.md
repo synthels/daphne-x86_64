@@ -121,6 +121,12 @@ mmd -i fat.img ::/EFI/BOOT
 mcopy -i fat.img bootx64.efi ::/EFI/BOOT
 ```
 
+Now, move `kernel.bin` from `build` to `kernel/arch/x86_64/boot`
+
+```
+mcopy -i fat.img kernel.bin ::/EFI/BOOT
+```
+
 Now, move `fat.img` to `build/iso` and run
 
 ```
@@ -144,5 +150,3 @@ cd EFI/BOOT
 ```
 bootx64.efi
 ```
-
-** TODO: Instructions incomplete, need to show how to include kernel **
