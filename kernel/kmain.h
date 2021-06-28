@@ -21,25 +21,25 @@
 #include <io/io.h>
 #include <kernel.h>
 
-#include <libk/sleep.h>
-#include <dev/dev.h>
-#include <memory/mm.h>
+// #include <libk/sleep.h>
+// #include <dev/dev.h>
+// #include <memory/mm.h>
 
-#include <tty/printk.h>
-#include <panic.h>
+// #include <tty/printk.h>
+// #include <panic.h>
 
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
+// #ifdef ARCH_x86_32
+// 	#include <arch/x86_32/idt/idt.h>
+// 	#include <arch/x86_32/gdt.h>
+// 	#include <arch/x86_32/tss.h>
+// #endif
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-#endif
+// #ifdef ARCH_x86_64
+// 	#include <arch/x86_64/gdt.h>
+// #endif
 
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
+// #ifdef BUILD_TESTS
+// 	#include <tests/tests.h>
+// #endif
 
-#endif
+// #endif

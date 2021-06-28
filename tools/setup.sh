@@ -36,5 +36,5 @@ then
 	mkdir $BUILD_DIR/iso
 	echo "#!/bin/sh
 	rm -r ./*
-	./../tools/setup.sh -mk-uefi" > $BUILD_DIR/clean.sh
+	bash ../tools/setup.sh -mk-uefi" > $BUILD_DIR/clean.sh
 fi
