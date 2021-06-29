@@ -50,6 +50,7 @@ typedef uint32_t addr_t;
 #define fast_ceil(x, y) ((long long) x + y - 1) / y
 #define kmem_align(n) 32 * fast_ceil(n, 32)
 #define kmem_page_align(n) PAGE_SIZE * fast_ceil(n, PAGE_SIZE)
+#define next_desc(ptr, size) ((efi_memory_descriptor_t *) (((uint8_t *) ptr) + size))
 
 /* Paging types */
 typedef uint32_t pte_t;
@@ -83,5 +84,6 @@ uint32_t kmem_get_installed_memory(void);
 #define MEMORY_RESERVED 0
 #define MEMORY_ACPI 9
 #define MEMORY_NVS 10
+#define MEMORY_INVALID 99
 
 #endif

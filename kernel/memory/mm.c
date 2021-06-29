@@ -17,26 +17,45 @@
 #include "mm.h"
 
 /* RAM info */
-efi_mmap_t *kmmap = NULL;
+efi_memory_descriptor_t kmmap[255];
 size_t kmmap_size = 0;
 
 static uint32_t total_ram = 0;
 static uint32_t highest_addr = 0;
 static size_t regions = 0;
 
-/* From linker.ld */
+/* linker.ld */
 extern uint32_t kstart;
 extern uint32_t kend;
 
 void kmem_init(efi_mmap_t *mmap)
 {
-	UNUSED(mmap);
-	UNUSED(regions);
+	/* Assuming that UEFI map is relatively sane */
+	efi_memory_descriptor_t *mement;
+	for(mement = mmap->map; (uint8_t *) mement < (uint8_t *) mmap->map + mmap->size; mement = next_desc(mement, mmap->desc_size)) {
+		/* Entry overlaps with kernel code */
+		if (mement->phys_start + (mement->pages * 4096) <= KERN_END) {
+			mement->type = MEMORY_INVALID;
+		} else if ((mement->phys_start <= KERN_END) && mement->type == MEMORY_AVAILABLE) {
+			/* If only a part of it does, keep the part that doesn't */
+			mement->phys_start += KERN_END + 1;
+			mement->pages -= (KERN_END / 4096) + 1;
+		}
+
+		/* Append entry to kmmap */
+		if (mement->type != MEMORY_INVALID) {
+			if (mement->type == MEMORY_AVAILABLE) {
+				regions++;
+			}
+			kmmap[kmmap_size] = *mement;
+			++kmmap_size;
+		}
+	}
 }
 
 efi_memory_descriptor_t *kmem_get_kernel_mmap(void)
 {
-	return kmmap->map;
+	return kmmap;
 }
 
 size_t kmem_get_kmmap_size(void)
