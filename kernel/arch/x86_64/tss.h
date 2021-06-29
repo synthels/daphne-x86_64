@@ -40,11 +40,8 @@ void init_tss(void);
 /**
  * tss_set_stack
  *   brief: Set current stack
- *   parameters:
- *     - ss0:  new TSS ss0
- *     - esp0: new TSS esp0
  */
-void tss_set_stack(uint16_t ss0, uint32_t esp0);
+void tss_set_stack(void);
 
 /**
  * get_tss
