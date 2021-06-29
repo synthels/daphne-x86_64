@@ -28,21 +28,16 @@ void kmain(efi_mmap_t *mmap)
 
 	uint32_t esp;
 	asm volatile("mov %%rsp, %0" : "=r"(esp));
-	init_tss(0x10, esp); /* Init TSS */
+	/* TODO: Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */
 
 	/* Set kernel mode */
 	set_kernel_mode(TTY_MODE);
 
-	/* Init mm */
-	printk("\nMemory map:");
 	/* TODO: pass memory map only, in order to make
 	   supporting x64 easier */
 	kmem_init(mmap);
-
-	/* Init paging */
-	kmem_init_paging();
 
 	/* Init essential devices */
 	dev_init_essentials();
