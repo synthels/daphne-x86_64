@@ -26,9 +26,7 @@ void kmain(efi_mmap_t *mmap)
 
 	printk("daphne %s (%s) \n", KERNEL_VERSION_STRING, KERNEL_ARCH_STRING);
 
-	uint32_t esp;
-	asm volatile("mov %%rsp, %0" : "=r"(esp));
-	/* TODO: Init TSS */
+	init_tss(); /* Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */
 

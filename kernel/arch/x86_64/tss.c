@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 synthels <synthels.me@gmail.com>
  *
@@ -10,31 +11,33 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * TSS
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "tss.h"
 
-#include <stdint.h>
+/* Kernel TSS */
+static tss_entry_t tss;
 
-#include <io/io.h>
-#include <kernel.h>
+/* Init TSS */
+void init_tss(void)
+{
+	uintptr_t base = (uintptr_t) &tss;
 
-#include <libk/sleep.h>
-#include <dev/dev.h>
-#include <memory/mm.h>
+	/* Add the TSS descriptor to the GDT */
+	gdt_set_gate(5, base, sizeof(tss), 0xE9, 0x00);
+	memset(&tss, 0x0, sizeof(tss));
+	extern void *stack_top;
+	tss.rsp[0] = (uintptr_t)&stack_top;
+}
 
-#include <tty/printk.h>
-#include <panic.h>
+void tss_set_stack(uint16_t ss0, uint64_t rsp0)
+{
+	tss.rsp[0] = rsp0;
+}
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt.h>
-	#include <arch/x86_64/tss.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
-#endif
-
-#endif
+struct tss_entry *get_tss(void)
+{
+	return &tss;
+}

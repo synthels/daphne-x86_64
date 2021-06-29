@@ -4,6 +4,8 @@ set(SRC
     ${SRCROOT}/gdt.c
     ${SRCROOT}/gdt.h
     ${SRCROOT}/boot.asm
+    ${SRCROOT}/ring3.asm
+    ${SRCROOT}/tss.asm
 )
 
 add_subdirectory(${SRCROOT}/idt)
