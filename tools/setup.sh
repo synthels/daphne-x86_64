@@ -12,29 +12,10 @@ fi
 # Add a clean script to build
 touch $BUILD_DIR/clean.sh
 
-if [[ $1 = "-mk-grub" ]]
-then
-	mkdir $BUILD_DIR/iso
-	mkdir $BUILD_DIR/iso/boot
-	mkdir $BUILD_DIR/iso/boot/grub
-	touch $BUILD_DIR/iso/boot/grub/grub.cfg
-	echo "default=0
-	timeout=0
-
-	menuentry \"daphne\" {
-		multiboot /boot/kernel.bin
-		boot
-	}" > $BUILD_DIR/iso/boot/grub/grub.cfg
-
-	echo "#!/bin/sh
-	rm -r ./*
-	bash ../tools/setup.sh -mk-grub" > $BUILD_DIR/clean.sh
-fi
-
-if [[ $1 = "-mk-uefi" ]]
+if [[ $1 = "-x64" ]]
 then
 	mkdir $BUILD_DIR/iso
 	echo "#!/bin/sh
 	rm -r ./*
-	bash ../tools/setup.sh -mk-uefi" > $BUILD_DIR/clean.sh
+	bash ../tools/setup.sh -x64" > $BUILD_DIR/clean.sh
 fi

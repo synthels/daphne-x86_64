@@ -124,4 +124,19 @@ void kernel_hang(void);
 	#define false 0
 #endif
 
+typedef struct {
+    uint32_t type;
+    uint32_t pad;
+    uint64_t phys_start;
+    uint64_t virt_start;
+    uint64_t pages;
+    uint64_t attr;
+} efi_memory_descriptor_t;
+
+typedef struct {
+	efi_memory_descriptor_t *map;
+	uint64_t size;
+	uint64_t desc_size;
+} efi_mmap_t;
+
 #endif

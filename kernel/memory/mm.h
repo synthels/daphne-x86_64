@@ -17,8 +17,8 @@
 
 #include <stdint.h>
 #include <tty/printk.h>
-#include <multiboot.h>
 #include <panic.h>
+#include <kernel.h>
 
 #include "malloc.h"
 
@@ -51,15 +51,6 @@ typedef uint32_t addr_t;
 #define kmem_align(n) 32 * fast_ceil(n, 32)
 #define kmem_page_align(n) PAGE_SIZE * fast_ceil(n, PAGE_SIZE)
 
-struct mmap_entry {
-	uint32_t size;
-	uint64_t base_addr;
-	uint64_t length;
-	uint32_t type;
-}  __attribute__((packed));
-
-typedef struct mmap_entry mmap_entry_t;
-
 /* Paging types */
 typedef uint32_t pte_t;
 typedef uint32_t pdir_t;
@@ -68,19 +59,13 @@ typedef uint32_t pdir_t;
  * kmem_init
  *   brief: init mm  
  */
-void kmem_init(multiboot_info_t *info);
-
-/**
- * kmem_init_paging
- *   brief: init legacy paging
- */
-void kmem_init_paging(void);
+void kmem_init(efi_mmap_t *mmap);
 
 /*
  * kmem_get_kernel_mmap
  *   brief: get kernel memory map
  */
-mmap_entry_t *kmem_get_kernel_mmap(void);
+efi_memory_descriptor_t *kmem_get_kernel_mmap(void);
 
 /**
  * kmem_get_kmmap_size
@@ -94,11 +79,9 @@ size_t kmem_get_kmmap_size(void);
  */
 uint32_t kmem_get_installed_memory(void);
 
-#define MEMORY_AVAILABLE 1
-#define MEMORY_RESERVED 2
-#define MEMORY_ACPI 3
-#define MEMORY_NVS 4
-#define MEMORY_BADRAM 5
-#define MEMORY_INVALID 6
+#define MEMORY_AVAILABLE 7
+#define MEMORY_RESERVED 0
+#define MEMORY_ACPI 9
+#define MEMORY_NVS 10
 
 #endif

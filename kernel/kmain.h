@@ -15,7 +15,6 @@
 #ifndef KERNEL_INIT
 #define KERNEL_INIT
 
-#include <multiboot.h>
 #include <stdint.h>
 
 #include <io/io.h>
@@ -27,12 +26,6 @@
 
 #include <tty/printk.h>
 #include <panic.h>
-
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
 
 #ifdef ARCH_x86_64
 	#include <arch/x86_64/gdt.h>

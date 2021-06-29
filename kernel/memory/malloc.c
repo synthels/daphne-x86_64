@@ -62,15 +62,15 @@ extern uint32_t kend;
 addr_t *kalloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
-	mmap_entry_t *mmap = kmem_get_kernel_mmap();
+	efi_memory_descriptor_t *mmap = kmem_get_kernel_mmap();
 	/* Go through every entry */
 	for (uint32_t i = begin; i < kmem_get_kmmap_size(); i++) {
 		if (mmap[i].type != MEMORY_AVAILABLE) continue;
 		/* See how much of this entry we have used */
-		if (mmap[i].length - mmap_offs[i] >= n) {
+		if ((mmap[i].pages * 4096) - mmap_offs[i] >= n) { /* Not so sure about this pages thing */
 			mmap_offs[i] += n;
 			release_mutex(&alloc_mutex);
-			return (addr_t *) (uintptr_t) (mmap[i].base_addr + mmap_offs[i]);
+			return (addr_t *) (uintptr_t) (mmap[i].phys_start + mmap_offs[i]);
 		} else {
 			/* If this entry runs out, try going to the next */
 			if (i < 255) {

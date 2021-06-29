@@ -66,13 +66,6 @@ typedef struct {
 } Elf64_Phdr;
 
 typedef struct {
-	uint32_t size;
-	uint64_t base_addr;
-	uint64_t length;
-	uint32_t type;
-} memory_map_t;
-
-typedef struct {
 	efi_memory_descriptor_t *map;
 	uintn_t size;
 	uintn_t desc_size;
@@ -87,26 +80,26 @@ void err(const char *msg)
 void get_mmap(efi_mmap_t *mmap)
 {
 	efi_status_t status;
-	efi_memory_descriptor_t *memory_map = NULL, *mement;
+	efi_memory_descriptor_t *memory_map = NULL;
 	uintn_t memory_map_size=0, map_key=0, desc_size=0, i;
 
 	status = BS->GetMemoryMap(&memory_map_size, NULL, &map_key, &desc_size, NULL);
-	if (status != EFI_BUFFER_TOO_SMALL || !memory_map_size) {
-		err("unable to get memory map!");
-	}
+	if(status != EFI_BUFFER_TOO_SMALL || !memory_map_size) err("UEFI error");
 
 	memory_map_size += 4 * desc_size;
-	memory_map = (efi_memory_descriptor_t*) malloc(memory_map_size);
-	status = BS->GetMemoryMap(&memory_map_size, memory_map, &map_key, &desc_size, NULL);
-	if (EFI_ERROR(status)) {
-		err("internal UEFI error");
+	memory_map = (efi_memory_descriptor_t*)malloc(memory_map_size);
+	if(!memory_map) {
+		err("malloc failure");
 	}
 
-	efi_mmap_t efi_mmap;
-	efi_mmap.map = memory_map;
-	efi_mmap.size = memory_map_size;
-	efi_mmap.desc_size = desc_size;
-	*mmap = efi_mmap;
+	status = BS->GetMemoryMap(&memory_map_size, memory_map, &map_key, &desc_size, NULL);
+	if (EFI_ERROR(status)) {
+		err("couldn't get mmap");
+	}
+
+	mmap->map = memory_map;
+	mmap->size = memory_map_size;
+	mmap->desc_size = desc_size;
 }
 
 void load_kernel(void)
@@ -167,21 +160,17 @@ int main(int argc, char **argv)
 	(void) argc;
 	(void) argv;
 
-	/* Pass memory map to kernel */
+	/* Get memory map */
 	efi_mmap_t efi_mmap;
+	efi_memory_descriptor_t *mement;
 	get_mmap(&efi_mmap);
-	efi_memory_descriptor_t *map = efi_mmap.map;
-	memory_map_t *mmap = malloc(sizeof(memory_map_t) * 255);
-	for(efi_memory_descriptor_t *mement = map; (uint8_t *) mement < (uint8_t *) map + efi_mmap.size;
-		mement = NextMemoryDescriptor(mement, efi_mmap.desc_size)) {
-			mmap->size = 20; /* Default grub size? */
-			mmap->base_addr = mement->PhysicalStart;
-			/* Convert UEFI type to something the kernel can understand */
-			if (mement->Type == EFI_CONVENTIAL_MEMORY) mmap->type = MEMORY_AVAILABLE;
-			if (mement->Type == EFI_RESERVED_MEMORY) mmap->type = MEMORY_RESERVED;
-	}
 
-	/* TODO: Pass memory map to kernel (move to rax) */
+	/* Save memory map in rax */
+	asm volatile (
+		"mov %0, %%rax\n"
+		: : "r"(&efi_mmap)
+	);
+
 	load_kernel();
 	return 0;
 }

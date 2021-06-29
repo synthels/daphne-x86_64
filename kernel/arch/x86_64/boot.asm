@@ -35,7 +35,5 @@ section .text
 ; kernel entry point
 _start:
 	mov rsp, stack_top
+	push rax ; ??
 	call kmain
-	halt:
-		cli
-		hlt
