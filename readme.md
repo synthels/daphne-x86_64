@@ -1,7 +1,7 @@
 # daphne
 daphne aims to be a highly portable and minimal operating system that can be directly shipped with applications in order to allow them to run on bare metal with high performance.
 
-_**x64 Warning:** x64 is currently being developed, and is not ready for production!_
+_**Note:** Currently rewriting daphne for x64 UEFI, check out the x64-rewrite branch_
 
 # Links
 * [Building from source](https://github.com/synthels/daphne/blob/master/building.md)
