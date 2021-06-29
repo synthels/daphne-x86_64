@@ -16,25 +16,12 @@
 #define KERNEL_INIT
 
 #include <stdint.h>
-
-#include <io/io.h>
 #include <kernel.h>
-
-#include <libk/sleep.h>
-#include <dev/dev.h>
-#include <memory/mm.h>
-
-#include <tty/printk.h>
-#include <panic.h>
 
 #ifdef ARCH_x86_64
 	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt.h>
+	#include <arch/x86_64/idt/idt.h>
 	#include <arch/x86_64/tss.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
 #endif
 
 #endif

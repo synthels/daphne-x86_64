@@ -50,6 +50,8 @@ Now, run
 ./tools/setup.sh -x64
 ```
 
+from the root directory
+
 in order create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
 
 Then run

@@ -41,12 +41,12 @@ void init_tss(void);
  * tss_set_stack
  *   brief: Set current stack
  */
-void tss_set_stack(void);
+void tss_set_stack(uint64_t rsp0);
 
 /**
  * get_tss
  *   brief: Get kernel tss
  */
-struct tss_entry *get_tss(void);
+tss_entry_t *get_tss(void);
 
 #endif

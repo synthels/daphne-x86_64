@@ -12,15 +12,12 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LOGGER
-#define LOGGER
+#ifndef KERNEL_VID
+#define KERNEL_VID
 
-#include <tty/printk.h>
-#include <dev/pit.h>
+#include "font.h"
 #include <stdint.h>
-#include <kernel.h>
 
-/* Logs a message */
-void logk(char *msg);
+void con_plot_px(int x, int y, uint32_t pixel, uint64_t fb_base, uint64_t pps);
 
 #endif

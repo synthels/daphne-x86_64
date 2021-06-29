@@ -19,7 +19,7 @@
 static struct gdt_entry gdt[6];
 static struct gdt_ptr gp;
 
-extern void tss_flush(void);
+extern void flush_tss(void);
 
 void gdt_set_gate(
 	int num,
@@ -70,5 +70,5 @@ void init_gdt(void)
 		: : "r"(&gp)
 	);
 
-	tss_flush();
+	flush_tss();
 }

@@ -16,7 +16,6 @@
 #define KERNEL_x86_64_IDT
 
 #include <stdint.h>
-#include <tty/printk.h>
 #include <panic.h>
 #include <kernel.h>
 

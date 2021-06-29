@@ -5,33 +5,24 @@ SECTIONS
 {
 	kstart = .;
 
-	/* Begin sections at 1 MiB, since lower memory is used by GRUB */
-	. = 1M;
+	. = 0x100000;
 
-	/* Multiboot header & text section */
-	.text BLOCK(4K) : ALIGN(4K)
-	{
-		*(.multiboot)
-		*(.text)
+	/* Then let's place all the other traditional executable sections afterwards. */
+	.text : {
+		*(.text*)
 	}
 
-	/* Read-only data */
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
-		*(.rodata)
+	.rodata : {
+		*(.rodata*)
 	}
 
-	/* Initialized data */
-	.data BLOCK(4K) : ALIGN(4K)
-	{
-		*(.data)
+	.data : {
+		*(.data*)
 	}
 
-	/* Uninitialized data & stack */
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
+	.bss : {
 		*(COMMON)
-		*(.bss)
+		*(.bss*)
 	}
 
 	kend = .;

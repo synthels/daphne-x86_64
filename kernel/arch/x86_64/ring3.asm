@@ -1,3 +1,5 @@
+[bits 64]
+
 global enter_usermode
 
 enter_usermode:
@@ -6,7 +8,7 @@ enter_usermode:
 	push rax
 	pushfq
 	push 0x1b
-	mov rax, qword umode
+	mov eax, umode
 	push rax
 	iretq
 umode:

@@ -32,12 +32,12 @@ void init_tss(void)
 	tss.rsp[0] = (uintptr_t)&stack_top;
 }
 
-void tss_set_stack(uint16_t ss0, uint64_t rsp0)
+void tss_set_stack(uint64_t rsp0)
 {
 	tss.rsp[0] = rsp0;
 }
 
-struct tss_entry *get_tss(void)
+tss_entry_t *get_tss(void)
 {
 	return &tss;
 }

@@ -34,6 +34,6 @@ stack_top:
 section .text
 ; kernel entry point
 _start:
-	mov rsp, stack_top
+	mov eax, stack_top
 	push rax ; ??
 	call kmain
