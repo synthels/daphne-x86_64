@@ -16,11 +16,12 @@
 
 #include "kmain.h"
 
-//extern void enter_usermode(void);
+// extern void enter_usermode(void);
 
 /* Kernel main function */
-void kmain()
+void kmain(efi_mmap_t *mmap)
 {
+	UNUSED(mmap);
 	init_tss(); /* Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */

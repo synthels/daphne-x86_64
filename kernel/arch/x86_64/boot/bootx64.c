@@ -14,6 +14,8 @@
  * UEFI bootloader
  */
 
+/* TODO: pass video info to kernel */
+
 #include <uefi.h>
 
 #define EFI_CONVENTIAL_MEMORY 7
@@ -77,6 +79,32 @@ void err(const char *msg)
 	for(;;);
 }
 
+void set_video_mode(void)
+{
+	efi_status_t status;
+	efi_guid_t gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
+	efi_gop_t *gop = NULL;
+	efi_gop_mode_info_t *info = NULL;
+	uintn_t isiz = sizeof(efi_gop_mode_info_t), currentMode;
+
+	status = BS->LocateProtocol(&gopGuid, NULL, (void **) &gop);
+	if (!EFI_ERROR(status) && gop) {
+		/* Get current mode */
+		status = gop->QueryMode(gop, gop->Mode ? gop->Mode->Mode : 0, &isiz, &info);
+		if (EFI_ERROR(status)) {
+			err("unable to get video mode");
+		}
+
+		/* jump to last mode & set it */
+		uintn_t mode = gop->Mode->MaxMode - 1;
+		status = gop->SetMode(gop, mode);
+		ST->ConOut->Reset(ST->ConOut, 0);
+		ST->StdErr->Reset(ST->StdErr, 0);
+	} else {
+		err("unable to get GOP");
+	}
+}
+
 void get_mmap(efi_mmap_t *mmap)
 {
 	efi_status_t status;
@@ -87,7 +115,7 @@ void get_mmap(efi_mmap_t *mmap)
 	if(status != EFI_BUFFER_TOO_SMALL || !memory_map_size) err("UEFI error");
 
 	memory_map_size += 4 * desc_size;
-	memory_map = (efi_memory_descriptor_t*)malloc(memory_map_size);
+	memory_map = (efi_memory_descriptor_t*) malloc(memory_map_size);
 	if(!memory_map) {
 		err("malloc failure");
 	}
@@ -171,6 +199,7 @@ int main(int argc, char **argv)
 		: : "r"(&efi_mmap)
 	);
 
-	load_kernel();
-	return 0;
+	printf("Loading kernel...");
+	set_video_mode(); /* set highest video mode */
+	load_kernel(); /* load kernel */
 }
