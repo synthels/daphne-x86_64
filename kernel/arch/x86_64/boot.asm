@@ -25,7 +25,7 @@ global stack_top
 STACKSIZE equ 16384
 
 section .bss
-;align 16
+align 16
 stack_bottom:
 resb STACKSIZE
 stack_top:

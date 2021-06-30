@@ -184,7 +184,7 @@ void load_kernel(efi_info_t *info)
 	}
 
 	free(buff);
- 
+
 	/* Save uefi info in rax */
 	asm volatile (
 		"mov %0, %%rax\n"
@@ -193,7 +193,6 @@ void load_kernel(efi_info_t *info)
 
 	/* Execute kernel */
 	exit_bs();
-	printf("Loading kernel...\n");
 	i = (*((int(* __attribute__((sysv_abi)))(void))(entry)))();
 }
 
