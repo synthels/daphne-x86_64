@@ -93,7 +93,7 @@ void set_video_mode(void)
 		uintn_t mode = gop->Mode->MaxMode - 1;
 		status = gop->SetMode(gop, mode);
 
-        if(EFI_ERROR(status)) {
+        if (EFI_ERROR(status)) {
             err("unable to set video mode");
         }
 	} else {
@@ -108,11 +108,11 @@ void get_mmap(efi_mmap_t *mmap)
 	uintn_t memory_map_size=0, map_key=0, desc_size=0, i;
 
 	status = BS->GetMemoryMap(&memory_map_size, NULL, &map_key, &desc_size, NULL);
-	if(status != EFI_BUFFER_TOO_SMALL || !memory_map_size) err("UEFI error");
+	if (status != EFI_BUFFER_TOO_SMALL || !memory_map_size) err("UEFI error");
 
 	memory_map_size += 4 * desc_size;
 	memory_map = (efi_memory_descriptor_t*) malloc(memory_map_size);
-	if(!memory_map) {
+	if (!memory_map) {
 		err("malloc failure");
 	}
 
