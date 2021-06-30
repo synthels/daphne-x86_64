@@ -96,25 +96,6 @@ void set_video_mode(void)
         if(EFI_ERROR(status)) {
             err("unable to set video mode");
         }
-
-		currentMode = gop->Mode->Mode;
-		/* iterate on modes and print info */
-		for(int i = 0; i < gop->Mode->MaxMode; i++) {
-			status = gop->QueryMode(gop, i, &isiz, &info);
-			if(EFI_ERROR(status) || info->PixelFormat > PixelBitMask) continue;
-			printf(" %c%3d. %4d x%4d (pitch %4d fmt %d r:%06x g:%06x b:%06x)\n",
-				i == currentMode ? '*' : ' ', i,
-				info->HorizontalResolution, info->VerticalResolution, info->PixelsPerScanLine, info->PixelFormat,
-				info->PixelFormat==PixelRedGreenBlueReserved8BitPerColor?0xff:(
-				info->PixelFormat==PixelBlueGreenRedReserved8BitPerColor?0xff0000:(
-				info->PixelFormat==PixelBitMask?info->PixelInformation.RedMask:0)),
-				info->PixelFormat==PixelRedGreenBlueReserved8BitPerColor ||
-				info->PixelFormat==PixelBlueGreenRedReserved8BitPerColor?0xff00:(
-				info->PixelFormat==PixelBitMask?info->PixelInformation.GreenMask:0),
-				info->PixelFormat==PixelRedGreenBlueReserved8BitPerColor?0xff0000:(
-				info->PixelFormat==PixelBlueGreenRedReserved8BitPerColor?0xff:(
-				info->PixelFormat==PixelBitMask?info->PixelInformation.BlueMask:0)));
-		}
 	} else {
 		err("unable to get GOP");
 	}
@@ -214,7 +195,7 @@ int main(int argc, char **argv)
 		: : "r"(&efi_mmap)
 	);
 
-	printf("Loading kernel...");
+	printf("Loading kernel...\n");
 	set_video_mode(); /* set highest video mode */
 	load_kernel(); /* load kernel */
 }
