@@ -21,12 +21,12 @@ void con_plot_px(int x, int y, uint32_t pixel, uint64_t fb_base, uint64_t pps)
 	*((uint32_t *) (fb_base + 4 * pps * y + 4 * x)) = pixel;
 }
 
-// void con_plot_char(uint32_t *buffer, uint32_t x, uint32_t y, uint32_t color, char charcode)
+// void con_plot_char(uint32_t buffer, uint32_t x, uint32_t y, uint32_t color, char charcode)
 // {
 //     char p = (charcode * 128) - 128; // Size of a font's character
 //     for (int l = 0; l < 16; l++) {
 //         for (int c = 0; c < 8; c++) {
-//             if (font_system_8x16[p] == 1) {
+//             if (font_system_8x16[(int) p] == 1) {
 //                 con_plot_px(x + c, y + l, color, buffer, 0);
 //             }
 //             p++;

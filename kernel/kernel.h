@@ -19,6 +19,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <vid/console/con.h>
 
 /**
  * Kernel version string
@@ -138,5 +139,17 @@ typedef struct {
 	uint64_t size;
 	uint64_t desc_size;
 } efi_mmap_t;
+
+typedef struct {
+	uint64_t fb_base;
+	uint64_t pps;
+	uint64_t width;
+	uint64_t height;
+} efi_gop_info_t;
+
+typedef struct {
+	efi_mmap_t *mmap;
+	efi_gop_info_t *gop;
+} efi_info_t;
 
 #endif

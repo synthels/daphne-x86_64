@@ -19,9 +19,10 @@
 // extern void enter_usermode(void);
 
 /* Kernel main function */
-void kmain(efi_mmap_t *mmap)
+void kmain(efi_info_t *info)
 {
-	UNUSED(mmap);
+	con_plot_px(70, 80, 0xFFFFFF, info->gop->fb_base, info->gop->pps);
+
 	init_tss(); /* Init TSS */
 	init_gdt(); /* Init GDT */
 	init_idt(); /* Init IDT */

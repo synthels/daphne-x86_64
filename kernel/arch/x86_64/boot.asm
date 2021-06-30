@@ -19,7 +19,6 @@
 extern kmain
 
 global _start
-global setcs
 global stack_top
 
 ; reserve stack

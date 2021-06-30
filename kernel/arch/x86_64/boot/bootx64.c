@@ -14,16 +14,27 @@
  * UEFI bootloader
  */
 
-/* TODO: pass video info to kernel */
-
 #include <uefi.h>
 
-#define EFI_CONVENTIAL_MEMORY 7
-#define EFI_RESERVED_MEMORY   0
+typedef struct {
+	efi_memory_descriptor_t *map;
+	uintn_t size;
+	uintn_t desc_size;
+} efi_mmap_t;
 
-#define MEMORY_AVAILABLE 1
-#define MEMORY_RESERVED  2
+typedef struct {
+	uintn_t fb_base;
+	uintn_t pps;
+	uintn_t width;
+	uintn_t height;
+} efi_gop_info_t;
 
+typedef struct {
+	efi_mmap_t *mmap;
+	efi_gop_info_t *gop;
+} efi_info_t;
+
+/* ELF */
 #define ELFMAG      "\177ELF"
 #define SELFMAG     4
 #define EI_CLASS    4       /* File class byte index */
@@ -67,19 +78,13 @@ typedef struct {
 	uint64_t p_align;
 } Elf64_Phdr;
 
-typedef struct {
-	efi_memory_descriptor_t *map;
-	uintn_t size;
-	uintn_t desc_size;
-} efi_mmap_t;
-
 void err(const char *msg)
 {
 	printf("boot error: %s\n", msg);
 	for(;;);
 }
 
-void set_video_mode(void)
+void set_video_mode(efi_gop_info_t *gop_info)
 {
 	efi_status_t status;
 	efi_guid_t gopGuid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
@@ -92,10 +97,17 @@ void set_video_mode(void)
 		/* jump to last mode & set it */
 		uintn_t mode = gop->Mode->MaxMode - 1;
 		status = gop->SetMode(gop, mode);
+		/* get mode info */
+		status = gop->QueryMode(gop, gop->Mode ? gop->Mode->Mode : 0, &isiz, &info);
 
         if (EFI_ERROR(status)) {
             err("unable to set video mode");
         }
+
+		gop_info->width = gop->Mode->Information->HorizontalResolution;
+		gop_info->height = gop->Mode->Information->VerticalResolution;
+		gop_info->pps = gop->Mode->Information->PixelsPerScanLine;
+		gop_info->fb_base = gop->Mode->FrameBufferBase;
 	} else {
 		err("unable to get GOP");
 	}
@@ -126,7 +138,7 @@ void get_mmap(efi_mmap_t *mmap)
 	mmap->desc_size = desc_size;
 }
 
-void load_kernel(void)
+void load_kernel(efi_info_t *info)
 {
 	FILE *f;
 	char *buff;
@@ -136,7 +148,7 @@ void load_kernel(void)
 	uintptr_t entry;
 	int i, j;
 
-	if ((f = fopen("kernel.bin", "r"))) {
+	if ((f = fopen("\\EFI\\BOOT\\kernel.bin", "r"))) {
 		fseek(f, 0, SEEK_END);
 		size = ftell(f);
 		fseek(f, 0, SEEK_SET);
@@ -147,8 +159,7 @@ void load_kernel(void)
 		err("unable to boot to kernel!");
 	}
 
-	/* From posix-uefi gitlab */
-	/* is it a valid ELF executable for this architecture? */
+	/* Load kernel here */
 	elf = (Elf64_Ehdr *) buff;
 	if (!memcmp(elf->e_ident, ELFMAG, SELFMAG) && /* magic match? */
 		elf->e_ident[EI_CLASS] == ELFCLASS64 &&   /* 64 bit? */
@@ -173,9 +184,16 @@ void load_kernel(void)
 	}
 
 	free(buff);
+ 
+	/* Save uefi info in rax */
+	asm volatile (
+		"mov %0, %%rax\n"
+		: : "r"(&info)
+	);
 
 	/* Execute kernel */
 	exit_bs();
+	printf("Loading kernel...\n");
 	i = (*((int(* __attribute__((sysv_abi)))(void))(entry)))();
 }
 
@@ -186,16 +204,14 @@ int main(int argc, char **argv)
 
 	/* Get memory map */
 	efi_mmap_t efi_mmap;
+	efi_gop_info_t gop_info;
 	efi_memory_descriptor_t *mement;
 	get_mmap(&efi_mmap);
 
-	/* Save memory map in rax */
-	asm volatile (
-		"mov %0, %%rax\n"
-		: : "r"(&efi_mmap)
-	);
+	set_video_mode(&gop_info); /* set highest video mode */
 
-	printf("Loading kernel...\n");
-	set_video_mode(); /* set highest video mode */
-	load_kernel(); /* load kernel */
+	efi_info_t info;
+	info.gop = &gop_info;
+	info.mmap =  &efi_mmap;
+	load_kernel(&info); /* load kernel */
 }
