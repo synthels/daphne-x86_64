@@ -5,7 +5,7 @@ SECTIONS
 {
 	kstart = .;
 
-	. = 0x100000;
+	. = 0x01000000;
 
 	/* Then let's place all the other traditional executable sections afterwards. */
 	.text : {
