@@ -11,10 +11,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * UEFI bootloader
+ * tulip - a simple EFI bootloader
  */
 
 #include <uefi.h>
+#include "elf.h"
 
 typedef struct {
 	efi_memory_descriptor_t *map;
@@ -34,56 +35,6 @@ typedef struct {
 	efi_gop_info_t *gop;
 } efi_info_t;
 
-/* ELF */
-#define ELFMAG      "\177ELF"
-#define SELFMAG     4
-#define EI_CLASS    4       /* File class byte index */
-#define ELFCLASS64  2       /* 64-bit objects */
-#define EI_DATA     5       /* Data encoding byte index */
-#define ELFDATA2LSB 1       /* 2's complement, little endian */
-#define ET_EXEC     2       /* Executable file */
-#define PT_LOAD     1       /* Loadable program segment */
-#ifdef __x86_64__
-#define EM_MACH     62      /* AMD x86-64 architecture */
-#endif
-#ifdef __aarch64__
-#define EM_MACH     183     /* ARM aarch64 architecture */
-#endif
-
-typedef struct {
-	uint8_t  e_ident[16];
-	uint16_t e_type;
-	uint16_t e_machine;
-	uint32_t e_version;
-	uint64_t e_entry;
-	uint64_t e_phoff;
-	uint64_t e_shoff;
-	uint32_t e_flags;
-	uint16_t e_ehsize;
-	uint16_t e_phentsize;
-	uint16_t e_phnum;
-	uint16_t e_shentsize;
-	uint16_t e_shnum;
-	uint16_t e_shstrndx;
-} Elf64_Ehdr;
-
-typedef struct {
-	uint32_t p_type;
-	uint32_t p_flags;
-	uint64_t p_offset;
-	uint64_t p_vaddr;
-	uint64_t p_paddr;
-	uint64_t p_filesz;
-	uint64_t p_memsz;
-	uint64_t p_align;
-} Elf64_Phdr;
-
-void err(const char *msg)
-{
-	printf("boot error: %s\n", msg);
-	for(;;);
-}
-
 void set_video_mode(efi_gop_info_t *gop_info)
 {
 	efi_status_t status;
@@ -100,9 +51,9 @@ void set_video_mode(efi_gop_info_t *gop_info)
 		/* get mode info */
 		status = gop->QueryMode(gop, gop->Mode ? gop->Mode->Mode : 0, &isiz, &info);
 
-        if (EFI_ERROR(status)) {
-            err("unable to set video mode");
-        }
+		if (EFI_ERROR(status)) {
+			err("unable to set video mode");
+		}
 
 		gop_info->width = gop->Mode->Information->HorizontalResolution;
 		gop_info->height = gop->Mode->Information->VerticalResolution;
@@ -142,11 +93,8 @@ void load_kernel(efi_info_t *info)
 {
 	FILE *f;
 	char *buff;
-	long int size;
-	Elf64_Ehdr *elf;
-	Elf64_Phdr *phdr;
+	size_t size;
 	uintptr_t entry;
-	int i, j;
 
 	if ((f = fopen("\\EFI\\BOOT\\kernel.bin", "r"))) {
 		fseek(f, 0, SEEK_END);
@@ -156,44 +104,24 @@ void load_kernel(efi_info_t *info)
 		fread(buff, size, 1, f);
 		fclose(f);
 	} else {
-		err("unable to boot to kernel!");
+		err("kernel image not found!");
 	}
 
-	/* Load kernel here */
-	elf = (Elf64_Ehdr *) buff;
-	if (!memcmp(elf->e_ident, ELFMAG, SELFMAG) && /* magic match? */
-		elf->e_ident[EI_CLASS] == ELFCLASS64 &&   /* 64 bit? */
-		elf->e_ident[EI_DATA] == ELFDATA2LSB &&   /* LSB? */
-		elf->e_type == ET_EXEC &&                 /* executable object? */
-		elf->e_machine == EM_MACH &&              /* architecture match? */
-		elf->e_phnum > 0) {                       /* has program headers? */
-			/* load segments */
-			for (phdr = (Elf64_Phdr *)(buff + elf->e_phoff), i = 0;
-				i < elf->e_phnum;
-				i++, phdr = (Elf64_Phdr *)((uint8_t *)phdr + elf->e_phentsize)) {
-					if (phdr->p_type == PT_LOAD) {
-						printf("ELF segment %p %d bytes (bss %d bytes)\n", phdr->p_vaddr, phdr->p_filesz,
-							phdr->p_memsz - phdr->p_filesz);
-						memcpy((void*)phdr->p_vaddr, buff + phdr->p_offset, phdr->p_filesz);
-						memset((void*)(phdr->p_vaddr + phdr->p_filesz), 0, phdr->p_memsz - phdr->p_filesz);
-					}
-				}
-			entry = elf->e_entry;
-	} else {
-		err("bad kernel binary");
-	}
+	/* Load kernel */
+	entry = elf_load(buff);
 
 	free(buff);
 
 	/* Save uefi info in rax */
 	asm volatile (
-		"mov %0, %%rax\n"
+		"mov %0, %%rdi\n"
 		: : "r"(&info)
 	);
 
 	/* Execute kernel */
 	exit_bs();
-	i = (*((int(* __attribute__((sysv_abi)))(void))(entry)))();
+	int ret = (*((int(* __attribute__((sysv_abi)))(void))(entry)))();
+	for(;;);
 }
 
 int main(int argc, char **argv)

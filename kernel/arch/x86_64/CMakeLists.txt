@@ -5,7 +5,6 @@ set(SRC
     ${SRCROOT}/gdt.h
     ${SRCROOT}/tss.c
     ${SRCROOT}/tss.h
-    ${SRCROOT}/boot.asm
     ${SRCROOT}/ring3.asm
     ${SRCROOT}/tss.asm
 )

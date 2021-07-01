@@ -42,7 +42,14 @@ export PATH="$PATH:$BREW_HOME"
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 # Let's start the build! (x86_64 UEFI)
-First, in order to build the bootloader, run `make` in the `kernel/arch/x86_64/boot` directory in order to build `bootx64.c`.
+First, you have a choice to build one of two bootloaders. You can either build limine, or, the currently very broken tulip. 
+
+
+## Building tulip (please don't)
+run `make` in `kernel/arch/x86_64/tulip`.
+
+## Building limine
+building limine is also really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
 
 Now, run
 
@@ -65,6 +72,7 @@ Now that you're in the `build` directory, we can start fiddling with CMake!
 ```
 cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
+
 This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
 
 To finally build the binary, you can run CMake's generic build command
@@ -76,63 +84,40 @@ cmake --build .
 If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 # Building an ISO image
-If you're still here, you might be interested in building an ISO image. Lucky for you, I can tell you how to do just that!
-
-First of all, run the following command to strip any debug info off the kernel binary
-
-```
-strip --strip-debug kernel.bin
-```
-
-Then, move `kernel.bin` to the `iso/boot` directory.
-
-Next, to build the ISO, just run
-
-```
-grub-mkrescue -o daphne-img-x32.iso iso
-```
 
 ## x86_64 UEFI
 In order to build an ISO image under x86_64, follow these instructions.
-First, `cd` to `kernel/arch/x86_64/boot`. There, run the following commands
+First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
 ```
-dd if=/dev/zero of=fat.img bs=1k count=1440
+cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
 ```
 
-```
-mformat -i fat.img -f 1440 ::
-```
-
-to format our FAT image. Next, run
+Now, `cd` to `build`
 
 ```
-mmd -i fat.img ::/EFI
+cp -v kernel.bin iso
 ```
 
 ```
-mmd -i fat.img ::/EFI/BOOT
+xorriso -as mkisofs -b limine-cd.bin \
+        -no-emul-boot -boot-load-size 4 -boot-info-table \
+        --efi-boot limine-eltorito-efi.bin \
+        -efi-boot-part --efi-boot-image --protective-msdos-label \
+        iso -o daphne_img_x64.iso
+```
+
+if you also want BIOS, you might want to run these commands
+
+```
+cd ../kernel/arch/x86_64/limine/bin
 ```
 
 ```
-mcopy -i fat.img bootx64.efi ::/EFI/BOOT
+./limine-install ../../../../../build/daphne_img_x64.iso
 ```
 
-Now, move `kernel.bin` from `build` to `kernel/arch/x86_64/boot`
-
-```
-mcopy -i fat.img kernel.bin ::/EFI/BOOT
-```
-
-Now, move `fat.img` to `build/iso` and run
-
-```
-xorriso -as mkisofs -R -f -e fat.img -no-emul-boot -o daphne_img_x64.iso iso
-```
-
-from the `build` directory
-
-## Testing x64 images in Virtual box
+## Testing x64 images in Virtualbox
 First, make sure the "Enable EFI (special OSes only)" checkbox under system is checked. Then, once
 you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
 
@@ -145,5 +130,8 @@ cd EFI/BOOT
 ```
 
 ```
-bootx64.efi
+BOOTX64.EFI
 ```
+
+## Testing x64 images in QEMU
+

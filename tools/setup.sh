@@ -17,7 +17,8 @@ touch ${BUILD_DIR}/clean.sh
 if [[ $1 = "-x64" ]]
 then
 	mkdir ${BUILD_DIR}/iso
-	echo "#!/bin/sh
+	cp limine.cfg build/iso
+	echo "#!/bin/bash
 	rm -r ./*
 	bash ../tools/setup.sh -x64" > ${BUILD_DIR}/clean.sh
 fi
