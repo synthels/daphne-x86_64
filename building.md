@@ -51,7 +51,8 @@ run `make` in `kernel/arch/x86_64/tulip`.
 ## Building limine
 building limine is also really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
 
-Now, run
+## Building the kernel
+First, run
 
 ```
 ./tools/setup.sh -x64

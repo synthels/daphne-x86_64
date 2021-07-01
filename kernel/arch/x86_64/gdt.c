@@ -70,5 +70,5 @@ void init_gdt(void)
 		: : "r"(&gp)
 	);
 
-	flush_tss();
+	//flush_tss();
 }

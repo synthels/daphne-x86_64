@@ -28,8 +28,7 @@ void init_tss(void)
 	/* Add the TSS descriptor to the GDT */
 	gdt_set_gate(5, base, sizeof(tss), 0xE9, 0x00);
 	memset(&tss, 0x0, sizeof(tss));
-	extern void *stack_top;
-	tss.rsp[0] = (uintptr_t)&stack_top;
+	asm volatile("mov %%rsp, %0" : "=r"(tss.rsp[0]));
 }
 
 void tss_set_stack(uint64_t rsp0)
