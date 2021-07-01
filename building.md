@@ -135,4 +135,9 @@ BOOTX64.EFI
 ```
 
 ## Testing x64 images in QEMU
+Testing under QEMU requires that you have an OVMF image installed, then, at least under linux, you can use
+this command
 
+```
+qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 4096 -cdrom daphne_img_x64.iso -vga virtio
+```
