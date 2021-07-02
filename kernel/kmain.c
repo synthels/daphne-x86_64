@@ -51,7 +51,7 @@ static struct stivale2_header stivale_hdr = {
 void kmain(struct stivale2_struct *stv)
 {
 	UNUSED(stv);
-	//init_idt();
+	init_idt();
 	for (;;) {
 		asm("hlt");
 	}

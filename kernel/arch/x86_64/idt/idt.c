@@ -17,7 +17,7 @@
 #include "idt.h"
 
 /* IDT structure */
-static struct IDT_entry IDT_buffer[256];
+static idt_entry_t IDT_buffer[256];
 
 /* IRQ handlers */
 static void *irq_handlers[129];
@@ -82,9 +82,7 @@ void idt_install_handlers()
 void init_idt(void)
 {
 	extern int load_idt();
-	uint32_t irq_addresses[129];
-	uint32_t idt_address;
-	unsigned long idt_ptr[2];
+	struct idtp idt_ptr;
 
 	/* Install the handlers */
 	idt_install_handlers();
@@ -93,17 +91,18 @@ void init_idt(void)
 
 	/* Fill the IDT */ 
 	for (int i = 0; i < 129; i++) {
-		irq_addresses[i] = (uint64_t) irq_handlers[i];
-		IDT_buffer[i].offset_lowerbits = irq_addresses[i] & 0xffff;
+		uintptr_t base = (uintptr_t) irq_handlers[i];
+		IDT_buffer[i].base_low  = (base & 0xFFFF);
+		IDT_buffer[i].base_mid  = (base >> 16) & 0xFFFF;
+		IDT_buffer[i].base_high = (base >> 32) & 0xFFFFFFFF;
 		IDT_buffer[i].selector = 0x08;
 		IDT_buffer[i].zero = 0;
-		IDT_buffer[i].type_attr = 0x8e;
-		IDT_buffer[i].offset_higherbits = (irq_addresses[i] & 0xffff0000) >> 16;
+		IDT_buffer[i].pad = 0;
+		IDT_buffer[i].flags = 0x8e; /* kernel space only (OR 0) */
 	}
 
-	idt_address = (uint64_t) IDT_buffer;
-	idt_ptr[0] = (sizeof (struct IDT_entry) * 256) + ((idt_address & 0xffff) << 16);
-	idt_ptr[1] = idt_address >> 16;
+	idt_ptr.limit = sizeof(IDT_buffer);
+	idt_ptr.base = (uintptr_t) &IDT_buffer;
 
 	asm volatile (
 		"lidt %0"
