@@ -17,7 +17,7 @@
 #include "idt.h"
 
 /* IDT structure */
-static idt_entry_t IDT_buffer[256];
+static idt_entry_t idt[256];
 
 /* IRQ handlers */
 static void *irq_handlers[129];
@@ -82,7 +82,7 @@ void idt_install_handlers()
 void init_idt(void)
 {
 	extern int load_idt();
-	struct idtp idt_ptr;
+	idtp idt_ptr;
 
 	/* Install the handlers */
 	idt_install_handlers();
@@ -92,17 +92,17 @@ void init_idt(void)
 	/* Fill the IDT */ 
 	for (int i = 0; i < 129; i++) {
 		uintptr_t base = (uintptr_t) irq_handlers[i];
-		IDT_buffer[i].base_low  = (base & 0xFFFF);
-		IDT_buffer[i].base_mid  = (base >> 16) & 0xFFFF;
-		IDT_buffer[i].base_high = (base >> 32) & 0xFFFFFFFF;
-		IDT_buffer[i].selector = 0x08;
-		IDT_buffer[i].zero = 0;
-		IDT_buffer[i].pad = 0;
-		IDT_buffer[i].flags = 0x8e; /* kernel space only (OR 0) */
+		idt[i].base_low  = (base & 0xFFFF);
+		idt[i].base_mid  = (base >> 16) & 0xFFFF;
+		idt[i].base_high = (base >> 32) & 0xFFFFFFFF;
+		idt[i].selector = 0x08;
+		idt[i].zero = 0;
+		idt[i].pad = 0;
+		idt[i].flags = 0x8e; /* kernel space only (OR 0) */
 	}
 
-	idt_ptr.limit = sizeof(IDT_buffer);
-	idt_ptr.base = (uintptr_t) &IDT_buffer;
+	idt_ptr.limit = sizeof(idt);
+	idt_ptr.base = (uintptr_t) &idt;
 
 	asm volatile (
 		"lidt %0"
