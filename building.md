@@ -42,14 +42,9 @@ export PATH="$PATH:$BREW_HOME"
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 # Let's start the build! (x86_64 UEFI)
-First, you have a choice to build one of two bootloaders. You can either build limine, or, the currently very broken tulip. 
-
-
-## Building tulip (please don't)
-run `make` in `kernel/arch/x86_64/tulip`.
 
 ## Building limine
-building limine is also really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
+building limine is really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
 
 ## Building the kernel
 First, run

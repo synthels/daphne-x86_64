@@ -45,12 +45,13 @@ static struct stivale2_header stivale_hdr = {
 	.entry_point = 0,
 	.stack = (uintptr_t)stack + sizeof(stack),
 	.flags = (1 << 1),
-	.tags = (uintptr_t)&framebuffer_hdr_tag
+	.tags = (uintptr_t) &framebuffer_hdr_tag
 };
 
 void kmain(struct stivale2_struct *stv)
 {
 	UNUSED(stv);
+	//init_idt();
 	for (;;) {
 		asm("hlt");
 	}
