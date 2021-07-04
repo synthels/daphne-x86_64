@@ -33,7 +33,7 @@ static struct stivale2_header_tag_terminal terminal_hdr_tag = {
 static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
 	.tag = {
 		.identifier = STIVALE2_HEADER_TAG_FRAMEBUFFER_ID,
-		.next = (uint64_t)&terminal_hdr_tag
+		.next = (uint64_t) &terminal_hdr_tag
 	},
 	.framebuffer_width  = 0,
 	.framebuffer_height = 0,
@@ -43,7 +43,7 @@ static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
 __attribute__((section(".stivale2hdr"), used))
 static struct stivale2_header stivale_hdr = {
 	.entry_point = 0,
-	.stack = (uintptr_t)stack + sizeof(stack),
+	.stack = (uintptr_t) stack + sizeof(stack),
 	.flags = (1 << 1),
 	.tags = (uintptr_t) &framebuffer_hdr_tag
 };
@@ -51,7 +51,9 @@ static struct stivale2_header stivale_hdr = {
 void kmain(struct stivale2_struct *stv)
 {
 	UNUSED(stv);
-	init_idt();
+	init_gdt(); /* gdt & tss */
+	init_idt(); /* idt */
+
 	for (;;) {
 		asm("hlt");
 	}

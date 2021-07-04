@@ -16,48 +16,42 @@
 
 #include "gdt.h"
 
-static struct gdt_entry gdt[6];
 static struct gdt_ptr gp;
+static struct gdt_desc gdt;
 
-extern void flush_tss(void);
-
-void gdt_set_gate(
-	int num,
-	uint32_t base,
-	uint32_t limit,
-	uint8_t access,
-	uint8_t gran)
+void gdt_set_desc(uint8_t n, uint16_t lim, uint16_t base_low, uint8_t base_mid, uint8_t base_high, uint8_t access, uint8_t gran)
 {
-	/* Base address */
-	gdt[num].base_low = (base & 0xffff);
-	gdt[num].base_middle = (base >> 16) & 0xff;
-	gdt[num].base_high = (base >> 24 & 0xff);
-
-	/* Limits */
-	gdt[num].limit_low = (limit & 0xffff);
-	gdt[num].granularity = (limit >> 16) & 0x0f;
-
-	/* Granularity & access flags */
-	gdt[num].granularity |= (gran & 0xf0);
-	gdt[num].access = access;
+	gdt.entries[n].limit = lim;
+	gdt.entries[n].base_low = base_low;
+	gdt.entries[n].base_mid = base_mid;
+	gdt.entries[n].access = access;
+	gdt.entries[n].granularity = gran;
+	gdt.entries[n].base_hi = base_high;
 }
 
 void init_gdt(void)
 {
-	gp.limit = (sizeof(struct gdt_entry) * 6) - 1;
-	gp.base = (uint64_t) &gdt; /* uintptr_t?? */
+	/* Set up gdt */
+	gdt_set_desc(0, 0, 0, 0, 0, 0, 0);
+	gdt_set_desc(1, 0xffff, 0x0000, 0x00, 0x00, 0b10011010, 0b00000000);
+	gdt_set_desc(2, 0xffff, 0x0000, 0x00, 0x00, 0b10010010, 0b00000000);
+	gdt_set_desc(3, 0xffff, 0x0000, 0x00, 0x00, 0b10011010, 0b11001111);
+	gdt_set_desc(4, 0xffff, 0x0000, 0x00, 0x00, 0b10010010, 0b10011010);
 
-	/* NULL seg */
-	gdt_set_gate(0, 0, 0, 0, 0);
-	/* kernel cs */
-	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-	/* kernel ds */
-	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
-	/* user cs */
-	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
-	/* user ds */
-	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
+	/* Set up tss */
+	gdt.tss.length       = 104;
+	gdt.tss.base_low16   = 0;
+	gdt.tss.base_mid8    = 0;
+	gdt.tss.flags1       = 0b10001001;
+	gdt.tss.flags2       = 0;
+	gdt.tss.base_high8   = 0;
+	gdt.tss.base_upper32 = 0;
+	gdt.tss.reserved     = 0;
 
+	gp.limit = sizeof(gdt) - 1;
+	gp.base = (uintptr_t) &gdt;
+
+	/* Load 'em both */
 	asm volatile (
 		"mov %0, %%rdi\n"
 		"lgdt (%%rdi)\n"
@@ -67,8 +61,6 @@ void init_gdt(void)
 		"mov %%ax, %%ss\n"
 		"mov $0x2b, %%ax\n"
 		"ltr %%ax\n"
-		: : "r"(&gp)
+		: : "r"((uintptr_t) &gp)
 	);
-
-	//flush_tss();
 }

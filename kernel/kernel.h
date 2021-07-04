@@ -27,12 +27,8 @@
  */
 #define KERNEL_VERSION_STRING "v1.0-Alpha"
 
-#ifdef ARCH_x86_32
-	#define KERNEL_ARCH_STRING "x86-32 BIOS"
-#endif
-
 #ifdef ARCH_x86_64
-	#define KERNEL_ARCH_STRING "x86-64 UEFI"
+	#define KERNEL_ARCH_STRING "x86-64"
 #endif
 
 /**
