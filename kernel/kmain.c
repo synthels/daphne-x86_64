@@ -21,6 +21,8 @@
 #include "kmain.h"
 
 static uint8_t stack[4096];
+static struct stivale2_mmap_entry *memmap;
+static uint64_t mm_size;
 
 static struct stivale2_header_tag_terminal terminal_hdr_tag = {
 	.tag = {
@@ -50,9 +52,20 @@ static struct stivale2_header stivale_hdr = {
 
 void kmain(struct stivale2_struct *stv)
 {
-	UNUSED(stv);
+	struct stivale2_tag *tag = (struct stivale2_tag *) &(stv->tags);
+	for (;;) {
+		if (tag == NULL) break;
+		tag = (struct stivale2_tag *) &(tag->next);
+		/* Got memory map */
+		if (tag->identifier == STIVALE2_STRUCT_TAG_MEMMAP_ID) {
+			memmap  = (*(struct stivale2_struct_tag_memmap *)(tag)).memmap;
+			mm_size = (*(struct stivale2_struct_tag_memmap *)(tag)).entries;
+		}
+	}
+
 	init_gdt(); /* gdt & tss */
 	init_idt(); /* idt */
+	mem_init((void *) &memmap, mm_size); /* mm */
 
 	for (;;) {
 		asm("hlt");
