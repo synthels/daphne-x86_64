@@ -110,7 +110,7 @@ void init_idt(void)
 	);
 }
 
-void fault_handler(struct regs *r)
+void fault_handler(regs_t *r)
 {
 	const char *exception_messages[] = {
 		"division by zero",

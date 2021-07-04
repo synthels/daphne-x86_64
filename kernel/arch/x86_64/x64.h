@@ -11,32 +11,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Interrupt handlers
+ * x64 shit
  */
 
-#include <io/io.h>
-#include <stdint.h>
-#include <arch/x86_64/x64.h>
+#ifndef x64_H
+#define x64_H
 
-#define IRQ_END outb(0x20, 0x20)
-
-/* PIT IRQ */
-void pit_irq_handler(void)
+typedef struct
 {
-	// pit_tick();
-	IRQ_END;
-}
+	uintptr_t r15;
+	uintptr_t r14;
+	uintptr_t r13;
+	uintptr_t r12;
+	uintptr_t r11;
+	uintptr_t r10;
+	uintptr_t r9;
+	uintptr_t r8;
+	uintptr_t rbp;
+	uintptr_t rdi;
+	uintptr_t rsi;
+	uintptr_t rdx;
+	uintptr_t rcx;
+	uintptr_t rbx;
+	uintptr_t rax;
+	uint64_t int_no;
+	uint64_t error_code;
+	uintptr_t rip;
+	uintptr_t cs;
+	uintptr_t rflags;
+	uintptr_t rsp;
+	uintptr_t ss;
+} __attribute__((packed)) regs_t;
 
-/* Keyboard IRQ */
-void kbd_irq_handler(void)
-{
-	// kbd_read();
-	IRQ_END;
-}
-
-/* syscall handler */
-void syscall_handler(regs_t *r)
-{
-	// printk("syscall: EAX = %i", r->eax);
-	IRQ_END;
-}
+#endif
