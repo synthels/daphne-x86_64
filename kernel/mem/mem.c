@@ -49,3 +49,8 @@ void mem_init(void *mmap_ptr, uint64_t size)
 		}
 	}
 }
+
+memsp_t *get_memsp()
+{
+	return &memsp;
+}

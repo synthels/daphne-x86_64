@@ -60,6 +60,7 @@ void kmain(struct stivale2_struct *stv)
 		if (tag->identifier == STIVALE2_STRUCT_TAG_MEMMAP_ID) {
 			memmap  = (*(struct stivale2_struct_tag_memmap *)(tag)).memmap;
 			mm_size = (*(struct stivale2_struct_tag_memmap *)(tag)).entries;
+			break;
 		}
 	}
 

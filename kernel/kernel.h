@@ -19,7 +19,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <vid/console/con.h>
 
 /**
  * Kernel version string

@@ -48,4 +48,10 @@ typedef struct {
  */
 void mem_init(void *mmap_ptr, uint64_t size);
 
+/**
+ * get_memsp
+ *   brief: Get memsp
+ */
+memsp_t *get_memsp();
+
 #endif
