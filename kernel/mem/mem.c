@@ -29,13 +29,12 @@ void mem_init(void *mmap_ptr, uint64_t size)
 	mmap_entry_t *mmap = (mmap_entry_t *) &mmap_ptr;
 	for (uint64_t i = 0; i < size; i++) {
 		mmap_entry_t *entry  = &mmap[i];
-
 		/* 0 length entries */
 		if (entry->length == 0x0) {
 			entry->type = INVALID;
 		}
 
-		// /* Overlapping entries */
+		/* Overlapping entries */
 		for (uint64_t j = 0; i < memsp.size; j++) {
 			/* Entry overlaps with another */
 			mmap_entry_t *memspe = memsp.mmap[j];
