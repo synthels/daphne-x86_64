@@ -1,7 +1,5 @@
 # daphne
-daphne aims to be a highly portable and minimal operating system that can be directly shipped with applications in order to allow them to run on bare metal with high performance.
-
-_**Note:** Currently rewriting daphne for x64 UEFI, check out the x64-rewrite branch_
+Daphne aims to be a modern and elegant 64-bit operating currently targetted at the x86 family of processors.
 
 # Links
 * [Building from source](https://github.com/synthels/daphne/blob/master/building.md)
@@ -9,6 +7,9 @@ _**Note:** Currently rewriting daphne for x64 UEFI, check out the x64-rewrite br
 
 # Screenshots
 Coming soon!
+
+# Acknowledgments
+* [Limine](https://github.com/limine-bootloader/limine) - An x86/x64 bootloader
 
 # License
 daphne is licensed under the GPLv3 license. See [license](https://github.com/synthels/daphne/blob/master/license) for more details.
