@@ -62,14 +62,14 @@ extern uint32_t kend;
 uintptr_t *kalloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
-	mmap_entry_t *mmap = get_memsp()->mmap;
+	mmap_entry_t **mmap = get_memsp()->mmap;
 	/* Go through every entry */
 	for (uint64_t i = begin; i < get_memsp()->size; i++) {
 		/* See how much of this entry we have used */
-		if (mmap[i].length - mmap_offs[i] >= n) {
+		if (mmap[i]->length - mmap_offs[i] >= n) {
 			mmap_offs[i] += n;
 			release_mutex(&alloc_mutex);
-			return (uintptr_t *) (mmap[i].base + mmap_offs[i]);
+			return (uintptr_t *) (mmap[i]->base + mmap_offs[i]);
 		} else {
 			/* If this entry runs out, try going to the next */
 			if (i < 255) {
@@ -224,7 +224,7 @@ void *kfree(void *ptr)
 	malloc_bin_t *b = head_bin;
 	void *page_base;
 	for (size_t i = 0; i < hbin_size; i++) {
-		/* Only bother searching bins with the 
+		/* Only bother searching bins with the
 		   same size as the object */
 		if (b->page_size == malloc_size) {
 			/* Correct bin is found */

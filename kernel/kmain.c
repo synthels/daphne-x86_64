@@ -20,7 +20,7 @@
 
 #include "kmain.h"
 
-static uint8_t stack[4096];
+static uint8_t stack[STACK_SIZE] __attribute__((aligned(16)));
 static struct stivale2_mmap_entry *memmap;
 static uint64_t mm_size;
 

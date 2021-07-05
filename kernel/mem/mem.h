@@ -38,9 +38,9 @@ typedef struct {
 
 /* Memory space structure */
 typedef struct {
+	mmap_entry_t **mmap;
 	uint64_t size;
-	mmap_entry_t *mmap;
-} __attribute__((packed)) memsp_t;
+} memsp_t;
 
 /**
  * mem_init

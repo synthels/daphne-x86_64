@@ -16,14 +16,17 @@
 
 #include "mem.h"
 
-/* Global virtual memory space */
+static mmap_entry_t *vmmap[256];
+/* Virtual memory space */
 static memsp_t memsp;
 
 void mem_init(void *mmap_ptr, uint64_t size)
 {
-	/* Validate mmap */
+	/* Initialise memsp */
+	memsp.size = 0;
+	memsp.mmap = vmmap;
+	/* Sanity check mmap */
 	mmap_entry_t *mmap = (mmap_entry_t *) &mmap_ptr;
-	uint16_t memsp_index = 0; 
 	for (uint64_t i = 0; i < size; i++) {
 		mmap_entry_t *entry  = &mmap[i];
 
@@ -32,10 +35,10 @@ void mem_init(void *mmap_ptr, uint64_t size)
 			entry->type = INVALID;
 		}
 
-		/* Overlapping entries */
+		// /* Overlapping entries */
 		for (uint64_t j = 0; i < memsp.size; j++) {
 			/* Entry overlaps with another */
-			mmap_entry_t *memspe = &(memsp.mmap[j]);
+			mmap_entry_t *memspe = memsp.mmap[j];
 			if (!(entry->base < memspe->base) && 
 				(entry->base < (memspe->base + memspe->length))) {
 				entry->type = INVALID;
@@ -43,10 +46,12 @@ void mem_init(void *mmap_ptr, uint64_t size)
 		}
 
 		/* Add to memsp */
-		if ((entry->type != INVALID) || (entry->type == USABLE)) {
-			memsp.mmap[memsp_index] = *entry;
-			++memsp.size;
+		if ((entry->type != INVALID) && (entry->type == USABLE)) {
+			vmmap[memsp.size] = entry;
+			++(memsp.size);
 		}
+
+		memsp.mmap = vmmap;
 	}
 }
 
