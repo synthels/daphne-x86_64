@@ -8,25 +8,22 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef DEV_PCSPK
+#define DEV_PCSPK
 
 #include <stdint.h>
-#include <kernel.h>
 #include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
+#include <libk/sleep.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
-
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+/**
+ * pcspk_beep
+ *   brief: play freq through the pc speaker for
+ *          a few ticks
+ */
+void pcspk_beep(uint16_t freq, uint16_t ticks);
 
 #endif

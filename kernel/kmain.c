@@ -67,6 +67,7 @@ void kmain(struct stivale2_struct *stv)
 	init_gdt(); /* gdt & tss */
 	init_idt(); /* idt */
 	mem_init((void *) &memmap, mm_size); /* mm */
+	dev_init(); /* essential devices */
 
 	for (;;) {
 		asm("hlt");

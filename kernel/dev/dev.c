@@ -12,21 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "dev.h"
 
-#include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
-
-#define STACK_SIZE 65536 /* 64KiB */
-
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
-
-#endif
+void dev_init(void)
+{
+	kbd_init();
+	pit_init();
+}

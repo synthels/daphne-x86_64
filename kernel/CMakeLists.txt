@@ -5,6 +5,7 @@ add_subdirectory(${SRCROOT}/io)
 add_subdirectory(${SRCROOT}/vid)
 add_subdirectory(${SRCROOT}/libk)
 add_subdirectory(${SRCROOT}/mem)
+add_subdirectory(${SRCROOT}/dev)
 
 set(SRC
 	${SRCROOT}/kernel.c

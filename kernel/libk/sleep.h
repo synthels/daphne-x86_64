@@ -12,21 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef LIBK_SLEEP
+#define LIBK_SLEEP
 
+#include <dev/pit.h>
 #include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
-
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+/**
+ * sleep
+ *   brief: sleep kernel for n ticks 
+ */
+void sleep(uint32_t ticks);
 
 #endif

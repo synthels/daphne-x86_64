@@ -10,23 +10,28 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * PIT driver
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "pit.h"
 
-#include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
+static uint64_t ticks = 0;
 
-#define STACK_SIZE 65536 /* 64KiB */
+void pit_init(void)
+{
+	int div = 1193180 / TIMER_FREQ;
+	outb(0x43, 0x34);
+	outb(0x40, div & 0xFF);
+	outb(0x40, div >> 8);
+}
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+void pit_tick(void)
+{
+	ticks++;
+}
 
-#endif
+void pit_get_ticks(uint32_t *data)
+{
+	*data = ticks;
+}

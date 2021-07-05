@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 synthels <synthels.me@gmail.com>
  *
@@ -12,21 +13,30 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef DEV_PIT
+#define DEV_PIT
 
-#include <stdint.h>
-#include <kernel.h>
 #include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
+#include <kernel.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
+#define TIMER_FREQ 100
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+/**
+ * pit_init
+ *   brief: init pit
+ */
+void pit_init(void);
+
+/**
+ * pit_tick
+ *   brief: do one tick
+ */
+void pit_tick(void);
+
+/**
+ * pit_get_ticks
+ *   brief: get current tick count
+ */
+void pit_get_ticks(uint32_t *data);
 
 #endif

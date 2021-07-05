@@ -10,23 +10,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Sleep function
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "sleep.h"
 
-#include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
-
-#define STACK_SIZE 65536 /* 64KiB */
-
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
-
-#endif
+void sleep(uint32_t ticks)
+{
+	uint32_t start;
+	uint32_t now;
+	pit_get_ticks(&start);
+	pit_get_ticks(&now);
+	while ((now - start) < ticks)
+		pit_get_ticks(&now);
+}

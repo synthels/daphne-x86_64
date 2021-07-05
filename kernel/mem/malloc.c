@@ -224,7 +224,7 @@ void *kfree(void *ptr)
 	malloc_bin_t *b = head_bin;
 	void *page_base;
 	for (size_t i = 0; i < hbin_size; i++) {
-		/* Only bother searching bins with the
+		/* Only bother searching bins with they
 		   same size as the object */
 		if (b->page_size == malloc_size) {
 			/* Correct bin is found */
