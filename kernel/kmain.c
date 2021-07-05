@@ -14,55 +14,62 @@
  * Kernel main function
  */
 
+#include <stdint.h>
+#include <stddef.h>
+#include <stivale2.h>
+
 #include "kmain.h"
 
-extern void enter_usermode(void);
+static uint8_t stack[STACK_SIZE] __attribute__((aligned(16)));
+static struct stivale2_mmap_entry *memmap;
+static uint64_t mm_size;
 
-/* Kernel main function */
-void kmain(multiboot_info_t *info)
+static struct stivale2_header_tag_terminal terminal_hdr_tag = {
+	.tag = {
+		.identifier = STIVALE2_HEADER_TAG_TERMINAL_ID,
+		.next = 0
+	},
+	.flags = 0
+};
+
+static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
+	.tag = {
+		.identifier = STIVALE2_HEADER_TAG_FRAMEBUFFER_ID,
+		.next = (uint64_t) &terminal_hdr_tag
+	},
+	.framebuffer_width  = 0,
+	.framebuffer_height = 0,
+	.framebuffer_bpp    = 0
+};
+
+__attribute__((section(".stivale2hdr"), used))
+static struct stivale2_header stivale_hdr = {
+	.entry_point = 0,
+	.stack = (uintptr_t) stack + sizeof(stack),
+	.flags = (1 << 1),
+	.tags = (uintptr_t) &framebuffer_hdr_tag
+};
+
+void kmain(struct stivale2_struct *stv)
 {
-	/* Init tty */
-	tty_init();
-
-	printk("daphne %s (%s) \n", KERNEL_VERSION_STRING, KERNEL_ARCH_STRING);
-
-	uint32_t esp;
-	asm volatile("mov %%esp, %0" : "=r"(esp));
-	init_tss(0x10, esp); /* Init TSS */
-	init_gdt(); /* Init GDT */
-	init_idt(); /* Init IDT */
-
-	/* Set kernel mode */
-	set_kernel_mode(TTY_MODE);
-
-	/* Check if grub can give us a memory map */
-	/* TODO: Detect manually */
-	if (!(info->flags & (1<<6))) {
-		panic("couldn't get memory map!");
+	struct stivale2_tag *tag = (struct stivale2_tag *) &(stv->tags);
+	for (;;) {
+		if (tag == NULL) break;
+		tag = (struct stivale2_tag *) &(tag->next);
+		/* Got memory map */
+		if (tag->identifier == STIVALE2_STRUCT_TAG_MEMMAP_ID) {
+			memmap  = (*(struct stivale2_struct_tag_memmap *)(tag)).memmap;
+			mm_size = (*(struct stivale2_struct_tag_memmap *)(tag)).entries;
+			break;
+		}
 	}
 
-	/* Init mm */
-	printk("\nMemory map:");
-	/* TODO: pass memory map only, in order to make
-	   supporting x64 easier */
-	kmem_init(info);
+	init_gdt(); /* gdt & tss */
+	init_idt(); /* idt */
+	mem_init((void *) &memmap, mm_size); /* mm */
+	dev_init(); /* essential devices */
 
-	/* Init paging */
-	kmem_init_paging();
-
-	/* Init essential devices */
-	dev_init_essentials();
-
-	printk("total_ram=%uiMB",  (kmem_get_installed_memory() / 1048576) + 2);
-
-	#ifdef BUILD_TESTS
-		/* Start tests */
-		do_tests();
-	#endif
-
-	/* Ring 3! */
-	enter_usermode();
-	printk("\nHello user mode! :)");
-
-	for(;;);
+	for (;;) {
+		asm("hlt");
+	}
 }

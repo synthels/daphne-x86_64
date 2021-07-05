@@ -11,7 +11,7 @@ enable_language(ASM_NASM)
 add_executable(${KERNEL_BIN})
 
 set(SRCROOT ${PROJECT_SOURCE_DIR})
-set(CMAKE_C_FLAGS "-std=gnu99 -ffreestanding -O2 -Wall -Wextra -Ilib/include -Ikernel -Wno-maybe-uninitialized")
+set(CMAKE_C_FLAGS "-std=gnu99 -ffreestanding -O2 -Wall -Wextra -fPIE -Ilib/include -Ikernel -Wno-maybe-uninitialized")
 
 # Build tests if needed
 if (BUILD_TESTS)

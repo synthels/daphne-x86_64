@@ -10,17 +10,37 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * x64 shit
  */
 
-#ifndef LOGGER
-#define LOGGER
+#ifndef x64_H
+#define x64_H
 
-#include <tty/printk.h>
-#include <dev/pit.h>
-#include <stdint.h>
-#include <kernel.h>
-
-/* Logs a message */
-void logk(char *msg);
+typedef struct
+{
+	uintptr_t r15;
+	uintptr_t r14;
+	uintptr_t r13;
+	uintptr_t r12;
+	uintptr_t r11;
+	uintptr_t r10;
+	uintptr_t r9;
+	uintptr_t r8;
+	uintptr_t rbp;
+	uintptr_t rdi;
+	uintptr_t rsi;
+	uintptr_t rdx;
+	uintptr_t rcx;
+	uintptr_t rbx;
+	uintptr_t rax;
+	uint64_t int_no;
+	uint64_t error_code;
+	uintptr_t rip;
+	uintptr_t cs;
+	uintptr_t rflags;
+	uintptr_t rsp;
+	uintptr_t ss;
+} __attribute__((packed)) regs_t;
 
 #endif

@@ -15,30 +15,28 @@
  */
 
 #include <io/io.h>
-#include <dev/kbd.h>
-#include <dev/pit.h>
 #include <stdint.h>
-#include <tty/printk.h>
+#include <arch/x86_64/x64.h>
 
 #define IRQ_END outb(0x20, 0x20)
 
 /* PIT IRQ */
 void pit_irq_handler(void)
 {
-	pit_tick();
+	// pit_tick();
 	IRQ_END;
 }
 
 /* Keyboard IRQ */
 void kbd_irq_handler(void)
 {
-	kbd_read();
+	// kbd_read();
 	IRQ_END;
 }
 
 /* syscall handler */
 void syscall_handler(regs_t *r)
 {
-	printk("syscall: EAX = %i", r->eax);
+	// printk("syscall: EAX = %i", r->eax);
 	IRQ_END;
 }

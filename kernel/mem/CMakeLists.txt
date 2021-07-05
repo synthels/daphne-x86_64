@@ -1,8 +1,8 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/memory)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/mem)
 
 set(SRC
-	${SRCROOT}/mm.c
-	${SRCROOT}/mm.h
+	${SRCROOT}/mem.c
+	${SRCROOT}/mem.h
 	${SRCROOT}/malloc.c
 	${SRCROOT}/malloc.h
 )

@@ -22,17 +22,15 @@
 #include <kernel.h>
 #include <mutex.h>
 
-#include "mm.h"
-
-#ifdef ARCH_x86_64
-typedef uint64_t addr_t;
-#endif
-
-#ifdef ARCH_x86_32
-typedef uint32_t addr_t;
-#endif
+#include "mem.h"
 
 #define MAX_PAGES 12 /* Max pages in bin */
+
+#define fast_ceil(x, y) ((long long) x + y - 1) / y
+#define kmem_align(n) 32 * fast_ceil(n, 32)
+#define kmem_page_align(n) PAGE_SIZE * fast_ceil(n, PAGE_SIZE)
+
+#define PAGE_SIZE 4096
 
 struct malloc_page {
 	struct malloc_page *next_page; /* NULL if last page */
@@ -68,7 +66,7 @@ void *kfree(void *ptr);
  * kalloc
  *   brief: watermark allocator
  */
-addr_t *kalloc(size_t n, size_t begin);
+uintptr_t *kalloc(size_t n, size_t begin);
 
 /**
  * kalloc_mem_aligned

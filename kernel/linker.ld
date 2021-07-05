@@ -1,38 +1,32 @@
-/* Entry */
-ENTRY(_start)
+/* Tell the linker that we want the symbol _start to be our entry point */
+ENTRY(kmain)
 
 SECTIONS
 {
-	kstart = .;
+    /* We wanna be placed in the higher half, 2MiB above 0 in physical memory. */
+    . = 0xffffffff80200000;
 
-	/* Begin sections at 1 MiB, since lower memory is used by GRUB */
-	. = 1M;
+    /* We place the .stivalehdr section containing the header in its own section, */
+    /* and we use the KEEP directive on it to make sure it doesn't get discarded. */
+    .stivale2hdr : {
+        KEEP(*(.stivale2hdr))
+    }
 
-	/* Multiboot header & text section */
-	.text BLOCK(4K) : ALIGN(4K)
-	{
-		*(.multiboot)
-		*(.text)
-	}
+    /* Then let's place all the other traditional executable sections afterwards. */
+    .text : {
+        *(.text*)
+    }
 
-	/* Read-only data */
-	.rodata BLOCK(4K) : ALIGN(4K)
-	{
-		*(.rodata)
-	}
+    .rodata : {
+        *(.rodata*)
+    }
 
-	/* Initialized data */
-	.data BLOCK(4K) : ALIGN(4K)
-	{
-		*(.data)
-	}
+    .data : {
+        *(.data*)
+    }
 
-	/* Uninitialized data & stack */
-	.bss BLOCK(4K) : ALIGN(4K)
-	{
-		*(COMMON)
-		*(.bss)
-	}
-
-	kend = .;
+    .bss : {
+        *(COMMON)
+        *(.bss*)
+    }
 }

@@ -14,7 +14,7 @@
 
 #include "dev.h"
 
-void dev_init_essentials()
+void dev_init(void)
 {
 	kbd_init();
 	pit_init();

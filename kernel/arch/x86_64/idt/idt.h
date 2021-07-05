@@ -16,9 +16,9 @@
 #define KERNEL_x86_64_IDT
 
 #include <stdint.h>
-#include <tty/printk.h>
 #include <panic.h>
 #include <kernel.h>
+#include <arch/x86_64/x64.h>
 
 #include "PIC.h"
 
@@ -29,13 +29,20 @@
 	idt_install_irq_handler(irq, n)
 
 /* IDT entry */
-struct IDT_entry {
-	uint16_t offset_lowerbits;
+typedef struct {
+	uint16_t base_low;
 	uint16_t selector;
 	uint8_t zero;
-	uint8_t type_attr;
-	uint16_t offset_higherbits;
-} __attribute__((packed));
+	uint8_t flags;
+	uint16_t base_mid;
+	uint32_t base_high;
+	uint32_t pad;
+} __attribute__((packed)) idt_entry_t;
+
+typedef struct {
+	uint16_t limit;
+	uintptr_t base;
+} __attribute__((packed)) idtp;
 
 /**
  * idt_install_irq_handler

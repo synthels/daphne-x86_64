@@ -26,24 +26,9 @@
  */
 #define KERNEL_VERSION_STRING "v1.0-Alpha"
 
-#ifdef ARCH_x86_32
-	#define KERNEL_ARCH_STRING "x86-32 BIOS"
-#endif
-
 #ifdef ARCH_x86_64
-	#define KERNEL_ARCH_STRING "x86-64 UEFI"
+	#define KERNEL_ARCH_STRING "x86-64"
 #endif
-
-/**
- * x86 registers struct
- */
-struct regs {
-	uint32_t gs, fs, es, ds;
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-	uint32_t int_no, err_code;
-	uint32_t eip, cs, eflags, useresp, ss;
-};
-typedef struct regs regs_t;
 
 /**
  * Mark a symbol unused
@@ -123,5 +108,32 @@ void kernel_hang(void);
 #ifndef false
 	#define false 0
 #endif
+
+typedef struct {
+    uint32_t type;
+    uint32_t pad;
+    uint64_t phys_start;
+    uint64_t virt_start;
+    uint64_t pages;
+    uint64_t attr;
+} efi_memory_descriptor_t;
+
+typedef struct {
+	efi_memory_descriptor_t *map;
+	uint64_t size;
+	uint64_t desc_size;
+} efi_mmap_t;
+
+typedef struct {
+	uint64_t fb_base;
+	uint64_t pps;
+	uint64_t width;
+	uint64_t height;
+} efi_gop_info_t;
+
+typedef struct {
+	efi_mmap_t *mmap;
+	efi_gop_info_t *gop;
+} efi_info_t;
 
 #endif

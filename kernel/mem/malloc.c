@@ -59,18 +59,17 @@ static mutex_t alloc_mutex = 0;
 extern uint32_t kstart;
 extern uint32_t kend;
 
-addr_t *kalloc(size_t n, size_t begin)
+uintptr_t *kalloc(size_t n, size_t begin)
 {
 	acquire_mutex(&alloc_mutex);
-	mmap_entry_t *mmap = kmem_get_kernel_mmap();
+	mmap_entry_t **mmap = get_memsp()->mmap;
 	/* Go through every entry */
-	for (uint32_t i = begin; i < kmem_get_kmmap_size(); i++) {
-		if (mmap[i].type != MEMORY_AVAILABLE) continue;
+	for (uint64_t i = begin; i < get_memsp()->size; i++) {
 		/* See how much of this entry we have used */
-		if (mmap[i].length - mmap_offs[i] >= n) {
+		if (mmap[i]->length - mmap_offs[i] >= n) {
 			mmap_offs[i] += n;
 			release_mutex(&alloc_mutex);
-			return (addr_t *) (uintptr_t) (mmap[i].base_addr + mmap_offs[i]);
+			return (uintptr_t *) (mmap[i]->base + mmap_offs[i]);
 		} else {
 			/* If this entry runs out, try going to the next */
 			if (i < 255) {
@@ -225,7 +224,7 @@ void *kfree(void *ptr)
 	malloc_bin_t *b = head_bin;
 	void *page_base;
 	for (size_t i = 0; i < hbin_size; i++) {
-		/* Only bother searching bins with the 
+		/* Only bother searching bins with they
 		   same size as the object */
 		if (b->page_size == malloc_size) {
 			/* Correct bin is found */

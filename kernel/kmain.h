@@ -15,31 +15,18 @@
 #ifndef KERNEL_INIT
 #define KERNEL_INIT
 
-#include <multiboot.h>
 #include <stdint.h>
-
-#include <io/io.h>
 #include <kernel.h>
-
-#include <libk/sleep.h>
+#include <io/io.h>
+#include <mem/mem.h>
+#include <mem/malloc.h>
 #include <dev/dev.h>
-#include <memory/mm.h>
 
-#include <tty/printk.h>
-#include <panic.h>
-
-#ifdef ARCH_x86_32
-	#include <arch/x86_32/idt/idt.h>
-	#include <arch/x86_32/gdt.h>
-	#include <arch/x86_32/tss.h>
-#endif
+#define STACK_SIZE 65536 /* 64KiB */
 
 #ifdef ARCH_x86_64
 	#include <arch/x86_64/gdt.h>
-#endif
-
-#ifdef BUILD_TESTS
-	#include <tests/tests.h>
+	#include <arch/x86_64/idt/idt.h>
 #endif
 
 #endif

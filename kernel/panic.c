@@ -18,7 +18,5 @@
 
 void panic(const char *msg)
 {
-	printk("\nkernel panic: %s", msg);
-	/* TODO: Add debug info here */
 	kernel_hang();
 }
