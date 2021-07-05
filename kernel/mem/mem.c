@@ -26,7 +26,7 @@ void mem_init(void *mmap_ptr, uint64_t size)
 	memsp.size = 0;
 	memsp.mmap = vmmap;
 	/* Sanity check mmap */
-	mmap_entry_t *mmap = (mmap_entry_t *) &mmap_ptr;
+	mmap_entry_t *mmap = mmap_ptr;
 	for (uint64_t i = 0; i < size; i++) {
 		mmap_entry_t *entry  = &mmap[i];
 		/* 0 length entries */

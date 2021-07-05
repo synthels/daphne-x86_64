@@ -50,19 +50,24 @@ static struct stivale2_header stivale_hdr = {
 	.tags = (uintptr_t) &framebuffer_hdr_tag
 };
 
+void *get_tag(struct stivale2_struct *stv, uint64_t id)
+{
+	struct stivale2_tag *tag = (void *) stv->tags;
+	for (;;) {
+		if (tag == NULL)
+			return tag;
+		if (tag->identifier == id)
+			return tag;
+		tag = (void *) tag->next;
+	}
+}
+
 void kmain(struct stivale2_struct *stv)
 {
-	struct stivale2_tag *tag = (struct stivale2_tag *) &(stv->tags);
-	for (;;) {
-		if (tag == NULL) break;
-		tag = (struct stivale2_tag *) &(tag->next);
-		/* Got memory map */
-		if (tag->identifier == STIVALE2_STRUCT_TAG_MEMMAP_ID) {
-			memmap  = (*(struct stivale2_struct_tag_memmap *)(tag)).memmap;
-			mm_size = (*(struct stivale2_struct_tag_memmap *)(tag)).entries;
-			break;
-		}
-	}
+	/* Get memory map */
+	struct stivale2_struct_tag_memmap *mmap = get_tag(stv, STIVALE2_STRUCT_TAG_MEMMAP_ID); /* TODO: Handle NULL */
+	memmap  = mmap->memmap;
+	mm_size = mmap->entries;
 
 	init_gdt(); /* gdt & tss */
 	init_idt(); /* idt */
