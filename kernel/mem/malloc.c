@@ -49,51 +49,29 @@
 
 #include "malloc.h"
 
-/* Offset for each mmap entry */
-static uint32_t mmap_offs[256];
-
-/* kalloc mutex lock */
-static mutex_t alloc_mutex = 0;
-
-/* From linker.ld */
-extern uint32_t kstart;
-extern uint32_t kend;
-
-uintptr_t *kalloc(size_t n, size_t begin)
+uintptr_t *kalloc(size_t n)
 {
-	acquire_mutex(&alloc_mutex);
-	mmap_entry_t **mmap = get_memsp()->mmap;
-	/* Go through every entry */
-	for (uint64_t i = begin; i < get_memsp()->size; i++) {
-		/* See how much of this entry we have used */
-		if (mmap[i]->length - mmap_offs[i] >= n) {
-			mmap_offs[i] += n;
-			release_mutex(&alloc_mutex);
-			return (uintptr_t *) (mmap[i]->base + mmap_offs[i]);
-		} else {
-			/* If this entry runs out, try going to the next */
-			if (i < 255) {
-				release_mutex(&alloc_mutex);
-				return kalloc(n, i + 1);
-			} else {
-				break;
-			}
+	mmap_entry_t *mmap = get_memsp()->mmap;
+	for (size_t i = 0; i < get_memsp()->size; i++) {
+		if (mmap[i].length >= n) {
+			mmap[i].length -= n;
+			mmap[i].base += n;
+			return (uintptr_t *) mmap[i].base;
 		}
 	}
 
-	/* Just so gcc can shut up */
 	return NULL;
 }
 
 void *kalloc_mem_aligned(size_t n)
 {	
-	return (void *) kalloc(kmem_align(n), 0);
+	return (void *) kalloc(kmem_align(n));
 }
 
 void *kalloc_mem_page_aligned(size_t n)
 {
 	const size_t mask = PAGE_SIZE - 1;
-	const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE, 0);
+	const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE);
 	return (void *) ((mem + mask) & ~mask);
 }
 

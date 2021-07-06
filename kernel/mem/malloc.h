@@ -66,7 +66,7 @@ void *kfree(void *ptr);
  * kalloc
  *   brief: watermark allocator
  */
-uintptr_t *kalloc(size_t n, size_t begin);
+uintptr_t *kalloc(size_t n);
 
 /**
  * kalloc_mem_aligned

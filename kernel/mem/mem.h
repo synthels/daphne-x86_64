@@ -38,13 +38,13 @@ typedef struct {
 
 /* Memory space structure */
 typedef struct {
-	mmap_entry_t **mmap;
+	mmap_entry_t *mmap;
 	uint64_t size;
 } memsp_t;
 
 /**
  * mem_init
- *   brief: Init memory manager
+ *   brief: Init memory manager service
  */
 void mem_init(void *mmap_ptr, uint64_t size);
 

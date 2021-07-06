@@ -20,22 +20,13 @@
 
 #include "kmain.h"
 
-static uint8_t stack[STACK_SIZE] __attribute__((aligned(16)));
-static struct stivale2_mmap_entry *memmap;
-static uint64_t mm_size;
-
-static struct stivale2_header_tag_terminal terminal_hdr_tag = {
-	.tag = {
-		.identifier = STIVALE2_HEADER_TAG_TERMINAL_ID,
-		.next = 0
-	},
-	.flags = 0
-};
+/* Kernel stack */
+static uint8_t stack[STACK_SIZE] __attribute__((aligned(16))) = {0};
 
 static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
 	.tag = {
 		.identifier = STIVALE2_HEADER_TAG_FRAMEBUFFER_ID,
-		.next = (uint64_t) &terminal_hdr_tag
+		.next = 0
 	},
 	.framebuffer_width  = 0,
 	.framebuffer_height = 0,
@@ -66,13 +57,25 @@ void kmain(struct stivale2_struct *stv)
 {
 	/* Get memory map */
 	struct stivale2_struct_tag_memmap *mmap = get_tag(stv, STIVALE2_STRUCT_TAG_MEMMAP_ID); /* TODO: Handle NULL */
-	memmap  = mmap->memmap;
-	mm_size = mmap->entries;
+	/* Get framebuffer info */
+	struct stivale2_struct_tag_framebuffer *fb_info = get_tag(stv, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
 
 	init_gdt(); /* gdt & tss */
 	init_idt(); /* idt */
-	mem_init((void *) &memmap, mm_size); /* mm */
+	mem_init(mmap->memmap, mmap->entries); /* mm */
 	dev_init(); /* essential devices */
+	vid_init(fb_info->framebuffer_width, fb_info->framebuffer_height, fb_info->framebuffer_addr, fb_info->framebuffer_pitch); /* video */
+
+	/* Create kernel video context */
+	struct gfx_context kern_ctx;
+	struct vid_info info;
+	struct pos ctx_pos = {0, 0};
+	vid_get_info(&info);
+	vid_create_ctx(&kern_ctx, ctx_pos, info.screen_width, info.screen_height);
+
+	/* REMOVE: Set a pixel, as a test */
+	struct color c = {255, 255, 255, 255};
+	vid_set_pixel(kern_ctx.handle, 5, 5, c);
 
 	for (;;) {
 		asm("hlt");

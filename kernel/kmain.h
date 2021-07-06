@@ -21,6 +21,7 @@
 #include <mem/mem.h>
 #include <mem/malloc.h>
 #include <dev/dev.h>
+#include <vid/vid.h>
 
 #define STACK_SIZE 65536 /* 64KiB */
 
