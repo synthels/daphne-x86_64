@@ -12,23 +12,41 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef __FBTERM
+#define __FBTERM
 
-#include <stdint.h>
+#define FBTERM_OFFSET 5
+
 #include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
 #include <vid/lfb.h>
-#include <shrimp/shrimp.h>
+#include <libk/string.h>
+#include <mem/malloc.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
+#include "shrimp_font.h"
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+#define BG_COLOR {12, 12, 12, 255}
+#define FG_COLOR {255, 255, 255, 255}
+
+/**
+ * shrimp_init
+ *   brief: init fbterm
+ *   parameters:
+ *     - _handle: fbterm context handle
+ */
+void shrimp_init(int _handle);
+
+/**
+ * shrimp_print
+ *   brief: print string
+ *   parameters:
+ *     - str: string
+ */
+void shrimp_print(char *str);
+
+/**
+ * shrimp_kill
+ *   brief: kill fbterm
+ */
+void shrimp_kill(void);
 
 #endif

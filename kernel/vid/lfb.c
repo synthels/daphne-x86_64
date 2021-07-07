@@ -11,10 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Low level graphics library
+ * Low level context manager
  */
 
-#include "vid.h"
+/* TODO: back buffer */
+
+#include "lfb.h"
 
 static uint64_t framebuffer;
 static uint16_t width, height, pitch;
@@ -24,7 +26,7 @@ static struct gfx_context **contexts;
 /* Last context handle */
 static int last_handle = 0;
 
-void vid_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t _pitch)
+void lfb_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t _pitch)
 {
 	framebuffer = _framebuffer;
 	width       = _width;
@@ -35,32 +37,39 @@ void vid_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t
 	contexts = kmalloc(MAX_CONTEXTS * sizeof(struct gfx_context *));
 }
 
-void vid_get_info(struct vid_info *info)
+void lfb_get_info(struct lfb_info *info)
 {
 	info->screen_width  = width;
 	info->screen_height = height;
 	info->screen_pitch  = pitch;
 }
 
-errcode_t vid_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t width, uint16_t height)
+void lfb_get_ctx_info(int handle, struct lfb_info *info)
+{
+	struct gfx_context *ctx = contexts[handle];
+	info->screen_width  = ctx->width;
+	info->screen_height = ctx->height;
+}
+
+errcode_t lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height)
 {
 	if (ctx->handle >= MAX_CONTEXTS || _pos.x > width || _pos.y > height) return EINVAL;
 	ctx->pos    = _pos;
-	ctx->width  = width;
-	ctx->height = height;
+	ctx->width  = _width;
+	ctx->height = _height;
 	ctx->handle = last_handle;
 	contexts[last_handle++] = ctx;
 	return NOERR;
 }
 
-errcode_t vid_destroy_ctx(int handle)
+errcode_t lfb_destroy_ctx(int handle)
 {
 	if (handle >= MAX_CONTEXTS) return EINVAL;
 	contexts[handle] = NULL;
 	return NOERR;
 }
 
-errcode_t vid_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
+errcode_t lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
 {
 	if (handle > MAX_CONTEXTS) return EINVAL;
 	struct gfx_context *ctx = contexts[handle];

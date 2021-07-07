@@ -64,18 +64,18 @@ void kmain(struct stivale2_struct *stv)
 	init_idt(); /* idt */
 	mem_init(mmap->memmap, mmap->entries); /* mm */
 	dev_init(); /* essential devices */
-	vid_init(fb_info->framebuffer_width, fb_info->framebuffer_height, fb_info->framebuffer_addr, fb_info->framebuffer_pitch); /* video */
+	lfb_init(fb_info->framebuffer_width, fb_info->framebuffer_height, fb_info->framebuffer_addr, fb_info->framebuffer_pitch); /* video */
 
 	/* Create kernel video context */
 	struct gfx_context kern_ctx;
-	struct vid_info info;
+	struct lfb_info info;
 	struct pos ctx_pos = {0, 0};
-	vid_get_info(&info);
-	vid_create_ctx(&kern_ctx, ctx_pos, info.screen_width, info.screen_height);
+	lfb_get_info(&info);
+	lfb_create_ctx(&kern_ctx, ctx_pos, info.screen_width, info.screen_height);
 
-	/* REMOVE: Set a pixel, as a test */
-	struct color c = {255, 255, 255, 255};
-	vid_set_pixel(kern_ctx.handle, 5, 5, c);
+	/* Initialize fbterm with kernel handle */
+	shrimp_init(kern_ctx.handle);
+	shrimp_print("Hello world!\n");
 
 	for (;;) {
 		asm("hlt");

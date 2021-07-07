@@ -12,8 +12,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef VID_
-#define VID_
+#ifndef __LFB
+#define __LFB
 
 #include <stdint.h>
 #include <mem/malloc.h>
@@ -41,41 +41,47 @@ struct gfx_context {
 	int z_index; /* TODO :) */
 };
 
-struct vid_info {
+struct lfb_info {
 	uint16_t screen_width;
 	uint16_t screen_height;
 	uint16_t screen_pitch;
 };
 
 /**
- * vid_init
+ * lfb_init
  *   brief: init video service
  */
-void vid_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t _pitch);
+void lfb_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t _pitch);
 
 /**
- * vid_init
+ * lfb_init
  *   brief: get video info
  */
-void vid_get_info(struct vid_info *info);
+void lfb_get_info(struct lfb_info *info);
 
 /**
- * vid_create_ctx
+ * lfb_get_ctx_info
+ *   brief: get context info
+ */
+void lfb_get_ctx_info(int handle, struct lfb_info *info);
+
+/**
+ * lfb_create_ctx
  *   brief: create context
  */
-errcode_t vid_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t width, uint16_t height);
+errcode_t lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height);
 
 /**
- * vid_destroy_ctx
+ * lfb_destroy_ctx
  *   brief: destroy context
  */
-errcode_t vid_destroy_ctx(int handle);
+errcode_t lfb_destroy_ctx(int handle);
 
 /**
- * vid_set_pixel
+ * lfb_set_pixel
  *   brief: set pixel at position (x, y) in context
  *          ctx
  */
-errcode_t vid_set_pixel(int handle, uint16_t x, uint16_t y, struct color c);
+errcode_t lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c);
 
 #endif
