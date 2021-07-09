@@ -12,24 +12,27 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef LIBK_STDLIB
+#define LIBK_STDLIB
 
-#include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
-#include <vid/lfb.h>
-#include <shrimp/shrimp.h>
-#include <libk/printk.h>
+#include "string.h"
 
-#define STACK_SIZE 65536 /* 64KiB */
+/**
+ * itoa 
+ *   brief: Convert n to string and copy to s
+ *   parameters:
+ *     - n: integer to convert
+ *     - s: output string
+ */
+void itoa(int n, char s[]);
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+/**
+ * uitoa 
+ *   brief: Convert n to string and copy to s
+ *   parameters:
+ *     - n: unsigned integer to convert
+ *     - s: output string
+ */
+void uitoa(unsigned n, char s[]);
 
 #endif

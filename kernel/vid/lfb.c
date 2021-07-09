@@ -73,6 +73,7 @@ errcode_t lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
 {
 	if (handle > MAX_CONTEXTS) return EINVAL;
 	struct gfx_context *ctx = contexts[handle];
+	
 	/* Destroyed context */
 	if (ctx == NULL) return EINVAL;
 	if (x <= ctx->width && y <= ctx->height) {

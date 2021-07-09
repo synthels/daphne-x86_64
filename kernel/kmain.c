@@ -75,7 +75,7 @@ void kmain(struct stivale2_struct *stv)
 
 	/* Initialize fbterm with kernel handle */
 	shrimp_init(kern_ctx.handle);
-	shrimp_print("Hello world!\n");
+	printk("Hello world!\n", "hi!!");
 
 	for (;;) {
 		asm("hlt");

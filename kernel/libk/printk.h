@@ -12,24 +12,17 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef LIBK_PRINTK
+#define LIBK_PRINTK
 
+#include <stdarg.h>
 #include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
-#include <vid/lfb.h>
 #include <shrimp/shrimp.h>
-#include <libk/printk.h>
+#include <kernel.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
+#include <libk/stdlib.h>
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+/* Prints a formatted string to the screen using tty functions */
+int printk(const char *fmt, ...);
 
 #endif

@@ -10,26 +10,45 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * stdlib.h functions
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "stdlib.h"
 
-#include <stdint.h>
-#include <kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <mem/malloc.h>
-#include <dev/dev.h>
-#include <vid/lfb.h>
-#include <shrimp/shrimp.h>
-#include <libk/printk.h>
+static void reverse(char s[])
+{
+	int i, j;
+	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
+		char c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
+}
 
-#define STACK_SIZE 65536 /* 64KiB */
+void itoa(int n, char s[])
+{
+	int i, sign;
+	if ((sign = n) < 0)
+		n = -n;
+	i = 0;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
 
-#ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
-#endif
+	if (sign < 0)
+		s[i++] = '-';
+	s[i] = '\0';
+	reverse(s);
+}
 
-#endif
+void uitoa(unsigned n, char s[])
+{
+	unsigned i;
+	i = 0;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
+	s[i] = '\0';
+	reverse(s);
+}
