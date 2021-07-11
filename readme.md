@@ -1,15 +1,21 @@
 # daphne
+![License](https://img.shields.io/github/license/synthels/daphne)
+
 Daphne aims to be a modern and elegant 64-bit operating currently targetted at the x86 family of processors.
 
-# Links
+Links
+----
 * [Building from source](https://github.com/synthels/daphne/blob/master/building.md)
 * [Contributing](https://github.com/synthels/daphne/blob/master/contributing.md)
 
-# Screenshots
+Screenshots
+----
 Coming soon!
 
-# Acknowledgments
+Acknowledgments
+----
 * [Limine](https://github.com/limine-bootloader/limine) - An x86/x64 bootloader
 
-# License
+License
+----
 daphne is licensed under the GPLv3 license. See [license](https://github.com/synthels/daphne/blob/master/license) for more details.
