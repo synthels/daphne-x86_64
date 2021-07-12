@@ -23,25 +23,25 @@
 #include "PIC.h"
 
 #define ISR(isr, n) extern void isr(void); \
-	idt_install_raw_handler(isr, n)
+    idt_install_raw_handler(isr, n)
 
 #define IRQ(irq, n) extern void irq(void); \
-	idt_install_irq_handler(irq, n)
+    idt_install_irq_handler(irq, n)
 
 /* IDT entry */
 typedef struct {
-	uint16_t base_low;
-	uint16_t selector;
-	uint8_t zero;
-	uint8_t flags;
-	uint16_t base_mid;
-	uint32_t base_high;
-	uint32_t pad;
+    uint16_t base_low;
+    uint16_t selector;
+    uint8_t zero;
+    uint8_t flags;
+    uint16_t base_mid;
+    uint32_t base_high;
+    uint32_t pad;
 } __attribute__((packed)) idt_entry_t;
 
 typedef struct {
-	uint16_t limit;
-	uintptr_t base;
+    uint16_t limit;
+    uintptr_t base;
 } __attribute__((packed)) idtp;
 
 /**

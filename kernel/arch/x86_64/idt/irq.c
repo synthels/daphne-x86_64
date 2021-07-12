@@ -23,20 +23,20 @@
 /* PIT IRQ */
 void pit_irq_handler(void)
 {
-	// pit_tick();
-	IRQ_END;
+    // pit_tick();
+    IRQ_END;
 }
 
 /* Keyboard IRQ */
 void kbd_irq_handler(void)
 {
-	// kbd_read();
-	IRQ_END;
+    // kbd_read();
+    IRQ_END;
 }
 
 /* syscall handler */
 void syscall_handler(regs_t *r)
 {
-	// printk("syscall: EAX = %i", r->eax);
-	IRQ_END;
+    // printk("syscall: EAX = %i", r->eax);
+    IRQ_END;
 }

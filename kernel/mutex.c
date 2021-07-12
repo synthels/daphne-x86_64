@@ -18,13 +18,13 @@
 
 void acquire_mutex(mutex_t *mutex)
 {
-	while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
-		asm("pause");
-	}
-	__sync_synchronize();
+    while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
+        asm("pause");
+    }
+    __sync_synchronize();
 }
 
 void release_mutex(mutex_t *mutex)
 {
-	*mutex = 0;
+    *mutex = 0;
 }

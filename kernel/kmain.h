@@ -28,8 +28,8 @@
 #define STACK_SIZE 65536 /* 64KiB */
 
 #ifdef ARCH_x86_64
-	#include <arch/x86_64/gdt.h>
-	#include <arch/x86_64/idt/idt.h>
+    #include <arch/x86_64/gdt.h>
+    #include <arch/x86_64/idt/idt.h>
 #endif
 
 #endif

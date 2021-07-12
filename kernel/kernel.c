@@ -19,16 +19,16 @@ static int kernel_mode;
 
 void set_kernel_mode(int mode)
 {
-	kernel_mode = mode;
+    kernel_mode = mode;
 }
 
 int get_kernel_mode(void)
 {
-	return kernel_mode;
+    return kernel_mode;
 }
 
 void kernel_hang(void)
 {
-	asm("cli");
-	asm("hlt");
+    asm("cli");
+    asm("hlt");
 }

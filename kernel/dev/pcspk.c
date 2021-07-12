@@ -19,30 +19,30 @@
 /* Play a certain frequency through the PC speaker */
 static void _beep(uint16_t freq)
 {
-	if (freq == 0) { return; }	
+    if (freq == 0) { return; }  
 
-	/* Set frequency */
-	uint32_t div = 1193180 / freq;
-	outb(0x43, 0xb6);
-	outb(0x42, (uint8_t) div);
-	outb(0x42, (uint8_t) (div >> 8));
+    /* Set frequency */
+    uint32_t div = 1193180 / freq;
+    outb(0x43, 0xb6);
+    outb(0x42, (uint8_t) div);
+    outb(0x42, (uint8_t) (div >> 8));
 
-	/* Play the sound */
-	uint8_t tmp = inb(0x61);
-	if (tmp != (tmp | 3)) {
-		outb(0x61, tmp | 3);
-	}
+    /* Play the sound */
+    uint8_t tmp = inb(0x61);
+    if (tmp != (tmp | 3)) {
+        outb(0x61, tmp | 3);
+    }
 }
 
 /* Stop the speaker */
 static void _stop(void)
 {
-	outb(0x61, inb(0x61) & 0xfc);
+    outb(0x61, inb(0x61) & 0xfc);
 }
 
 void pcspk_beep(uint16_t freq, uint16_t ticks)
 {
-	_beep(freq);
-	sleep(ticks);
-	_stop();
+    _beep(freq);
+    sleep(ticks);
+    _stop();
 }

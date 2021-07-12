@@ -22,13 +22,13 @@ static memsp_t memsp;
 
 void mem_init(void *mmap_ptr, uint64_t size)
 {
-	mmap_entry_t *mmap = mmap_ptr;
-	/* Initialise memsp */
-	memsp.size = size;
-	memsp.mmap = mmap;
+    mmap_entry_t *mmap = mmap_ptr;
+    /* Initialise memsp */
+    memsp.size = size;
+    memsp.mmap = mmap;
 }
 
 memsp_t *get_memsp()
 {
-	return &memsp;
+    return &memsp;
 }

@@ -20,18 +20,18 @@ static uint64_t ticks = 0;
 
 void pit_init(void)
 {
-	int div = 1193180 / TIMER_FREQ;
-	outb(0x43, 0x34);
-	outb(0x40, div & 0xFF);
-	outb(0x40, div >> 8);
+    int div = 1193180 / TIMER_FREQ;
+    outb(0x43, 0x34);
+    outb(0x40, div & 0xFF);
+    outb(0x40, div >> 8);
 }
 
 void pit_tick(void)
 {
-	ticks++;
+    ticks++;
 }
 
 void pit_get_ticks(uint32_t *data)
 {
-	*data = ticks;
+    *data = ticks;
 }

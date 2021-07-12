@@ -24,81 +24,81 @@ static char printk_buf[1024];
  */
 errcode_t vsprintf(char **buf, va_list args)
 {
-	const char *fmt = va_arg(args, char *);
-	char c;
-	for (int i = 0; (c = *fmt++);) {
-		printk_buf[i++] = c;
-		if (c == '%') {
-			c = *fmt++;
-			char *str;
-			switch (c) {
-				/* Strings */
-				case 's':
-					str = va_arg(args, char *);
-					break;
-				/* Unsigned (no prettier way to do this) */
-				case 'u':
-					switch (*fmt++) {
-						case 'i':
-							uitoa(va_arg(args, uint32_t), str);
-							break;
-						/* Hex */
-						case 'x':
-							/* TODO */
-							break;
-						/* Binary */
-						case 'b':
-							/* TODO */
-							break;
-					}
-					break;
-				case 'i':
-					itoa(va_arg(args, int32_t), str);
-					break;
-				/* Hex */
-				case 'x':
-					/* TODO */
-					break;
-				/* Binary */
-				case 'b':
-					/* TODO */
-					break;
-				/* Just print a '%' */
-				case '%':
-					str = "%";
-					break;
-				/* Unknown type */
-				default:
-					*buf = "";
-					return EINVAL;
-			}
-			/* Skip '%' sign */
-			i--;
-			/* Copy string to buffer */
-			for (; (c = *str++); i++) {
-				printk_buf[i] = c;
-			}
-		}
-	}
+    const char *fmt = va_arg(args, char *);
+    char c;
+    for (int i = 0; (c = *fmt++);) {
+        printk_buf[i++] = c;
+        if (c == '%') {
+            c = *fmt++;
+            char *str;
+            switch (c) {
+                /* Strings */
+                case 's':
+                    str = va_arg(args, char *);
+                    break;
+                /* Unsigned (no prettier way to do this) */
+                case 'u':
+                    switch (*fmt++) {
+                        case 'i':
+                            uitoa(va_arg(args, uint32_t), str);
+                            break;
+                        /* Hex */
+                        case 'x':
+                            /* TODO */
+                            break;
+                        /* Binary */
+                        case 'b':
+                            /* TODO */
+                            break;
+                    }
+                    break;
+                case 'i':
+                    itoa(va_arg(args, int32_t), str);
+                    break;
+                /* Hex */
+                case 'x':
+                    /* TODO */
+                    break;
+                /* Binary */
+                case 'b':
+                    /* TODO */
+                    break;
+                /* Just print a '%' */
+                case '%':
+                    str = "%";
+                    break;
+                /* Unknown type */
+                default:
+                    *buf = "";
+                    return EINVAL;
+            }
+            /* Skip '%' sign */
+            i--;
+            /* Copy string to buffer */
+            for (; (c = *str++); i++) {
+                printk_buf[i] = c;
+            }
+        }
+    }
 
-	*buf = printk_buf;
-	return NOERR;
+    *buf = printk_buf;
+    return NOERR;
 }
 
 int printk(const char *fmt, ...)
 {
-	/* Empty buffer */
-	for (size_t i = 0; i < sizeof(printk_buf) / sizeof(char); i++) {
-		printk_buf[i] = '\0';
-	}
+    /* Empty buffer */
+    for (size_t i = 0; i < sizeof(printk_buf) / sizeof(char); i++) {
+        printk_buf[i] = '\0';
+    }
 
-	char *buf;
+    char *buf;
     va_list ap;
-	ap = (va_list) fmt;
+    ap = (va_list) fmt;
     va_start(ap, fmt);
-	int err = vsprintf(&buf, ap);
+    int err = vsprintf(&buf, ap);
     va_end(ap);
-	shrimp_print(buf);
+    shrimp_print(buf);
 
-	return err;
+    return err;
 }

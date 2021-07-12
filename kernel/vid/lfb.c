@@ -28,61 +28,61 @@ static int last_handle = 0;
 
 void lfb_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t _pitch)
 {
-	framebuffer = _framebuffer;
-	width       = _width;
-	height      = _height;
-	pitch       = _pitch;
+    framebuffer = _framebuffer;
+    width       = _width;
+    height      = _height;
+    pitch       = _pitch;
 
-	/* Allocate contexts */
-	contexts = kmalloc(MAX_CONTEXTS * sizeof(struct gfx_context *));
+    /* Allocate contexts */
+    contexts = kmalloc(MAX_CONTEXTS * sizeof(struct gfx_context *));
 }
 
 void lfb_get_info(struct lfb_info *info)
 {
-	info->screen_width  = width;
-	info->screen_height = height;
-	info->screen_pitch  = pitch;
+    info->screen_width  = width;
+    info->screen_height = height;
+    info->screen_pitch  = pitch;
 }
 
 void lfb_get_ctx_info(int handle, struct lfb_info *info)
 {
-	struct gfx_context *ctx = contexts[handle];
-	info->screen_width  = ctx->width;
-	info->screen_height = ctx->height;
+    struct gfx_context *ctx = contexts[handle];
+    info->screen_width  = ctx->width;
+    info->screen_height = ctx->height;
 }
 
 errcode_t lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height)
 {
-	if (ctx->handle >= MAX_CONTEXTS || _pos.x > width || _pos.y > height) return EINVAL;
-	ctx->pos    = _pos;
-	ctx->width  = _width;
-	ctx->height = _height;
-	ctx->handle = last_handle;
-	contexts[last_handle++] = ctx;
-	return NOERR;
+    if (ctx->handle >= MAX_CONTEXTS || _pos.x > width || _pos.y > height) return EINVAL;
+    ctx->pos    = _pos;
+    ctx->width  = _width;
+    ctx->height = _height;
+    ctx->handle = last_handle;
+    contexts[last_handle++] = ctx;
+    return NOERR;
 }
 
 errcode_t lfb_destroy_ctx(int handle)
 {
-	if (handle >= MAX_CONTEXTS) return EINVAL;
-	contexts[handle] = NULL;
-	return NOERR;
+    if (handle >= MAX_CONTEXTS) return EINVAL;
+    contexts[handle] = NULL;
+    return NOERR;
 }
 
 errcode_t lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
 {
-	if (handle > MAX_CONTEXTS) return EINVAL;
-	struct gfx_context *ctx = contexts[handle];
-	
-	/* Destroyed context */
-	if (ctx == NULL) return EINVAL;
-	if (x <= ctx->width && y <= ctx->height) {
-		const uint64_t realpos = (ctx->pos.x + x) + (width * (y + ctx->pos.y));
-		struct color *frb = (struct color *) framebuffer;
-		frb[realpos] = c;
-		return NOERR;
-	} else {
-		/* invalid position */
-		return EINVAL;
-	}
+    if (handle > MAX_CONTEXTS) return EINVAL;
+    struct gfx_context *ctx = contexts[handle];
+    
+    /* Destroyed context */
+    if (ctx == NULL) return EINVAL;
+    if (x <= ctx->width && y <= ctx->height) {
+        const uint64_t realpos = (ctx->pos.x + x) + (width * (y + ctx->pos.y));
+        struct color *frb = (struct color *) framebuffer;
+        frb[realpos] = c;
+        return NOERR;
+    } else {
+        /* invalid position */
+        return EINVAL;
+    }
 }

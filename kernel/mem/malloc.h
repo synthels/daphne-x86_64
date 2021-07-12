@@ -33,18 +33,18 @@
 #define PAGE_SIZE 4096
 
 struct malloc_page {
-	struct malloc_page *next_page; /* NULL if last page */
-	uint8_t free;
-	uint32_t *base;
+    struct malloc_page *next_page; /* NULL if last page */
+    uint8_t free;
+    uint32_t *base;
 };
 
 typedef struct malloc_page malloc_page_t;
 
 struct malloc_bin {
-	struct malloc_bin *next_bin; /* NULL if last node */
-	struct malloc_page *first_page;
-	size_t page_size; /* This bin's page size */
-	size_t pages; /* Number of pages in bin */
+    struct malloc_bin *next_bin; /* NULL if last node */
+    struct malloc_page *first_page;
+    size_t page_size; /* This bin's page size */
+    size_t pages; /* Number of pages in bin */
 };
 
 typedef struct malloc_bin malloc_bin_t;

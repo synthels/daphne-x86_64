@@ -22,29 +22,29 @@
 #define MAX_CONTEXTS 50
 
 struct pos {
-	uint16_t x;
-	uint16_t y;
+    uint16_t x;
+    uint16_t y;
 };
 
 struct color {
-	uint8_t b;
-	uint8_t g;
-	uint8_t r;
-	uint8_t a;
+    uint8_t b;
+    uint8_t g;
+    uint8_t r;
+    uint8_t a;
 } __attribute__((packed));
 
 struct gfx_context {
-	struct pos pos;
-	uint16_t width;
-	uint16_t height;
-	int handle;
-	int z_index; /* TODO :) */
+    struct pos pos;
+    uint16_t width;
+    uint16_t height;
+    int handle;
+    int z_index; /* TODO :) */
 };
 
 struct lfb_info {
-	uint16_t screen_width;
-	uint16_t screen_height;
-	uint16_t screen_pitch;
+    uint16_t screen_width;
+    uint16_t screen_height;
+    uint16_t screen_pitch;
 };
 
 /**

@@ -21,7 +21,7 @@
 typedef uint8_t byte;
 
 #ifndef NULL
-	#define NULL (void *) 0x0
+    #define NULL (void *) 0x0
 #endif
 
 /**

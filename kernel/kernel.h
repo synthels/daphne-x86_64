@@ -27,7 +27,7 @@
 #define KERNEL_VERSION_STRING "v1.0-Alpha"
 
 #ifdef ARCH_x86_64
-	#define KERNEL_ARCH_STRING "x86-64"
+    #define KERNEL_ARCH_STRING "x86-64"
 #endif
 
 /**
@@ -102,11 +102,11 @@ void kernel_hang(void);
 #define bool _Bool
 
 #ifndef true
-	#define true 1
+    #define true 1
 #endif
 
 #ifndef false
-	#define false 0
+    #define false 0
 #endif
 
 typedef struct {
@@ -119,21 +119,21 @@ typedef struct {
 } efi_memory_descriptor_t;
 
 typedef struct {
-	efi_memory_descriptor_t *map;
-	uint64_t size;
-	uint64_t desc_size;
+    efi_memory_descriptor_t *map;
+    uint64_t size;
+    uint64_t desc_size;
 } efi_mmap_t;
 
 typedef struct {
-	uint64_t fb_base;
-	uint64_t pps;
-	uint64_t width;
-	uint64_t height;
+    uint64_t fb_base;
+    uint64_t pps;
+    uint64_t width;
+    uint64_t height;
 } efi_gop_info_t;
 
 typedef struct {
-	efi_mmap_t *mmap;
-	efi_gop_info_t *gop;
+    efi_mmap_t *mmap;
+    efi_gop_info_t *gop;
 } efi_info_t;
 
 #endif

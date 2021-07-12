@@ -18,28 +18,28 @@
 #include <stdint.h>
 
 enum mmap_type {
-	INVALID                = 0,
-	USABLE                 = 1,
-	RESERVED               = 2,
-	ACPI_RECLAIMABLE       = 3,
-	ACPI_NVS               = 4,
-	BAD_MEMORY             = 5,
-	BOOTLOADER_RECLAIMABLE = 0x1000,
-	KERNEL_AND_MODULES     = 0x1001,
-	FRAMEBUFFER            = 0x1002
+    INVALID                = 0,
+    USABLE                 = 1,
+    RESERVED               = 2,
+    ACPI_RECLAIMABLE       = 3,
+    ACPI_NVS               = 4,
+    BAD_MEMORY             = 5,
+    BOOTLOADER_RECLAIMABLE = 0x1000,
+    KERNEL_AND_MODULES     = 0x1001,
+    FRAMEBUFFER            = 0x1002
 };
 
 typedef struct {
-	uint64_t base;
-	uint64_t length;
-	uint32_t type;
-	uint32_t unused;
+    uint64_t base;
+    uint64_t length;
+    uint32_t type;
+    uint32_t unused;
 } __attribute__((packed)) mmap_entry_t;
 
 /* Memory space structure */
 typedef struct {
-	mmap_entry_t *mmap;
-	uint64_t size;
+    mmap_entry_t *mmap;
+    uint64_t size;
 } memsp_t;
 
 /**

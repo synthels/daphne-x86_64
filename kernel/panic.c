@@ -18,5 +18,5 @@
 
 void panic(const char *msg)
 {
-	kernel_hang();
+    kernel_hang();
 }

@@ -16,6 +16,6 @@
 
 void dev_init(void)
 {
-	kbd_init();
-	pit_init();
+    kbd_init();
+    pit_init();
 }

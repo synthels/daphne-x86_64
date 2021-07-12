@@ -51,28 +51,28 @@
 
 uintptr_t *kalloc(size_t n)
 {
-	mmap_entry_t *mmap = get_memsp()->mmap;
-	for (size_t i = 0; i < get_memsp()->size; i++) {
-		if (mmap[i].length >= n) {
-			mmap[i].length -= n;
-			mmap[i].base += n;
-			return (uintptr_t *) mmap[i].base;
-		}
-	}
+    mmap_entry_t *mmap = get_memsp()->mmap;
+    for (size_t i = 0; i < get_memsp()->size; i++) {
+        if (mmap[i].length >= n) {
+            mmap[i].length -= n;
+            mmap[i].base += n;
+            return (uintptr_t *) mmap[i].base;
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
 
 void *kalloc_mem_aligned(size_t n)
-{	
-	return (void *) kalloc(kmem_align(n));
+{   
+    return (void *) kalloc(kmem_align(n));
 }
 
 void *kalloc_mem_page_aligned(size_t n)
 {
-	const size_t mask = PAGE_SIZE - 1;
-	const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE);
-	return (void *) ((mem + mask) & ~mask);
+    const size_t mask = PAGE_SIZE - 1;
+    const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE);
+    return (void *) ((mem + mask) & ~mask);
 }
 
 static malloc_bin_t *head_bin = NULL;
@@ -84,135 +84,135 @@ static size_t hbin_size = 1;
 /* Init bin (EXPECTS BIN TO BE ALLOCATED) */
 void init_bin(malloc_bin_t *bin, size_t size)
 {
-	bin->page_size = kmem_align(size);
+    bin->page_size = kmem_align(size);
 
-	/* Init first page */
-	bin->first_page = kalloc_mem_aligned(sizeof(malloc_page_t));
-	bin->first_page->base = kalloc_mem_aligned(size);
-	bin->first_page->free = 1;
+    /* Init first page */
+    bin->first_page = kalloc_mem_aligned(sizeof(malloc_page_t));
+    bin->first_page->base = kalloc_mem_aligned(size);
+    bin->first_page->free = 1;
 
-	/* Fill rest of bin */
-	malloc_page_t *page = bin->first_page;
-	for (int i = 0; i < MAX_PAGES - 1; i++) {
-		malloc_page_t *node = kalloc_mem_aligned(sizeof(malloc_page_t));
-		node->base = kalloc_mem_aligned(size);
-		node->free = 1;
+    /* Fill rest of bin */
+    malloc_page_t *page = bin->first_page;
+    for (int i = 0; i < MAX_PAGES - 1; i++) {
+        malloc_page_t *node = kalloc_mem_aligned(sizeof(malloc_page_t));
+        node->base = kalloc_mem_aligned(size);
+        node->free = 1;
 
-		/* Copy page */
-		page->next_page = node;
-		page = page->next_page;
-	}
-	page->next_page = NULL;
-	bin->pages = MAX_PAGES;
+        /* Copy page */
+        page->next_page = node;
+        page = page->next_page;
+    }
+    page->next_page = NULL;
+    bin->pages = MAX_PAGES;
 }
 
 /* Add a new bin to head_bin */
 void add_bin(malloc_bin_t *bin)
 {
-	/* Add a new bin */
-	malloc_bin_t *b = head_bin;
-	for (size_t i = 0; i < hbin_size - 1; i++) {
-		b = b->next_bin;
-	}
-	b->next_bin = bin;
-	++hbin_size;
+    /* Add a new bin */
+    malloc_bin_t *b = head_bin;
+    for (size_t i = 0; i < hbin_size - 1; i++) {
+        b = b->next_bin;
+    }
+    b->next_bin = bin;
+    ++hbin_size;
 }
 
 /* Find a free page in a large enough bin and 
    populate it with a new page of size n */
 malloc_page_t *find_free_page_and_alloc(malloc_bin_t *bin, size_t n)
 {
-	if ((n - 4) > bin->page_size) return NULL;
-	malloc_page_t *page = bin->first_page;
-	for (size_t i = 0; i < bin->pages; i++) {
-		if (page->free) {
-			page->free = 0;
-			return page;
-		}
-		page = page->next_page;
-	}
+    if ((n - 4) > bin->page_size) return NULL;
+    malloc_page_t *page = bin->first_page;
+    for (size_t i = 0; i < bin->pages; i++) {
+        if (page->free) {
+            page->free = 0;
+            return page;
+        }
+        page = page->next_page;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 /* Attempt to find a large enough existing free page and
    populate it */
 malloc_page_t *find_best_bin_and_alloc(size_t n)
 {
-	/* Add 4 bytes to n */
-	n = kmem_align(n) + 4;
-	malloc_bin_t *b = head_bin;
-	malloc_page_t *page;
-	for (size_t i = 0; i < hbin_size; i++) {
-		/* Try to fit page in existing free page */
-		if ((page = find_free_page_and_alloc(b, n)) != NULL) {
-			return page;
-		}
-		b = b->next_bin;
-	}
+    /* Add 4 bytes to n */
+    n = kmem_align(n) + 4;
+    malloc_bin_t *b = head_bin;
+    malloc_page_t *page;
+    for (size_t i = 0; i < hbin_size; i++) {
+        /* Try to fit page in existing free page */
+        if ((page = find_free_page_and_alloc(b, n)) != NULL) {
+            return page;
+        }
+        b = b->next_bin;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 /* Frees a single page from a bin */
 void *free_page(malloc_bin_t *bin, void *base)
 {
-	malloc_page_t *page = bin->first_page;
-	for (size_t i = 0; i < bin->pages; i++) {
-		if (!(page->free) && (page->base == base)) {
-			page->free = 1;
-			return page->base;
-		}
-		page = page->next_page;
-	}
-	return NULL;
+    malloc_page_t *page = bin->first_page;
+    for (size_t i = 0; i < bin->pages; i++) {
+        if (!(page->free) && (page->base == base)) {
+            page->free = 1;
+            return page->base;
+        }
+        page = page->next_page;
+    }
+    return NULL;
 }
 
 void *kmalloc(size_t n)
 {
-	/* First call, init bin */
-	if (head_bin == NULL) {
-		head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
-		init_bin(head_bin, n);
-	}
+    /* First call, init bin */
+    if (head_bin == NULL) {
+        head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
+        init_bin(head_bin, n);
+    }
 
-	malloc_bin_t *bin;
-	malloc_page_t *page;
-	if ((page = find_best_bin_and_alloc(n)) == NULL) {
-		/* We couldn't find an existing page large enough
-		   to accommodate our page */
-		bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
-		init_bin(bin, n);
-		add_bin(bin);
-		bin->first_page->free = 0;
-		/* Set malloc size right behind pointer returned */
-		*(bin->first_page->base) = kmem_align(n);
-		return (bin->first_page->base + 1);
-	}
+    malloc_bin_t *bin;
+    malloc_page_t *page;
+    if ((page = find_best_bin_and_alloc(n)) == NULL) {
+        /* We couldn't find an existing page large enough
+           to accommodate our page */
+        bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
+        init_bin(bin, n);
+        add_bin(bin);
+        bin->first_page->free = 0;
+        /* Set malloc size right behind pointer returned */
+        *(bin->first_page->base) = kmem_align(n);
+        return (bin->first_page->base + 1);
+    }
 
-	page->free = 0;
-	*(page->base) = kmem_align(n);
-	return (page->base + 1);
+    page->free = 0;
+    *(page->base) = kmem_align(n);
+    return (page->base + 1);
 }
 
 void *kfree(void *ptr)
 {
-	/* Get size of allocated object */
-	uint32_t malloc_size = *((uint32_t *) ptr - 1);
-	malloc_bin_t *b = head_bin;
-	void *page_base;
-	for (size_t i = 0; i < hbin_size; i++) {
-		/* Only bother searching bins with the
-		   same size as the object */
-		if (b->page_size == malloc_size) {
-			/* Correct bin is found */
-			if ((page_base = free_page(b, (uint32_t *) ptr - 1)) != NULL) {
-				return page_base;
-			}
-		}
-		b = b->next_bin;
-	}
+    /* Get size of allocated object */
+    uint32_t malloc_size = *((uint32_t *) ptr - 1);
+    malloc_bin_t *b = head_bin;
+    void *page_base;
+    for (size_t i = 0; i < hbin_size; i++) {
+        /* Only bother searching bins with the
+           same size as the object */
+        if (b->page_size == malloc_size) {
+            /* Correct bin is found */
+            if ((page_base = free_page(b, (uint32_t *) ptr - 1)) != NULL) {
+                return page_base;
+            }
+        }
+        b = b->next_bin;
+    }
 
-	/* Pointer was not allocated by kmalloc() */
-	return NULL;
+    /* Pointer was not allocated by kmalloc() */
+    return NULL;
 }

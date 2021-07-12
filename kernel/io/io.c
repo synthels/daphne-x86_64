@@ -18,33 +18,33 @@
 
 void outb(uint16_t port, uint8_t val)
 {
-	asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
+    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
 }
 
 void outl(uint16_t port, uint8_t val)
 {
-	asm volatile ( "outl %%eax, %%dx": :"d" (port), "a" (val) );
+    asm volatile ( "outl %%eax, %%dx": :"d" (port), "a" (val) );
 }
 
 uint8_t inb(uint16_t port)
 {
-	uint8_t ret;
-	asm volatile ( "inb %1, %0"
-		: "=a"(ret)
-		: "Nd"(port) );
-	return ret;
+    uint8_t ret;
+    asm volatile ( "inb %1, %0"
+        : "=a"(ret)
+        : "Nd"(port) );
+    return ret;
 }
 
 uint8_t inl(uint16_t port)
 {
-	uint8_t ret;
-	asm volatile ( "inl %%dx, %%eax"
-		: "=a"(ret)
-		: "d"(port) );
-	return ret;
+    uint8_t ret;
+    asm volatile ( "inl %%dx, %%eax"
+        : "=a"(ret)
+        : "d"(port) );
+    return ret;
 }
 
 void io_wait(void)
 {
-	asm volatile ( "outb %%al, $0x80" : : "a"(0) );
+    asm volatile ( "outb %%al, $0x80" : : "a"(0) );
 }

@@ -19,33 +19,33 @@
 #include <libk/string.h>
 
 struct tss_entry {
-	uint16_t length;
-	uint16_t base_low16;
-	uint8_t base_mid8;
-	uint8_t flags1;
-	uint8_t flags2;
-	uint8_t base_high8;
-	uint32_t base_upper32;
-	uint32_t reserved;
+    uint16_t length;
+    uint16_t base_low16;
+    uint8_t base_mid8;
+    uint8_t flags1;
+    uint8_t flags2;
+    uint8_t base_high8;
+    uint32_t base_upper32;
+    uint32_t reserved;
 } __attribute__((packed));
 
 struct gdt_entry {
-	uint16_t limit;
-	uint16_t base_low;
-	uint8_t base_mid;
-	uint8_t access;
-	uint8_t granularity;
-	uint8_t base_hi;
+    uint16_t limit;
+    uint16_t base_low;
+    uint8_t base_mid;
+    uint8_t access;
+    uint8_t granularity;
+    uint8_t base_hi;
 } __attribute__((packed));
 
 struct gdt_desc {
-	struct gdt_entry entries[5];
-	struct tss_entry tss;
+    struct gdt_entry entries[5];
+    struct tss_entry tss;
 } __attribute__((packed));
 
 struct gdt_ptr {
-	uint16_t limit;
-	uint64_t base;
+    uint16_t limit;
+    uint64_t base;
 } __attribute__((packed));
 
 /**
