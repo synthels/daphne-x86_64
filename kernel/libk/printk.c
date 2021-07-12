@@ -19,12 +19,9 @@
 /* Don't let anyone see this... */
 static char printk_buf[1024];
 
-/*
- * Not too bad, right?
- */
-int vsprintf(char **buf, va_list args)
+/* Not too bad, right? */
+int vsprintf(char **buf, const char *fmt, va_list args)
 {
-    const char *fmt = va_arg(args, char *);
     char c;
     for (int i = 0; (c = *fmt++);) {
         printk_buf[i++] = c;
@@ -94,9 +91,8 @@ int printk(const char *fmt, ...)
 
     char *buf;
     va_list ap;
-    ap = (va_list) fmt;
     va_start(ap, fmt);
-    int err = vsprintf(&buf, ap);
+    int err = vsprintf(&buf, fmt, ap);
     va_end(ap);
     shrimp_print(buf);
 
