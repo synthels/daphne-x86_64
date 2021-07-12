@@ -32,7 +32,7 @@ export PATH="$PATH:$BREW_HOME"
 
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
-# Let's start the build! (x86_64 UEFI)w
+# Let's start the build! (x86_64 UEFI)
 First, clone the repositorty with the following command
 
 ```
