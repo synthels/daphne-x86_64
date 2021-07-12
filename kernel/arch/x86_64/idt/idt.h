@@ -16,7 +16,7 @@
 #define KERNEL_x86_64_IDT
 
 #include <stdint.h>
-#include <panic.h>
+#include <forbia/panic.h>
 #include <forbia/kernel.h>
 #include <arch/x86_64/x64.h>
 

@@ -10,12 +10,8 @@ add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 
 set(SRC
-	${SRCROOT}/mutex.c
-	${SRCROOT}/mutex.h
 	${SRCROOT}/kmain.c
 	${SRCROOT}/kmain.h
-	${SRCROOT}/panic.c
-	${SRCROOT}/panic.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})
