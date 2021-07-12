@@ -69,19 +69,19 @@ void lfb_get_ctx_info(int handle, struct lfb_info *info);
  * lfb_create_ctx
  *   brief: create context
  */
-errcode_t lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height);
+int lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height);
 
 /**
  * lfb_destroy_ctx
  *   brief: destroy context
  */
-errcode_t lfb_destroy_ctx(int handle);
+int lfb_destroy_ctx(int handle);
 
 /**
  * lfb_set_pixel
  *   brief: set pixel at position (x, y) in context
  *          ctx
  */
-errcode_t lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c);
+int lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c);
 
 #endif

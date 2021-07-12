@@ -21,6 +21,7 @@
 #include <vid/lfb.h>
 #include <libk/string.h>
 #include <mem/malloc.h>
+#include <forbia/types.h>
 
 #include "shrimp_font.h"
 

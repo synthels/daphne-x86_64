@@ -36,12 +36,6 @@
 #define UNUSED(x) (void) (x)
 
 /**
- * errcode_t
- *   brief: function return type 
- */
-typedef int errcode_t;
-
-/**
  * EINVAL
  *   brief: invalid argument error
  */
@@ -95,45 +89,5 @@ void kernel_hang(void);
  *          user I/O operations.
  */
 #define USR_MODE 2
-
-/**
- * <stbool.h>
- */
-#define bool _Bool
-
-#ifndef true
-    #define true 1
-#endif
-
-#ifndef false
-    #define false 0
-#endif
-
-typedef struct {
-    uint32_t type;
-    uint32_t pad;
-    uint64_t phys_start;
-    uint64_t virt_start;
-    uint64_t pages;
-    uint64_t attr;
-} efi_memory_descriptor_t;
-
-typedef struct {
-    efi_memory_descriptor_t *map;
-    uint64_t size;
-    uint64_t desc_size;
-} efi_mmap_t;
-
-typedef struct {
-    uint64_t fb_base;
-    uint64_t pps;
-    uint64_t width;
-    uint64_t height;
-} efi_gop_info_t;
-
-typedef struct {
-    efi_mmap_t *mmap;
-    efi_gop_info_t *gop;
-} efi_info_t;
 
 #endif

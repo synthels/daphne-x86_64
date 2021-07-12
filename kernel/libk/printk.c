@@ -22,7 +22,7 @@ static char printk_buf[1024];
 /*
  * Not too bad, right?
  */
-errcode_t vsprintf(char **buf, va_list args)
+int vsprintf(char **buf, va_list args)
 {
     const char *fmt = va_arg(args, char *);
     char c;

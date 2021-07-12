@@ -7,6 +7,7 @@ add_subdirectory(${SRCROOT}/libk)
 add_subdirectory(${SRCROOT}/mem)
 add_subdirectory(${SRCROOT}/dev)
 add_subdirectory(${SRCROOT}/shrimp)
+add_subdirectory(${SRCROOT}/forbia)
 
 set(SRC
 	${SRCROOT}/kernel.c
