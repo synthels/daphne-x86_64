@@ -19,7 +19,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <kernel.h>
+#include <forbia/kernel.h>
 #include <mutex.h>
 
 #include "mem.h"

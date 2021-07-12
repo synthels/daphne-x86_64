@@ -17,8 +17,8 @@
 #ifndef PANIC
 #define PANIC
 
-//#include <tty/printk.h>
-#include <kernel.h>
+#include <libk/printk.h>
+#include <forbia/kernel.h>
 
 /* Throws a tantrum */
 void panic(const char *msg);

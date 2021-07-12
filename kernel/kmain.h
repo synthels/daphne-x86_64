@@ -16,7 +16,7 @@
 #define KERNEL_INIT
 
 #include <stdint.h>
-#include <kernel.h>
+#include <forbia/kernel.h>
 #include <io/io.h>
 #include <mem/mem.h>
 #include <mem/malloc.h>

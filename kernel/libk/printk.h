@@ -18,7 +18,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <shrimp/shrimp.h>
-#include <kernel.h>
+#include <forbia/kernel.h>
 
 #include <libk/stdlib.h>
 

@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <panic.h>
-#include <kernel.h>
+#include <forbia/kernel.h>
 #include <arch/x86_64/x64.h>
 
 #include "PIC.h"

@@ -10,8 +10,6 @@ add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 
 set(SRC
-	${SRCROOT}/kernel.c
-	${SRCROOT}/kernel.h
 	${SRCROOT}/mutex.c
 	${SRCROOT}/mutex.h
 	${SRCROOT}/kmain.c

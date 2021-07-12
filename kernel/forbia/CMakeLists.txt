@@ -1,6 +1,8 @@
 set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/forbia)
 
 set(SRC
+	${SRCROOT}/kernel.c
+	${SRCROOT}/kernel.h
 	${SRCROOT}/types.h
 )
 

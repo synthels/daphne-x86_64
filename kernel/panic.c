@@ -18,5 +18,6 @@
 
 void panic(const char *msg)
 {
+    printk("kernel panic: %s", msg);
     kernel_hang();
 }

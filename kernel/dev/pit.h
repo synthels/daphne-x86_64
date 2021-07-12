@@ -17,7 +17,7 @@
 #define DEV_PIT
 
 #include <io/io.h>
-#include <kernel.h>
+#include <forbia/kernel.h>
 
 #define TIMER_FREQ 100
 
