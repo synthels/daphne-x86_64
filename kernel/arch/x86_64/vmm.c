@@ -11,29 +11,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Memory manager
+ * x64 vmm
  */
 
-#include "mem.h"
+#include "vmm.h"
 
-/* Virtual memory space */
-/* Pointer to bootloader memory, might cause problems */
-static memsp_t memsp;
-
-void mem_init(void *mmap_ptr, uint64_t size)
-{
-    mmap_entry_t *mmap = mmap_ptr;
-    /* Initialise memsp */
-    memsp.size = size;
-    memsp.mmap = mmap;
-}
-
-memsp_t *get_memsp(void)
-{
-    return &memsp;
-}
-
-void set_memsp(memsp_t msp)
-{
-    memsp = msp;
-}

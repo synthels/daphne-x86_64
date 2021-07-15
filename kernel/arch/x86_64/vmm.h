@@ -10,30 +10,12 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Memory manager
  */
 
-#include "mem.h"
 
-/* Virtual memory space */
-/* Pointer to bootloader memory, might cause problems */
-static memsp_t memsp;
+#ifndef KERNEL_x86_64_VMM
+#define KERNEL_x86_64_VMM
 
-void mem_init(void *mmap_ptr, uint64_t size)
-{
-    mmap_entry_t *mmap = mmap_ptr;
-    /* Initialise memsp */
-    memsp.size = size;
-    memsp.mmap = mmap;
-}
 
-memsp_t *get_memsp(void)
-{
-    return &memsp;
-}
 
-void set_memsp(memsp_t msp)
-{
-    memsp = msp;
-}
+#endif

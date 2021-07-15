@@ -24,9 +24,9 @@ static uint16_t ctx_width, ctx_height;
 static uint16_t shrimp_x = 0, shrimp_y = 0;
 
 /* Terminal buffer */
-static char   **shrimp_buf;
+static char **shrimp_buf;
 static size_t shrimp_index = 0;
-static int    impl_newln = 0;
+static int impl_newln = 0;
 
 /* Clear terminal */
 void shrimp_clear(void)

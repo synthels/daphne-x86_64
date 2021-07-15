@@ -52,6 +52,12 @@ void mem_init(void *mmap_ptr, uint64_t size);
  * get_memsp
  *   brief: Get memsp
  */
-memsp_t *get_memsp();
+memsp_t *get_memsp(void);
+
+/**
+ * get_memsp
+ *   brief: Set memsp
+ */
+void set_memsp(memsp_t msp);
 
 #endif
