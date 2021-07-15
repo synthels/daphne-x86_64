@@ -16,6 +16,12 @@
 #ifndef KERNEL_x86_64_VMM
 #define KERNEL_x86_64_VMM
 
+#include <stddef.h>
+#include <stdint.h>
+#include <forbia/kernel.h>
 
+void vmm_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags);
+
+void vmm_alloc_space(uint64_t virt_from, uint64_t virt_to, uint64_t flags);
 
 #endif

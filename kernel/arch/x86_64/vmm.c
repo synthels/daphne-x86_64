@@ -16,3 +16,16 @@
 
 #include "vmm.h"
 
+void vmm_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
+{
+    UNUSED(virt_addr);
+    UNUSED(phys_addr);
+    UNUSED(flags);
+}
+
+void vmm_alloc_space(uint64_t virt_from, uint64_t virt_to, uint64_t flags)
+{
+    UNUSED(virt_from);
+    UNUSED(virt_to);
+    UNUSED(flags);
+}
