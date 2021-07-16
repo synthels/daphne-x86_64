@@ -17,10 +17,10 @@
 #include "printk.h"
 
 /* Don't let anyone see this... */
-static char printk_buf[1024];
+static char *printk_buf;
 
 /* Not too bad, right? */
-int vsprintf(char **buf, const char *fmt, va_list args)
+int vsprintf(const char *fmt, va_list args)
 {
     char c;
     for (int i = 0; (c = *fmt++);) {
@@ -66,7 +66,6 @@ int vsprintf(char **buf, const char *fmt, va_list args)
                     break;
                 /* Unknown type */
                 default:
-                    *buf = "";
                     return EINVAL;
             }
             /* Skip '%' sign */
@@ -78,23 +77,21 @@ int vsprintf(char **buf, const char *fmt, va_list args)
         }
     }
 
-    *buf = printk_buf;
     return NOERR;
 }
 
 int printk(const char *fmt, ...)
 {
-    /* Empty buffer */
-    for (size_t i = 0; i < sizeof(printk_buf) / sizeof(char); i++) {
-        printk_buf[i] = '\0';
-    }
+    /* This leaks a LOT of memory! Its a temporary solution
+       to a nasty bug with shrimp. We need a proper fix
+       soon */
+    printk_buf = kmalloc(sizeof(char) * 1024);
 
-    char *buf;
     va_list ap;
     va_start(ap, fmt);
-    int err = vsprintf(&buf, fmt, ap);
+    int err = vsprintf(fmt, ap);
     va_end(ap);
-    shrimp_print(buf);
+    shrimp_print(printk_buf);
 
     return err;
 }

@@ -5,6 +5,8 @@ set(SRC
     ${SRCROOT}/gdt.h
     ${SRCROOT}/vmm.c
     ${SRCROOT}/vmm.h
+    ${SRCROOT}/pmm.c
+    ${SRCROOT}/pmm.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

@@ -19,7 +19,9 @@
 #include <stdint.h>
 #include <shrimp/shrimp.h>
 #include <forbia/kernel.h>
+#include <forbia/types.h>
 
+#include <mem/malloc.h>
 #include <libk/stdlib.h>
 
 /* Prints a formatted string to the screen using tty functions */
