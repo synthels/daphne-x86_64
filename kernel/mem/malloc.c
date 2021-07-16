@@ -49,6 +49,10 @@
 
 #include "malloc.h"
 
+/* TODO: use fixed kernel space
+         instead of whole memory
+         map
+         (0xFFFF + O - 0xFFFF + O + C) */
 uintptr_t *kalloc(size_t n)
 {
     mmap_entry_t *mmap = get_memsp()->mmap;

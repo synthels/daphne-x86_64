@@ -18,8 +18,6 @@
 #include <stddef.h>
 #include <stivale2.h>
 
-#include <arch/x86_64/pmm.h>
-
 #include "kmain.h"
 
 /* Kernel stack */
