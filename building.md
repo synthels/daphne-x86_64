@@ -16,18 +16,18 @@ If you haven't built gcc already, please run the `tools/gcc_pre.sh` script first
 Before building, you must also build the `x86_64-elf-gcc` compiler. The easiest way to build it is to use brew like so
 
 ```
-brew install x86_64-elf-gcc
+$ brew install x86_64-elf-gcc
 ```
 
 ### WSL note
 On WSL/Some linux distros, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
 
 ```
-export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
+$ export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
 ```
 
 ```
-export PATH="$PATH:$BREW_HOME"
+$ export PATH="$PATH:$BREW_HOME"
 ```
 
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
@@ -36,7 +36,7 @@ If there are no errors and everything went well, you should now have a multiboot
 First, clone the repositorty with the following command
 
 ```
-git clone https://github.com/synthels/daphne.git --recursive
+$ git clone https://github.com/synthels/daphne.git --recursive
 ```
 
 ## Building limine
@@ -46,7 +46,7 @@ building limine is really simple. All you have to do is run `make` from inside t
 First, run
 
 ```
-./tools/setup.sh -x64
+$ ./tools/setup.sh -x64
 ```
 
 from the root directory
@@ -56,13 +56,13 @@ in order create the `build` directory. In this directory you will find the `iso`
 Then run
 
 ```
-cd build
+$ cd build
 ```
 
 Now that you're in the `build` directory, we can start fiddling with CMake!
 
 ```
-cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
+$ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
 
 This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
@@ -70,7 +70,7 @@ This command will create all the necessary files for CMake to build the project.
 To finally build the binary, you can run CMake's generic build command
 
 ```
-cmake --build .
+$ cmake --build .
 ```
 
 If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
@@ -82,17 +82,17 @@ In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
 ```
-cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
+$ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
 ```
 
 Now, `cd` to `build`
 
 ```
-cp -v kernel.bin iso
+$ cp -v kernel.bin iso
 ```
 
 ```
-xorriso -as mkisofs -b limine-cd.bin \
+$ xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
         --efi-boot limine-eltorito-efi.bin \
         -efi-boot-part --efi-boot-image --protective-msdos-label \
@@ -102,11 +102,9 @@ xorriso -as mkisofs -b limine-cd.bin \
 if you also want BIOS, you might want to run these commands
 
 ```
-cd ../kernel/arch/x86_64/limine/bin
-```
+$ cd ../kernel/arch/x86_64/limine/bin
 
-```
-./limine-install ../../../../../build/daphne_img_x64.iso
+$ ./limine-install ../../../../../build/daphne_img_x64.iso
 ```
 
 ## Testing x64 images in Virtualbox
@@ -114,15 +112,11 @@ First, make sure the "Enable EFI (special OSes only)" checkbox under system is c
 you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
 
 ```
-fs1:
-```
+$ fs1:
 
-```
-cd EFI/BOOT
-```
+$ cd EFI/BOOT
 
-```
-BOOTX64.EFI
+$ BOOTX64.EFI
 ```
 
 ## Testing x64 images in QEMU
@@ -130,5 +124,5 @@ Testing under QEMU requires that you have an OVMF image installed, then, at leas
 this command
 
 ```
-qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 4096 -cdrom daphne_img_x64.iso -vga virtio
+$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 4096 -cdrom daphne_img_x64.iso -vga virtio
 ```
