@@ -14,9 +14,16 @@
  * Memory manager
  */
 
+/**
+ * Virtual memory space:
+ * | --------- | ------ | ----------- |
+ * | Userspace | Kernel | Kernel heap |
+ * | --------- | ------ | ----------- |
+ */
+
 #include "mem.h"
 
-/* Virtual memory space */
+/* Limine memory map */
 /* Pointer to bootloader memory, might cause problems */
 static memsp_t memsp;
 

@@ -63,6 +63,7 @@ void kmain(struct stivale2_struct *stv)
     init_gdt(); /* gdt & tss */
     init_idt(); /* idt */
     mem_init(mmap->memmap, mmap->entries); /* mm */
+    vmm_init(); /* vmm */
     dev_init(); /* essential devices */
     lfb_init(fb_info->framebuffer_width, fb_info->framebuffer_height, fb_info->framebuffer_addr, fb_info->framebuffer_pitch); /* video */
 

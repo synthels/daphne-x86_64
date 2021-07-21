@@ -49,22 +49,14 @@
 
 #include "malloc.h"
 
-/* TODO: use fixed kernel space
-         instead of whole memory
-         map
-         (0xFFFF + O - 0xFFFF + O + C) */
+extern uint64_t kernel_end;
+
+/* Allocate n bytes on the kernel heap */
 uintptr_t *kalloc(size_t n)
 {
-    mmap_entry_t *mmap = get_memsp()->mmap;
-    for (size_t i = 0; i < get_memsp()->size; i++) {
-        if (mmap[i].length >= n) {
-            mmap[i].length -= n;
-            mmap[i].base += n;
-            return (uintptr_t *) mmap[i].base;
-        }
-    }
-
-    return NULL;
+    static uint64_t ap = KERNEL_HEAP_LOW;
+    ap += n;
+    return (uintptr_t *) (ap - n);
 }
 
 void *kalloc_mem_aligned(size_t n)

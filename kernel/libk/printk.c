@@ -37,7 +37,7 @@ int vsprintf(const char *fmt, va_list args)
                 case 'u':
                     switch (*fmt++) {
                         case 'i':
-                            uitoa(va_arg(args, uint32_t), str);
+                            uitoa(va_arg(args, uint64_t), str);
                             break;
                         /* Hex */
                         case 'x':
@@ -50,7 +50,7 @@ int vsprintf(const char *fmt, va_list args)
                     }
                     break;
                 case 'i':
-                    itoa(va_arg(args, int32_t), str);
+                    itoa(va_arg(args, int64_t), str);
                     break;
                 /* Hex */
                 case 'x':
@@ -82,7 +82,7 @@ int vsprintf(const char *fmt, va_list args)
 
 int printk(const char *fmt, ...)
 {
-    /* This leaks a LOT of memory! Its a temporary solution
+    /* This leaks a LOT of memory! It's a temporary solution
        to a nasty bug with shrimp. We need a proper fix
        soon */
     printk_buf = kmalloc(sizeof(char) * 1024);

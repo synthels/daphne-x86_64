@@ -22,6 +22,8 @@
 #include <forbia/kernel.h>
 #include <forbia/mutex.h>
 
+#include <forbia/panic.h>
+
 #include "mem.h"
 
 #define MAX_PAGES 12 /* Max pages in bin */

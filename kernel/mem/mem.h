@@ -17,6 +17,8 @@
 
 #include <stdint.h>
 
+#define KERNEL_HEAP_LOW 0xFFFFff0000000000UL /* Kernel heap virtual addr */
+
 enum mmap_type {
     INVALID                = 0,
     USABLE                 = 1,

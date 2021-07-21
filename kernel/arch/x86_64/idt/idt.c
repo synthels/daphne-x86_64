@@ -149,8 +149,7 @@ void fault_handler(regs_t *r)
 
     if (r->int_no < 32) {
         panic(exception_messages[r->int_no]);
-    }
-    else {
+    } else {
         panic("what the hell?");
     }
 }

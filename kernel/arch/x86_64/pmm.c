@@ -18,17 +18,27 @@
 
 #include "pmm.h"
 
+extern uint64_t kernel_end;
+
 void *pmm_alloc(size_t n)
 {
-    /* Start from physical address 0,
-       NOT sure if this works (limine says so) */
-    static size_t index = 0x0;
-    size_t tmp = index;
-    index += n;
-    if (index > PMM_HIGH) {
-        panic("pmm: out of memory!");
+    mmap_entry_t *mmap = get_memsp()->mmap;
+    for (size_t i = 0; i < get_memsp()->size; i++) {
+        if (mmap[i].length >= n) {
+            mmap[i].length -= n;
+            mmap[i].base += n;
+            return (void *) mmap[i].base;
+        }
     }
-    return (void *) tmp;
+
+    return NULL;
+}
+
+void *pmm_alloc_page(void)
+{
+	const size_t mask = 4096 - 1;
+	const uintptr_t mem = (uintptr_t) pmm_alloc(4096 * 2);
+	return (void *) ((mem + mask) & ~mask);
 }
 
 void pmm_free(void *ptr)

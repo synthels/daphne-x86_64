@@ -20,13 +20,25 @@
 #include <forbia/kernel.h>
 #include <forbia/panic.h>
 
-#define PMM_HIGH (uint64_t) 0xFFFF
+#include <libk/string.h>
+#include <mem/mem.h>
+#include <mem/malloc.h>
+
+/**
+ * pmm_init
+ *   brief: init pmm
+ */
+void pmm_init(void);
+
+uint64_t pmm_get_highest(void);
 
 /**
  * pmm_alloc
  *   brief: allocate n bytes in physical memory
  */
 void *pmm_alloc(size_t n);
+
+void *pmm_alloc_page(void);
 
 /**
  * pmm_free

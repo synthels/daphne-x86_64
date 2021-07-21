@@ -1,4 +1,4 @@
-/* Tell the linker that we want the symbol _start to be our entry point */
+/* Tell the linker that we want the symbol kmain to be our entry point */
 ENTRY(kmain)
 
 SECTIONS
@@ -29,4 +29,6 @@ SECTIONS
         *(COMMON)
         *(.bss*)
     }
+
+    kernel_end = .;
 }
