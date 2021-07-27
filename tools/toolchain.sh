@@ -1,111 +1,59 @@
 #!/bin/bash
+
 set -e
-
-# ----- Configs -------------------------------------------------------------- #
-
-BINUTILS_VERSION=2.36
-BINUTILS_DIRECTORY="binutils-$BINUTILS_VERSION"
-BINUTILS_FILENAME="$BINUTILS_DIRECTORY.tar.gz"
-BINUTILS_URL="http://ftp.gnu.org/gnu/binutils/$BINUTILS_FILENAME"
-
-GCC_VERSION=11.1.0
-GCC_DIRECTORY="gcc-$GCC_VERSION"
-GCC_FILENAME="gcc-$GCC_VERSION.tar.gz"
-GCC_URL="http://ftp.gnu.org/gnu/gcc/$GCC_DIRECTORY/$GCC_FILENAME"
-
-# ---------------------------------------------------------------------------- #
-
-DIR="$HOME"
-
-PREFIX="$DIR/local"
-
-if [ -e "$PREFIX/build-ok" ]; then
-    echo "The toolchain is already built!"
-    exit 0
-fi
-
-cd "$DIR"
-
-mkdir -p tarballs
-
-# Download and unpack GCC and binutils
-# ---------------------------------------------------------------------------- #
-
-pushd tarballs
-    if [ ! -e "$BINUTILS_FILENAME" ]; then
-        wget $WGETFLAGS "$BINUTILS_URL"
-    else
-        echo "Skipped downloading binutils"
-    fi
-
-    if [ ! -e "$GCC_FILENAME" ]; then
-        wget $WGETFLAGS "$GCC_URL"
-    else
-        echo "Skipped downloading gcc"
-    fi
-
-    if [ ! -d "$BINUTILS_DIRECTORY" ]; then
-        echo "Extracting binutils..."
-        tar -xf "$BINUTILS_FILENAME"
-    else
-        echo "Skipped extracting binutils"
-    fi
-
-    if [ ! -d "$GCC_DIRECTORY" ]; then
-        echo "Extracting gcc..."
-        tar -xf "$GCC_FILENAME"
-
-        # FIXME: What if this fail ?
-        echo "Download gcc prerequisites..."
-
-        pushd $GCC_DIRECTORY
-            ./contrib/download_prerequisites
-        popd
-    else
-        echo "Skipped extracting gcc"
-    fi
-popd
-
-mkdir -p $PREFIX
-
-if [ -z "$MAKEJOBS" ]; then
-    MAKEJOBS=$(nproc)
-fi
-
-# Build GCC and binutils for the x86_64 target
-# ---------------------------------------------------------------------------- #
+set -x
 
 TARGET=i686-elf
+BINUTILSVERSION=2.33.1
+GCCVERSION=9.2.0
+PREFIX="$(pwd)/$TARGET-cross"
 
-mkdir -p "$DIR/build/binutils"
-mkdir -p "$DIR/build/gcc"
+if [ -z "$MAKEFLAGS" ]; then
+	MAKEFLAGS="$1"
+fi
+export MAKEFLAGS
 
-pushd "$DIR/build/"
-    unset PKG_CONFIG_LIBDIR # Just in case
+export PATH="$PREFIX/bin:$PATH"
 
-    pushd binutils
-        "$DIR/tarballs/$BINUTILS_DIRECTORY/configure" \
-            --target=$TARGET \
-            --prefix=$PREFIX \
-            --with-sysroot \
-            --disable-werror || exit 1
+if [ -x "$(command -v gmake)" ]; then
+    mkdir -p "$PREFIX/bin"
+    cat <<EOF >"$PREFIX/bin/make"
+#!/usr/bin/env sh
+gmake "\$@"
+EOF
+    chmod +x "$PREFIX/bin/make"
+fi
 
-        make -j $MAKEJOBS || exit 1
-        make install || exit 1
-    popd
+mkdir -p build
+cd build
 
-    pushd gcc
-        "$DIR/tarballs/$GCC_DIRECTORY/configure" \
-            --target=$TARGET \
-            --prefix=$PREFIX \
-            --disable-nls \
-            --with-newlib \
-            --with-sysroot \
-            --enable-languages=c|| exit 1
+if [ ! -f binutils-$BINUTILSVERSION.tar.gz ]; then
+    wget https://ftp.gnu.org/gnu/binutils/binutils-$BINUTILSVERSION.tar.gz
+fi
+if [ ! -f gcc-$GCCVERSION.tar.gz ]; then
+    wget https://ftp.gnu.org/gnu/gcc/gcc-$GCCVERSION/gcc-$GCCVERSION.tar.gz
+fi
 
-        make -j $MAKEJOBS all-gcc all-target-libgcc || exit 1
-        make install-gcc install-target-libgcc || exit 1
-    popd
-popd
+tar -xf binutils-$BINUTILSVERSION.tar.gz
+tar -xf gcc-$GCCVERSION.tar.gz
 
-touch $PREFIX/build-ok
+rm -rf build-gcc build-binutils
+
+mkdir build-binutils
+cd build-binutils
+../binutils-$BINUTILSVERSION/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+make
+make install
+cd ..
+
+cd gcc-$GCCVERSION
+contrib/download_prerequisites
+cd ..
+mkdir build-gcc
+cd build-gcc
+../gcc-$GCCVERSION/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c --without-headers
+make all-gcc
+make all-target-libgcc
+make install-gcc
+make install-target-libgcc
+cd ..
