@@ -38,13 +38,7 @@ void *pmm_alloc(size_t n)
 
 void *pmm_alloc_page(void)
 {
-	const size_t mask = 4096 - 1;
-	const uintptr_t mem = (uintptr_t) pmm_alloc(4096 * 2);
-	return (void *) ((mem + mask) & ~mask);
-}
-
-void pmm_free(void *ptr)
-{
-    UNUSED(ptr);
-    /* stub */
+    const size_t mask = 4096 - 1;
+    const uintptr_t mem = (uintptr_t) pmm_alloc(4096 * 2);
+    return (void *) ((mem + mask) & ~mask);
 }
