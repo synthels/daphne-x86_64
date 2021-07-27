@@ -18,10 +18,6 @@
     push r15
 %endmacro
 
-extern pit_irq_handler
-extern kbd_irq_handler
-extern generic_irq_handler
-extern syscall_handler
 %macro _popaq 0
     pop r15
     pop r14
