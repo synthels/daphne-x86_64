@@ -16,22 +16,19 @@
 
 #include "idt.h"
 
-/* IDT structure */
+/* IDT */
 static idt_entry_t idt[256];
 
+/* IRQs (in IDT indices) */
+static interrupt_handler_t idt_handlers[256];
+
 /* IRQ handlers */
-static void *irq_handlers[129];
+static interrupt_handler_t irq_handlers[256];
 
 /* Install an IRQ handler to the IDT */
-void idt_install_irq_handler(void (*handler)(void), int i)
+void idt_install_handler(void (*handler)(void), int i)
 {
-    //printk("Installed IRQ handler #%i", i);
-    irq_handlers[32 + i] = handler;
-}
-
-void idt_install_raw_handler(void (*handler)(void), int i)
-{
-    irq_handlers[i] = handler;
+    idt_handlers[i] = handler;
 }
 
 /* Install all handlers */
@@ -69,13 +66,13 @@ void idt_install_handlers()
     ISR(isr29, 29);
     ISR(isr30, 30);
     ISR(isr31, 31);
-    /* syscall */
-    ISR(_syscall, 128);
+    /* syscall (TODO: this needs to be in userspace) */
+    ISR(isr128, 128);
 
     /* PIT */
-    IRQ(irq0, 0);
+    IRQ(irq0, pit_irq_handler, 0);
     /* Keyboard */
-    IRQ(irq1, 1);
+    IRQ(irq1, kbd_irq_handler, 1);
 }
 
 /* Generate & load an IDT */
@@ -84,14 +81,12 @@ void init_idt(void)
     extern int load_idt();
     idtp idt_ptr;
 
-    /* Install the handlers */
     idt_install_handlers();
-    /* Remap the PIC */
     remap_pic();
 
-    /* Fill the IDT */ 
+    /* Fill the IDT */
     for (int i = 0; i < 129; i++) {
-        uintptr_t base = (uintptr_t) irq_handlers[i];
+        uintptr_t base = (uintptr_t) idt_handlers[i];
         idt[i].base_low  = (base & 0xFFFF);
         idt[i].base_mid  = (base >> 16) & 0xFFFF;
         idt[i].base_high = (base >> 32) & 0xFFFFFFFF;
@@ -110,9 +105,10 @@ void init_idt(void)
     );
 }
 
-void fault_handler(regs_t *r)
+void isr_handler(regs_t *r)
 {
-    const char *exception_messages[] = {
+    extern void syscall_handler(regs_t *r);
+    const char *exceptions[] = {
         "division by zero",
         "debug",
         "NMI",
@@ -147,9 +143,19 @@ void fault_handler(regs_t *r)
         "reserved"
     };
 
+    /* Exception/IRQ?? */
     if (r->int_no < 32) {
-        panic(exception_messages[r->int_no]);
+        panic(exceptions[r->int_no]);
+    } else if (r->int_no == __SYSCALL_INDEX) {
+        syscall_handler(r);
+        return;
     } else {
-        panic("what the hell?");
+        (*irq_handlers[r->int_no - 32])();
     }
+
+    /* Slave EOI */
+    if (r->int_no >= 40)
+       outb(0xA0, 0x20);
+    /* Master EOI */
+    outb(0x20, 0x20);
 }

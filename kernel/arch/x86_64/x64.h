@@ -17,8 +17,7 @@
 #ifndef x64_H
 #define x64_H
 
-typedef struct
-{
+typedef struct {
     uintptr_t r15;
     uintptr_t r14;
     uintptr_t r13;
@@ -34,8 +33,8 @@ typedef struct
     uintptr_t rcx;
     uintptr_t rbx;
     uintptr_t rax;
-    uint64_t int_no;
-    uint64_t error_code;
+    uintptr_t int_no;
+    uintptr_t error_code;
     uintptr_t rip;
     uintptr_t cs;
     uintptr_t rflags;

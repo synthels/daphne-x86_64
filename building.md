@@ -124,5 +124,9 @@ Testing under QEMU requires that you have an OVMF image installed, then, at leas
 this command
 
 ```
+# Don't use this...
 $ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso -vga virtio
+
+# UEFI is a little broken right now, run with BIOS instead
+$ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -vga virtio -soundhw pcspk
 ```

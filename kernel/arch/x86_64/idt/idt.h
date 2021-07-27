@@ -23,10 +23,14 @@
 #include "PIC.h"
 
 #define ISR(isr, n) extern void isr(void); \
-    idt_install_raw_handler(isr, n)
+    idt_install_handler(isr, n)
 
-#define IRQ(irq, n) extern void irq(void); \
-    idt_install_irq_handler(irq, n)
+#define IRQ(irq, fn, n) extern void irq(void); \
+    extern void fn(void); \
+    irq_handlers[n] = fn; \
+    idt_install_handler(irq, n + 32)
+
+typedef void (*interrupt_handler_t)(void);
 
 /* IDT entry */
 typedef struct {

@@ -53,6 +53,16 @@ void *get_tag(struct stivale2_struct *stv, uint64_t id)
     }
 }
 
+void enable_interrupts(void)
+{
+    asm volatile("sti");
+}
+
+void disable_interrupts(void)
+{
+    asm volatile("cli");
+}
+
 void kmain(struct stivale2_struct *stv)
 {
     /* Get memory map */
@@ -77,6 +87,9 @@ void kmain(struct stivale2_struct *stv)
     /* Initialize fbterm with kernel handle */
     shrimp_init(kern_ctx.handle);
     printk("daphne (forbia %s, running on %s)\n", KERNEL_VERSION, KERNEL_ARCH);
+
+    /* Houston, we've got interrupts */
+    enable_interrupts();
 
     for (;;) {
         asm("hlt");

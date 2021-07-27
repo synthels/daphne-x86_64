@@ -18,25 +18,25 @@
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 
-#define IRQ_END outb(0x20, 0x20)
+#include <dev/kbd.h>
+#include <dev/pit.h>
+
+#include <libk/printk.h>
 
 /* PIT IRQ */
 void pit_irq_handler(void)
 {
-    // pit_tick();
-    IRQ_END;
+    pit_tick();
 }
 
 /* Keyboard IRQ */
 void kbd_irq_handler(void)
 {
-    // kbd_read();
-    IRQ_END;
+    kbd_read();
 }
 
 /* syscall handler */
 void syscall_handler(regs_t *r)
 {
-    // printk("syscall: EAX = %i", r->eax);
-    IRQ_END;
+    printk("Not implemented - syscall(%i)", r->rax);
 }

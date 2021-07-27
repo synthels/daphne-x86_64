@@ -30,6 +30,7 @@
     #define KERNEL_ARCH "x86-64"
     #define __KERNEL_CS 0x8
     #define __KERNEL_DS 0x10
+    #define __SYSCALL_INDEX 0x80
 #endif
 
 /**
