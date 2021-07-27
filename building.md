@@ -85,7 +85,7 @@ First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
 ```
 
-Now, `cd` to `build`
+Now, `cd` to `build` (not `limine/build`)
 
 ```
 $ cp -v kernel.bin iso

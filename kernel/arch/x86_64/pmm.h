@@ -30,20 +30,16 @@
  */
 void pmm_init(void);
 
-uint64_t pmm_get_highest(void);
-
 /**
  * pmm_alloc
  *   brief: allocate n bytes in physical memory
  */
 void *pmm_alloc(size_t n);
 
-void *pmm_alloc_page(void);
-
 /**
- * pmm_free
- *   brief: free ptr
+ * pmm_alloc_page
+ *   brief: allocate single page
  */
-void pmm_free(void *ptr);
+void *pmm_alloc_page(void);
 
 #endif
