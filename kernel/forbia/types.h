@@ -17,9 +17,6 @@
 #ifndef FORBIA_TYPES
 #define FORBIA_TYPES
 
-/**
- * <stbool.h>
- */
 #define bool _Bool
 
 #ifndef true
