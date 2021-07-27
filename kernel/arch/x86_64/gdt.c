@@ -16,51 +16,33 @@
 
 #include "gdt.h"
 
-static struct gdt_ptr gp;
-static struct gdt_desc gdt;
-
-void gdt_set_desc(uint8_t n, uint16_t lim, uint16_t base_low, uint8_t base_mid, uint8_t base_high, uint8_t access, uint8_t gran)
-{
-    gdt.entries[n].limit = lim;
-    gdt.entries[n].base_low = base_low;
-    gdt.entries[n].base_mid = base_mid;
-    gdt.entries[n].access = access;
-    gdt.entries[n].granularity = gran;
-    gdt.entries[n].base_hi = base_high;
-}
+static struct gdt_ptr  gp;
+static struct gdt_full gdt = {
+    {0, 0, 0, 0b00000000, 0b00000000, 0},   /* Kernel NULL */
+    {0, 0, 0, 0b10011010, 0b00100000, 0},   /* Kernel code */
+    {0, 0, 0, 0b10010010, 0b00000000, 0},   /* Kernel data */
+    {0, 0, 0, 0b11111010, 0b00100000, 0},   /* User code */
+    {0, 0, 0, 0b11110010, 0b00000000, 0}    /* User data */
+};
 
 void init_gdt(void)
 {
-    /* Set up gdt */
-    gdt_set_desc(0, 0, 0, 0, 0, 0, 0);
-    gdt_set_desc(1, 0xffff, 0x0000, 0x00, 0x00, 0b10011010, 0b00000000);
-    gdt_set_desc(2, 0xffff, 0x0000, 0x00, 0x00, 0b10010010, 0b00000000);
-    gdt_set_desc(3, 0xffff, 0x0000, 0x00, 0x00, 0b10011010, 0b11001111);
-    gdt_set_desc(4, 0xffff, 0x0000, 0x00, 0x00, 0b10010010, 0b10011010);
+    gp.limit = (sizeof(gdt) - 1);
+    gp.base  = (uintptr_t) &gdt;
 
-    /* Set up tss */
-    gdt.tss.length       = 104;
-    gdt.tss.base_low16   = 0;
-    gdt.tss.base_mid8    = 0;
-    gdt.tss.flags1       = 0b10001001;
-    gdt.tss.flags2       = 0;
-    gdt.tss.base_high8   = 0;
-    gdt.tss.base_upper32 = 0;
-    gdt.tss.reserved     = 0;
-
-    gp.limit = sizeof(gdt) - 1;
-    gp.base = (uintptr_t) &gdt;
-
-    /* Load 'em both */
     asm volatile (
-        "mov %0, %%rdi\n"
-        "lgdt (%%rdi)\n"
-        "mov $0x10, %%ax\n"
-        "mov %%ax, %%ds\n"
-        "mov %%ax, %%es\n"
-        "mov %%ax, %%ss\n"
-        "mov $0x2b, %%ax\n"
-        "ltr %%ax\n"
-        : : "r"((uintptr_t) &gp)
+        "lgdt %0\n"
+        "push $0x08\n"
+        "lea 1f(%%rip), %%rbx\n"
+        "push %%rbx\n"
+        "lretq\n"
+        "1:\n"
+        "mov %1, %%ds\n"
+        "mov %1, %%es\n"
+        "mov %1, %%ss\n"
+        "mov %1, %%fs\n"
+        "mov %1, %%gs\n"
+        : : "m"(gp), "a"(__KERNEL_DS)
+        : "rbx"
     );
 }

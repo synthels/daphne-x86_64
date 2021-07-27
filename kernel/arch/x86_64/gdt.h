@@ -17,17 +17,7 @@
 
 #include <stdint.h>
 #include <libk/string.h>
-
-struct tss_entry {
-    uint16_t length;
-    uint16_t base_low16;
-    uint8_t base_mid8;
-    uint8_t flags1;
-    uint8_t flags2;
-    uint8_t base_high8;
-    uint32_t base_upper32;
-    uint32_t reserved;
-} __attribute__((packed));
+#include <forbia/kernel.h>
 
 struct gdt_entry {
     uint16_t limit;
@@ -38,9 +28,23 @@ struct gdt_entry {
     uint8_t base_hi;
 } __attribute__((packed));
 
-struct gdt_desc {
-    struct gdt_entry entries[5];
-    struct tss_entry tss;
+struct gdt_full {
+	struct gdt_entry null;
+	struct gdt_entry kernel_code;
+	struct gdt_entry kernel_data;
+	struct gdt_entry user_code;
+	struct gdt_entry user_data;
+} __attribute__((packed));
+
+struct tss_entry {
+    uint16_t length;
+    uint16_t base_low16;
+    uint8_t base_mid8;
+    uint8_t flags1;
+    uint8_t flags2;
+    uint8_t base_high8;
+    uint32_t base_upper32;
+    uint32_t reserved;
 } __attribute__((packed));
 
 struct gdt_ptr {

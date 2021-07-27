@@ -21,7 +21,7 @@
 #include "kmain.h"
 
 /* Kernel stack */
-static uint8_t stack[STACK_SIZE] __attribute__((aligned(16))) = {0};
+static uint8_t stack[STACK_SIZE * 8] __attribute__((aligned(16))) = {0};
 
 static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
     .tag = {

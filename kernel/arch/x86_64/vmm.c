@@ -43,7 +43,7 @@ void map_kernel()
 
     /* Map kernel heap */
     for (uint64_t i = 0; i < HEAP_PAGES; i++) {
-        map_page(KERNEL_HEAP_LOW + (i * PAGE_SIZE), (uint64_t) pmm_alloc(PAGE_SIZE + (i * PAGE_SIZE)), VMM_DEFAULT_PERMISSIONS);
+        map_page(KERNEL_HEAP_LOW + (i * PAGE_SIZE), (uint64_t) pmm_alloc(PAGE_SIZE), VMM_DEFAULT_PERMISSIONS);
     }
 
     /* Load pml4 */

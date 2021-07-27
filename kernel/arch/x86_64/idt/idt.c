@@ -105,7 +105,7 @@ void init_idt(void)
     idt_ptr.base = (uintptr_t) &idt;
 
     asm volatile (
-        "lidt %0"
+        "lidt %0\n"
         : : "m"(idt_ptr)
     );
 }
