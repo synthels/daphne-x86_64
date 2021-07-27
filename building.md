@@ -124,5 +124,5 @@ Testing under QEMU requires that you have an OVMF image installed, then, at leas
 this command
 
 ```
-$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2G -cdrom daphne_img_x64.iso -vga virtio
+$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso -vga virtio
 ```
