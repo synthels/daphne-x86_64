@@ -1,10 +1,5 @@
 [bits 64]
 
-extern pit_irq_handler
-extern kbd_irq_handler
-extern generic_irq_handler
-extern syscall_handler
-
 %macro _pushaq 0
     push rax
     push rbx
