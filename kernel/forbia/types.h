@@ -14,8 +14,8 @@
  * Kernel types
  */
 
-#ifndef FORBIA_TYPES
-#define FORBIA_TYPES
+#ifndef TYPES_H
+#define TYPES_H
 
 #define bool _Bool
 

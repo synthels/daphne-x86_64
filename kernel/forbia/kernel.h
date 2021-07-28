@@ -14,14 +14,14 @@
  * Symbols used throughout the kernel
  */
 
-#ifndef KERNEL
-#define KERNEL
+#ifndef KERNEL_H
+#define KERNEL_H
 
 #include <stddef.h>
 #include <stdint.h>
 
 /**
- * Kernel version string
+ * Kernel version
  *   fmt: vMajor.minor-Codename 
  */
 #define KERNEL_VERSION "v0.1-Alpha"

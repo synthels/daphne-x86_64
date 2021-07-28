@@ -49,7 +49,8 @@
 
 #include "malloc.h"
 
-extern uint64_t kernel_end;
+declare_lock(malloc_lock);
+declare_lock(free_lock);
 
 /* Allocate n bytes on the kernel heap */
 uintptr_t *kalloc(size_t n)
@@ -166,6 +167,7 @@ void *free_page(malloc_bin_t *bin, void *base)
 
 void *kmalloc(size_t n)
 {
+    lock(&malloc_lock);
     /* First call, init bin */
     if (head_bin == NULL) {
         head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
@@ -188,11 +190,13 @@ void *kmalloc(size_t n)
 
     page->free = 0;
     *(page->base) = kmem_align(n);
+    unlock(&malloc_lock);
     return (page->base + 1);
 }
 
 void *kfree(void *ptr)
 {
+    lock(&free_lock);
     /* Get size of allocated object */
     uint32_t malloc_size = *((uint32_t *) ptr - 1);
     malloc_bin_t *b = head_bin;
@@ -208,6 +212,7 @@ void *kfree(void *ptr)
         }
         b = b->next_bin;
     }
+    unlock(&free_lock);
 
     /* Pointer was not allocated by kmalloc() */
     return NULL;

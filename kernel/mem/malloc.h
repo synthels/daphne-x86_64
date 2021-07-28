@@ -19,10 +19,10 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <forbia/kernel.h>
-#include <forbia/mutex.h>
 
+#include <forbia/kernel.h>
 #include <forbia/panic.h>
+#include <forbia/lock.h>
 
 #include "mem.h"
 

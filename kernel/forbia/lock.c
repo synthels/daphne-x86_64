@@ -10,17 +10,21 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Synchronization primitives
  */
 
-#ifndef MUTEX
-#define MUTEX
+#include "lock.h"
 
-typedef volatile int mutex_t;
+void lock(mutex_t *mutex)
+{
+    while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
+        asm("pause");
+    }
+    __sync_synchronize();
+}
 
-/* Acquire lock */
-void acquire_mutex(mutex_t *mutex);
-
-/* Release lock */
-void release_mutex(mutex_t *mutex);
-
-#endif
+void unlock(mutex_t *mutex)
+{
+    *mutex = 0;
+}

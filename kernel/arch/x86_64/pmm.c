@@ -18,21 +18,24 @@
 
 #include "pmm.h"
 
-extern uint64_t kernel_end;
+declare_lock(pmm_lock);
 
 void *pmm_alloc(size_t n)
 {
+    lock(&pmm_lock);
     mmap_entry_t *mmap = get_memsp()->mmap;
     for (size_t i = 0; i < get_memsp()->size; i++) {
         if (mmap[i].type == USABLE) {
             if (mmap[i].length >= n) {
                 mmap[i].length -= n;
                 mmap[i].base += n;
+                unlock(&pmm_lock);
                 return (void *) mmap[i].base;
             }
         }
     }
 
+    unlock(&pmm_lock);
     return NULL;
 }
 

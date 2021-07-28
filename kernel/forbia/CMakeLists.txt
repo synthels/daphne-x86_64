@@ -5,8 +5,8 @@ set(SRC
 	${SRCROOT}/kernel.h
 	${SRCROOT}/panic.c
 	${SRCROOT}/panic.h
-	${SRCROOT}/mutex.c
-	${SRCROOT}/mutex.h
+	${SRCROOT}/lock.c
+	${SRCROOT}/lock.h
 	${SRCROOT}/types.h
 )
 

@@ -10,21 +10,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Spin lock implementation
  */
 
-#include "mutex.h"
+#ifndef LOCK_H
+#define LOCK_H
 
-void acquire_mutex(mutex_t *mutex)
-{
-    while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
-        asm("pause");
-    }
-    __sync_synchronize();
-}
+typedef volatile int mutex_t;
 
-void release_mutex(mutex_t *mutex)
-{
-    *mutex = 0;
-}
+#define declare_lock(name) static mutex_t name = 0
+
+/* Acquire lock */
+void lock(mutex_t *mutex);
+
+/* Release lock */
+void unlock(mutex_t *mutex);
+
+#endif

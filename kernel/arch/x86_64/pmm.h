@@ -17,8 +17,10 @@
 
 #include <stddef.h>
 #include <stdint.h>
+
 #include <forbia/kernel.h>
 #include <forbia/panic.h>
+#include <forbia/lock.h>
 
 #include <libk/string.h>
 #include <mem/mem.h>

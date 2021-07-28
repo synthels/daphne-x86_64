@@ -14,8 +14,8 @@
  * Kernel panic
  */
 
-#ifndef PANIC
-#define PANIC
+#ifndef PANIC_H
+#define PANIC_H
 
 #include <libk/printk.h>
 #include <forbia/kernel.h>
