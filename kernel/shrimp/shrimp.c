@@ -86,11 +86,10 @@ void shrimp_putc(char a)
         shrimp_y++;
         /* Scroll terminal if it fills up */
         if (shrimp_y >= ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET)) {
-            shrimp_y = ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) - 2;
+            shrimp_y = ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) - 1;
             shrimp_index = shrimp_y;
-            /* Move all lines one line up */
-            for (int i = shrimp_y; i > 0; i--) {
-                shrimp_buf[i-1] = shrimp_buf[i];
+            for (size_t i = 0; i < shrimp_y; i++) {
+                shrimp_buf[i] = shrimp_buf[i+1];
             }
         }
         return;

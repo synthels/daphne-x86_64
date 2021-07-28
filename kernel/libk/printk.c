@@ -28,7 +28,7 @@ int vsprintf(const char *fmt, va_list args)
         if (c == '%') {
             c = *fmt++;
             /* Allocate memory for the va_arg strings */
-            char *str = kmalloc(__PRINTK_BUFFER_SIZE);
+            char *str = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
             switch (c) {
                 /* Strings */
                 case 's':
