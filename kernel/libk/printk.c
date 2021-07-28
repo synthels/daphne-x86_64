@@ -27,7 +27,8 @@ int vsprintf(const char *fmt, va_list args)
         printk_buf[i++] = c;
         if (c == '%') {
             c = *fmt++;
-            char *str;
+            /* Allocate memory for the va_arg strings */
+            char *str = kmalloc(__PRINTK_BUFFER_SIZE);
             switch (c) {
                 /* Strings */
                 case 's':
@@ -74,6 +75,9 @@ int vsprintf(const char *fmt, va_list args)
             for (; (c = *str++); i++) {
                 printk_buf[i] = c;
             }
+
+            /* We don't need str anymore */
+            kfree(str);
         }
     }
 
@@ -82,7 +86,7 @@ int vsprintf(const char *fmt, va_list args)
 
 int printk(const char *fmt, ...)
 {
-    /* Allocate a buffer */
+    /* TODO: Stop leaking memory */
     printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
 
     for (size_t i = 0; i < __PRINTK_BUFFER_SIZE; i++) {
