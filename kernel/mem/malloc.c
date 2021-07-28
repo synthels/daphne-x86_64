@@ -208,6 +208,7 @@ void *kfree(void *ptr)
         if (b->page_size == malloc_size) {
             /* Correct bin is found */
             if ((page_base = free_page(b, (uint32_t *) ptr - 1)) != NULL) {
+                unlock(&free_lock);
                 return page_base;
             }
         }
