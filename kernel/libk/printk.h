@@ -24,6 +24,8 @@
 #include <mem/malloc.h>
 #include <libk/stdlib.h>
 
+#define __PRINTK_BUFFER_SIZE 1024
+
 /* Prints a formatted string to the screen using tty functions */
 int printk(const char *fmt, ...);
 

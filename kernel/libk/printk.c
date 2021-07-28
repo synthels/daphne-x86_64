@@ -85,7 +85,11 @@ int printk(const char *fmt, ...)
     /* This leaks a LOT of memory! It's a temporary solution
        to a nasty bug with shrimp. We need a proper fix
        soon */
-    printk_buf = kmalloc(sizeof(char) * 1024);
+    printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
+
+    for (size_t i = 0; i < __PRINTK_BUFFER_SIZE; i++) {
+        printk_buf[i] = '\0';
+    }
 
     va_list ap;
     va_start(ap, fmt);

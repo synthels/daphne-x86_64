@@ -49,7 +49,7 @@ void shrimp_init(int _handle)
     lfb_get_ctx_info(_handle, &info);
     ctx_width  = info.screen_width;
     ctx_height = info.screen_height;
-    /* Allocating terminal buffer */
+    /* Allocate terminal buffer */
     shrimp_buf = kmalloc((((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) * sizeof(char *)));
 
     /* Clear terminal */
@@ -90,7 +90,7 @@ void shrimp_putc(char a)
             shrimp_index = shrimp_y;
             /* Move all lines one line up */
             for (int i = shrimp_y; i > 0; i--) {
-                shrimp_buf[i+1] = shrimp_buf[i];
+                shrimp_buf[i-1] = shrimp_buf[i];
             }
         }
         return;

@@ -185,6 +185,7 @@ void *kmalloc(size_t n)
         bin->first_page->free = 0;
         /* Set malloc size right behind pointer returned */
         *(bin->first_page->base) = kmem_align(n);
+        unlock(&malloc_lock);
         return (bin->first_page->base + 1);
     }
 
