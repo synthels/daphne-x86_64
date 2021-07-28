@@ -19,9 +19,11 @@
 
 #include <forbia/kernel.h>
 #include <vid/lfb.h>
-#include <libk/string.h>
 #include <mem/malloc.h>
 #include <forbia/types.h>
+
+#include <libk/string.h>
+#include <libk/printk.h>
 
 #include "shrimp_font.h"
 

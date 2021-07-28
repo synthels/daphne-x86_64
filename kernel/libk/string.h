@@ -25,7 +25,7 @@ typedef uint8_t byte;
 #endif
 
 /**
- * strlen 
+ * strlen
  *   brief: return number of characters in
  *          the null terminated string str
  *   parameters:
@@ -43,5 +43,46 @@ size_t strlen(const char *str);
  *     - sz: number of bytes
  */
 void *memset(void *s, int c, size_t sz);
+
+/**
+ * strcpy
+ *   brief: copy null terminated string src to
+ *          dest
+ *   parameters:
+ *     - dest: destination string
+ *     - src:  source string
+ */
+void strcpy(char *dest, const char *src);
+
+/**
+ * memcpy
+ *   brief: copy data from src to dst
+ *   parameters:
+ *     - dst:  destination
+ *     - src:  source
+ *     - len:  length
+ */
+void *memcpy(void *dst, const void *src, size_t len);
+
+/**
+ * memmove
+ *   brief: copy data from src to dst, while taking
+ *          care of overelaps
+ *   parameters:
+ *     - dest:  destination
+ *     - src:   source
+ *     - n:     length
+ */
+void *memmove(void *dest, const void *src, size_t n);
+
+/**
+ * memcmp
+ *   brief: compare first n bytes of str1 and str2
+ *   parameters:
+ *     - str1:  first string
+ *     - str2:  second string
+ *     - n:     length
+ */
+int memcmp(const void *str1, const void *str2, size_t n);
 
 #endif
