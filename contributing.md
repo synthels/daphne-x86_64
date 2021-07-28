@@ -1,6 +1,15 @@
 # Contributing to daphne
 All contributions to daphne are very welcome and needed. If you have decided to contribute to this project, all you have to do is follow a few minor guidelines.
 
+## Table of contents
+
+- [Writing commit messages](#commit-messages)
+- [Code style](#code-style)
+  - [Functions](#functions)
+  - [Comments](#comments)
+  - [If statements and loops](#if-statements-and-loops)
+  - [Header files](#header-files)
+
 ## Commit messages
 When writing a commit message, please make sure it is in the format of
 ```
@@ -13,7 +22,7 @@ tty: printk bugfixes
 You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/daphne/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
 
 ## Code style
-I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with spaces when writing C and CMakeLists.txt files
+I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with 4 spaces when writing C and CMakeLists.txt files.
 
 ### Functions
 All of the function singature must be on the same line, only putting the opening brace on the next.
@@ -38,7 +47,7 @@ Not like this:
 // Bad comment :(
 ```
 
-### If statements and while/for loops
+### If statements and loops
 All if statements, for and while loops must be written with a space left between the for/while or if and the opening parenthesis. The opening brace must be put on the same line.
 
 ```c
