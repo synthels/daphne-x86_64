@@ -13,7 +13,7 @@ tty: printk bugfixes
 You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/daphne/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
 
 ## Code style
-I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with spaces when writing C, and tabs when writing CMake files.
+I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with spaces when writing C and CMakeLists.txt files
 
 ### Functions
 All of the function singature must be on the same line, only putting the opening brace on the next.
@@ -21,7 +21,7 @@ All of the function singature must be on the same line, only putting the opening
 ```c
 void foo(int p1, int p2)
 {
-	/* ... */
+    /* ... */
 }
 ```
 
@@ -43,7 +43,7 @@ All if statements, for and while loops must be written with a space left between
 
 ```c
 for (int i = 0; i < size; i++) {
-	/* ... */
+    /* ... */
 }
 ```
 

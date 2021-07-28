@@ -16,12 +16,12 @@ set(CMAKE_C_STANDARD 99)
 
 # Build tests if needed
 if (BUILD_TESTS)
-	add_subdirectory(${SRCROOT}/kernel/tests)
-	add_compile_definitions(BUILD_TESTS)
+    add_subdirectory(${SRCROOT}/kernel/tests)
+    add_compile_definitions(BUILD_TESTS)
 endif()
 
 if (ARCH STREQUAL "x86_64")
-	add_compile_definitions(ARCH_x86_64)
+    add_compile_definitions(ARCH_x86_64)
 endif()
 
 # Build kernel

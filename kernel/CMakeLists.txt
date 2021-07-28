@@ -10,8 +10,8 @@ add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 
 set(SRC
-	${SRCROOT}/kmain.c
-	${SRCROOT}/kmain.h
+    ${SRCROOT}/kmain.c
+    ${SRCROOT}/kmain.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})
