@@ -14,7 +14,26 @@
  * Shrimp - early kernel terminal
  */
 
-/* TODO: ANSI (like) Escape sequences */
+/**
+ * Our ANSI-like escape sequences:
+ * format: \xff[XXXXXXX
+ *         where every X is any number 
+ *         between 1-9.
+ *
+ * @ Overwiring the current line:
+ * \xff[0000000
+ * If this sequence is found anywhere in the string, the
+ * current line will be overwritten with this string.
+ *
+ * @ Printing with colors:
+ * \xff[1YYYXXX
+ * where every Y is a multiplier value between 0-9
+ * and every X is a number between 0-9.
+ *
+ * The final (R,G,B) color is calculated by multiplying
+ * the first Y with the first X (R), the 2nd Y with the second X (G)
+ * and the third Y with the thrid X (B).
+ */
 
 #include "shrimp.h"
 
@@ -27,6 +46,51 @@ static uint16_t shrimp_x = 0, shrimp_y = 0;
 static char **shrimp_buf;
 static size_t shrimp_index = 0;
 static int impl_newln = 0;
+
+static int strcut(char *str, int begin, int len)
+{
+    int l = strlen(str);
+    if (len < 0) len = l - begin;
+    if (begin + len > l) len = l - begin;
+    memmove(str + begin, str + begin + len, l - len + 1);
+    return len;
+}
+
+void shrimp_update(void);
+
+/* Parse "ANSI" sequences */
+void ansi_parse(char *str)
+{
+    bool escape_found = false;
+    for (size_t j = 0; j < strlen(str); j++) {
+        /* Parse escape sequences */
+        char c = str[j];
+        if (c == ESCAPE_SEQ) escape_found = true; 
+        if (escape_found) {
+            ++j; /* skip bracket */
+            for (size_t k = j; k < strlen(str); ++k) {
+                c = str[k];
+                switch (c) {
+                    case ESCAPE_OVERWRITE:
+                        /* Overwrite current line */
+                        if (shrimp_y > 0) {
+                            /* Cut the escape sequence */
+                            strcut(str, k-2, 9);
+                            /* Free overwritten line */
+                            kfree(shrimp_buf[--shrimp_index]);
+                            shrimp_buf[shrimp_index] = NULL;
+                            shrimp_buf[shrimp_index] = str;
+                            shrimp_update(); /* Note: no, this doesn't cause infinite recursion */
+                        }
+                        break;
+                    case ESCAPE_COLOR_PRINT:
+                        /* Print with color, TODO */
+                        break;
+                }
+            }
+        }
+    }
+}
 
 /* Clear terminal */
 void shrimp_clear(void)
@@ -88,6 +152,9 @@ void shrimp_putc(char a)
         if (shrimp_y >= ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET)) {
             shrimp_y = ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) - 1;
             shrimp_index = shrimp_y;
+            /* Free topmost string (fixes the
+               memory leaks) */
+            kfree(shrimp_buf[0]);
             for (size_t i = 0; i < shrimp_y; i++) {
                 shrimp_buf[i] = shrimp_buf[i+1];
             }
@@ -108,6 +175,8 @@ void shrimp_update(void)
     /* Flush buffer */
     for (size_t i = 0; i < shrimp_index; i++) {
         char *str = shrimp_buf[i];
+        /* Parse "ansi" sequences */
+        ansi_parse(str);
         /* Set on implicit newline */
         bool newline = false;
         for (size_t j = 0; j < strlen(str); j++) {

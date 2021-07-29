@@ -63,6 +63,23 @@ void disable_interrupts(void)
     asm volatile("cli");
 }
 
+/* Print an animated progress bar */
+void print_progress(const char *msg)
+{
+    static int iter = 0;
+    switch (iter) {
+        case 0: printk(KERN_OVERWRITE "[***] %s", msg); sleep(50); break;
+        case 1: printk(KERN_OVERWRITE "[**] %s", msg);  sleep(50); break;
+        case 2: printk(KERN_OVERWRITE "[*] %s", msg);   sleep(50); break;
+        case 3: 
+            printk(KERN_OVERWRITE "[**] %s", msg);
+            sleep(50);
+            iter = 0;
+            return;
+    }
+    ++iter;
+}
+
 void kmain(struct stivale2_struct *stv)
 {
     /* Get memory map */
@@ -92,6 +109,7 @@ void kmain(struct stivale2_struct *stv)
     enable_interrupts();
 
     for (;;) {
+        print_progress("Kernel hung...");
         asm("hlt");
     }
 }

@@ -25,10 +25,14 @@
 #include <libk/string.h>
 #include <libk/printk.h>
 
-#include "shrimp_font.h"
+#include "font.h"
 
 #define BG_COLOR {12, 12, 12, 255}
 #define FG_COLOR {255, 255, 255, 255}
+
+#define ESCAPE_SEQ         '\xff'
+#define ESCAPE_OVERWRITE   '0'
+#define ESCAPE_COLOR_PRINT '1'
 
 /**
  * shrimp_init

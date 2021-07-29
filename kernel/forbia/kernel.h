@@ -93,4 +93,7 @@ void kernel_hang(void);
  */
 #define USR_MODE 2
 
+/* printk escape sequences */
+#define KERN_OVERWRITE "\xff[0000000"
+
 #endif
