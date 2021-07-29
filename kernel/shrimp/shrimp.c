@@ -20,7 +20,7 @@
  *         where every X is any number 
  *         between 1-9.
  *
- * @ Overwiring the current line:
+ * @ Overwriting the current line:
  * \xff[0000000
  * If this sequence is found anywhere in the string, the
  * current line will be overwritten with this string.
