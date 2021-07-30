@@ -29,6 +29,5 @@ int get_kernel_mode(void)
 
 void kernel_hang(void)
 {
-    asm("cli");
-    asm("hlt");
+    for(;;);
 }

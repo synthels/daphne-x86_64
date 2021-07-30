@@ -38,5 +38,5 @@ void kbd_irq_handler(void)
 /* syscall handler */
 void syscall_handler(regs_t *r)
 {
-    printk("Not implemented - syscall(%i)", r->rax);
+    warn("not implemented - syscall(%i)", r->rax);
 }

@@ -18,6 +18,7 @@
 
 /* Don't let anyone see this... */
 static char *printk_buf;
+static int log_level = NORMAL;
 
 /* Not too bad, right? */
 int vsprintf(const char *fmt, va_list args)
@@ -84,20 +85,29 @@ int vsprintf(const char *fmt, va_list args)
     return NOERR;
 }
 
-int printk(const char *fmt, ...)
+int printk(int level, const char *fmt, ...)
 {
-    /* This will be later freed by shrimp, so it's fine */
-    printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
+    if (level >= log_level) {
+        /* This will be later freed by shrimp, so it's fine */
+        printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
 
-    for (size_t i = 0; i < __PRINTK_BUFFER_SIZE; i++) {
-        printk_buf[i] = '\0';
+        for (size_t i = 0; i < __PRINTK_BUFFER_SIZE; i++) {
+            printk_buf[i] = '\0';
+        }
+
+        va_list ap;
+        va_start(ap, fmt);
+        int err = vsprintf(fmt, ap);
+        va_end(ap);
+        shrimp_print(printk_buf);
+
+        return err;
     }
 
-    va_list ap;
-    va_start(ap, fmt);
-    int err = vsprintf(fmt, ap);
-    va_end(ap);
-    shrimp_print(printk_buf);
+    return NOERR;
+}
 
-    return err;
+int get_log_level(void)
+{
+    return log_level;
 }

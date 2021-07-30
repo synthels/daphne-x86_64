@@ -68,11 +68,11 @@ void print_progress(const char *msg)
 {
     static int iter = 0;
     switch (iter) {
-        case 0: printk(KERN_OVERWRITE "[***] %s", msg); sleep(50); break;
-        case 1: printk(KERN_OVERWRITE "[**] %s", msg);  sleep(50); break;
-        case 2: printk(KERN_OVERWRITE "[*] %s", msg);   sleep(50); break;
-        case 3: 
-            printk(KERN_OVERWRITE "[**] %s", msg);
+        case 0: printk(NORMAL, KERN_OVERWRITE "\n[***] %s", msg); sleep(50); break;
+        case 1: printk(NORMAL, KERN_OVERWRITE "\n[**] %s", msg);  sleep(50); break;
+        case 2: printk(NORMAL, KERN_OVERWRITE "\n[*] %s", msg);   sleep(50); break;
+        case 4: 
+            printk(NORMAL, KERN_OVERWRITE "\n[**] %s", msg);
             sleep(50);
             iter = 0;
             return;
@@ -92,7 +92,12 @@ void kmain(struct stivale2_struct *stv)
     mem_init(mmap->memmap, mmap->entries); /* mm */
     vmm_init(); /* vmm */
     dev_init(); /* essential devices */
-    lfb_init(fb_info->framebuffer_width, fb_info->framebuffer_height, fb_info->framebuffer_addr, fb_info->framebuffer_pitch); /* video */
+    lfb_init(   /* video */
+        fb_info->framebuffer_width, 
+        fb_info->framebuffer_height,
+        fb_info->framebuffer_addr,
+        fb_info->framebuffer_pitch
+    );
 
     /* Create kernel video context */
     struct gfx_context kern_ctx;
@@ -103,13 +108,20 @@ void kmain(struct stivale2_struct *stv)
 
     /* Initialize fbterm with kernel handle */
     shrimp_init(kern_ctx.handle);
-    printk("daphne (forbia %s, running on %s)\n", KERNEL_VERSION, KERNEL_ARCH);
+    printk(NORMAL, "daphne (forbia %s, running on %s)\n\n", KERNEL_VERSION, KERNEL_ARCH);
+
+    ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
+    info("display info - width: %i, height: %i, pitch: %i", 
+        info.screen_width,
+        info.screen_height,
+        info.screen_pitch
+    );
 
     /* Houston, we've got interrupts */
     enable_interrupts();
 
     for (;;) {
-        print_progress("Kernel hung...");
+        print_progress("Kernel hung...\n");
         asm("hlt");
     }
 }
