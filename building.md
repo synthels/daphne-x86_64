@@ -89,9 +89,7 @@ Now, `cd` to `build` (not `limine/build`)
 
 ```
 $ cp -v kernel.bin iso
-```
 
-```
 $ xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
         --efi-boot limine-eltorito-efi.bin \
