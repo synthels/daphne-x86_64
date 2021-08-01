@@ -30,7 +30,7 @@
 #define MEM_KERN_OFFSET (size_t) 0xffffffff80000000
 #define MMU_CEIL(a, b) (((a) + ((b) - 1)) / (b))
 
-#define HEAP_PAGES 50 /* Pages in the heap (200KiB) */
+#define HEAP_PAGES 500 /* Pages in the heap (2MiB) */
 
 #define VMM_DEFAULT_PERMISSIONS 0x03 /* wr supervisor only */
 

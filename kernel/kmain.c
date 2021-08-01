@@ -108,7 +108,7 @@ void kmain(struct stivale2_struct *stv)
 
     /* Initialize fbterm with kernel handle */
     shrimp_init(kern_ctx.handle);
-    printk(NORMAL, "daphne (forbia %s, running on %s)\n\n", KERNEL_VERSION, KERNEL_ARCH);
+    printk(NORMAL, "daphne (forbia %s, running on %s)\n", KERNEL_VERSION, KERNEL_ARCH);
 
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
     info("display info - width: %i, height: %i, pitch: %i", 
