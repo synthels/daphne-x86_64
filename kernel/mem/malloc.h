@@ -14,8 +14,8 @@
  * Malloc
  */
 
-#ifndef MALLOC
-#define MALLOC
+#ifndef __MALLOC
+#define __MALLOC
 
 #include <stddef.h>
 #include <stdint.h>
