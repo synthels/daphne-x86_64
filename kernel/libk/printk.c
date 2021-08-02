@@ -33,6 +33,10 @@ int vsprintf(const char *fmt, va_list args)
             switch (c) {
                 /* Strings */
                 case 's':
+                    /* Free string here again, since the other free
+                       will not work, as we are essentially losing
+                       the pointer here */
+                    kfree(str);
                     str = va_arg(args, char *);
                     break;
                 /* Unsigned (no prettier way to do this) */
