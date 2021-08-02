@@ -68,6 +68,8 @@ int vsprintf(const char *fmt, va_list args)
                     break;
                 /* Just print a '%' */
                 case '%':
+                    /* Same as above... */
+                    kfree(str);
                     str = "%";
                     break;
                 /* Unknown type */
