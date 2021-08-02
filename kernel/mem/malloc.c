@@ -199,7 +199,7 @@ void *kfree(void *ptr)
 {
     lock(&free_lock);
     /* Get size of allocated object */
-    uint32_t malloc_size = *((uint32_t *) ptr - 1);
+    uint32_t malloc_size = *(((uint32_t *) ptr) - 1);
     malloc_bin_t *b = head_bin;
     void *page_base;
     for (size_t i = 0; i < hbin_size; i++) {
@@ -207,7 +207,7 @@ void *kfree(void *ptr)
            same size as the object */
         if (b->page_size == malloc_size) {
             /* Correct bin is found */
-            if ((page_base = free_page(b, (uint32_t *) ptr - 1)) != NULL) {
+            if ((page_base = free_page(b, (uint32_t *) ptr)) != NULL) {
                 unlock(&free_lock);
                 return page_base;
             }

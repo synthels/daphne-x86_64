@@ -80,7 +80,7 @@ If there are no errors and everything went well, you should now have a binary ca
 ## x86_64 UEFI
 In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
-
+ven
 ```
 $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
 ```

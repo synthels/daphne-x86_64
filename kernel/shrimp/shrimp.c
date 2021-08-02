@@ -92,7 +92,7 @@ void ansi_parse(char *str, struct color *color, bool reset)
                             /* Cut the escape sequence */
                             strcut(str, k-2, 9);
                             /* Free overwritten line */
-                            kfree(shrimp_buf[--shrimp_index]);
+                            if (kfree(shrimp_buf[--shrimp_index]) == NULL)panic("ooga booga caveman brane!\n") ;
                             shrimp_buf[shrimp_index] = str;
                             shrimp_update(); /* Note: no, this doesn't cause infinite recursion */
                         }
@@ -174,8 +174,8 @@ void shrimp_putc(char a, struct color c)
         shrimp_x   = 0;
         shrimp_y++;
         /* Scroll terminal if it fills up */
-        if (shrimp_y >= ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET)) {
-            shrimp_y = ((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) - 1;
+        if (shrimp_y >= ((ctx_height / FONT_HEIGHT))) {
+            shrimp_y = ((ctx_height / FONT_HEIGHT)) - 1;
             shrimp_index = shrimp_y;
             /* Free topmost string (fixes the
                memory leaks) */
