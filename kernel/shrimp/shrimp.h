@@ -19,7 +19,7 @@
 
 #include <forbia/kernel.h>
 #include <vid/lfb.h>
-#include <mem/malloc.h>
+#include <malloc/malloc.h>
 #include <forbia/types.h>
 
 #include <libk/string.h>

@@ -14,7 +14,7 @@
  * x64 pmm
  */
 
-/* TODO: pmm_free? Integrate mem/malloc?? */
+/* TODO: pmm_free? Integrate malloc?? */
 
 #include "pmm.h"
 

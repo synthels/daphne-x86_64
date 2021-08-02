@@ -24,7 +24,7 @@
 
 #include <libk/string.h>
 #include <mem/mem.h>
-#include <mem/malloc.h>
+#include <malloc/malloc.h>
 
 /**
  * pmm_init

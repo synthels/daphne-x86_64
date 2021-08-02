@@ -19,7 +19,7 @@
 #include <forbia/kernel.h>
 #include <io/io.h>
 #include <mem/mem.h>
-#include <mem/malloc.h>
+#include <malloc/malloc.h>
 #include <dev/dev.h>
 #include <vid/lfb.h>
 #include <shrimp/shrimp.h>

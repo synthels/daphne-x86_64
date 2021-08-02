@@ -22,7 +22,7 @@
 #include <forbia/panic.h>
 #include <forbia/lock.h>
 
-#include "mem.h"
+#include <mem/mem.h>
 
 #define MAX_PAGES 12 /* Max pages in bin */
 
