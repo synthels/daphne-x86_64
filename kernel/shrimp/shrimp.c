@@ -36,7 +36,7 @@
  * the first Y with the first X (R), the 2nd Y with the second X (G)
  * and the third Y with the thrid X (B).
  *
- * WARNING: be very careful of escape sequences. After seeing
+ * WARNING: be very careful with escape sequences. After seeing
  *          \xff in a string, the terminal expects exactly 8
  *          characters right after. If it does not get them,
  *          very bad things could happen and heap overflows
@@ -92,7 +92,7 @@ void ansi_parse(char *str, struct color *color, bool reset)
                             /* Cut the escape sequence */
                             strcut(str, k-2, 9);
                             /* Free overwritten line */
-                            if (kfree(shrimp_buf[--shrimp_index]) == NULL)panic("ooga booga caveman brane!\n") ;
+                            kfree(shrimp_buf[--shrimp_index]);
                             shrimp_buf[shrimp_index] = str;
                             shrimp_update(); /* Note: no, this doesn't cause infinite recursion */
                         }

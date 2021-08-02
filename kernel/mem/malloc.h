@@ -10,8 +10,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Malloc
  */
 
 #ifndef __MALLOC
@@ -50,6 +48,13 @@ struct malloc_bin {
 };
 
 typedef struct malloc_bin malloc_bin_t;
+
+struct malloc_ptr {
+    uint32_t size;
+    uint32_t *base;
+} __attribute__((packed));
+
+typedef struct malloc_ptr malloc_ptr_t;
 
 /**
  * kmalloc

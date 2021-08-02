@@ -156,7 +156,7 @@ void *free_page(malloc_bin_t *bin, void *base)
 {
     malloc_page_t *page = bin->first_page;
     for (size_t i = 0; i < bin->pages; i++) {
-        if (!(page->free) && (page->base == base)) {
+        if ((!(page->free)) && ((page->base + 1) == base)) {
             page->free = 1;
             return page->base;
         }
@@ -174,6 +174,7 @@ void *kmalloc(size_t n)
         init_bin(head_bin, n);
     }
 
+    malloc_ptr_t *malloc_ptr;
     malloc_bin_t *bin;
     malloc_page_t *page;
     if ((page = find_best_bin_and_alloc(n)) == NULL) {
@@ -184,13 +185,15 @@ void *kmalloc(size_t n)
         add_bin(bin);
         bin->first_page->free = 0;
         /* Set malloc size right behind pointer returned */
-        *(bin->first_page->base) = kmem_align(n);
+        malloc_ptr = (malloc_ptr_t *) (bin->first_page->base);
+        malloc_ptr->size = kmem_align(n);
         unlock(&malloc_lock);
         return (bin->first_page->base + 1);
     }
 
     page->free = 0;
-    *(page->base) = kmem_align(n);
+    malloc_ptr = (malloc_ptr_t *) page->base;
+    malloc_ptr->size = kmem_align(n);
     unlock(&malloc_lock);
     return (page->base + 1);
 }
@@ -199,7 +202,8 @@ void *kfree(void *ptr)
 {
     lock(&free_lock);
     /* Get size of allocated object */
-    uint32_t malloc_size = *(((uint32_t *) ptr) - 1);
+    malloc_ptr_t *malloc_ptr = (malloc_ptr_t *) (((uint32_t *) ptr) - 1);
+    uint32_t malloc_size = malloc_ptr->size;
     malloc_bin_t *b = head_bin;
     void *page_base;
     for (size_t i = 0; i < hbin_size; i++) {
@@ -207,7 +211,7 @@ void *kfree(void *ptr)
            same size as the object */
         if (b->page_size == malloc_size) {
             /* Correct bin is found */
-            if ((page_base = free_page(b, (uint32_t *) ptr)) != NULL) {
+            if ((page_base = free_page(b, ptr)) != NULL) {
                 unlock(&free_lock);
                 return page_base;
             }
