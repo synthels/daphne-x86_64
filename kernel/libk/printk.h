@@ -17,9 +17,12 @@
 
 #include <stdarg.h>
 #include <stdint.h>
+
 #include <shrimp/shrimp.h>
+
 #include <forbia/kernel.h>
 #include <forbia/types.h>
+#include <forbia/lock.h>
 
 #include <malloc/malloc.h>
 #include <libk/stdlib.h>

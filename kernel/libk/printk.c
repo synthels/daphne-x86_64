@@ -20,6 +20,8 @@
 static char *printk_buf;
 static int log_level = NORMAL;
 
+declare_lock(printk_lock);
+
 /* Not too bad, right? */
 int vsprintf(const char *fmt, va_list args)
 {
@@ -94,6 +96,7 @@ int vsprintf(const char *fmt, va_list args)
 int printk(int level, const char *fmt, ...)
 {
     if (level >= log_level) {
+        lock(&printk_lock);
         /* This will be later freed by shrimp, so it's fine */
         printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
 
@@ -107,6 +110,7 @@ int printk(int level, const char *fmt, ...)
         va_end(ap);
         shrimp_print(printk_buf);
 
+        unlock(&printk_lock);
         return err;
     }
 
