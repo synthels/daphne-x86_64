@@ -32,7 +32,7 @@ $ export PATH="$PATH:$BREW_HOME"
 
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
-# Let's start the build! (x86_64 UEFI)
+# Let's start the build! (x86_64 UEFI/BIOS)
 First, clone the repositorty with the following command
 
 ```
@@ -49,9 +49,7 @@ First, run
 $ ./tools/setup.sh -x64
 ```
 
-from the root directory
-
-in order create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
+from the root directory in order to create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
 
 Then run
 
@@ -77,7 +75,7 @@ If there are no errors and everything went well, you should now have a binary ca
 
 # Building an ISO image
 
-## x86_64 UEFI
+## x86_64 UEFI/BIOS
 In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 

@@ -63,23 +63,6 @@ void disable_interrupts(void)
     asm volatile("cli");
 }
 
-/* Print an animated progress bar */
-void print_progress(const char *msg)
-{
-    static int iter = 0;
-    switch (iter) {
-        case 0: printk(NORMAL, KERN_OVERWRITE "\n[***] %s", msg); sleep(50); break;
-        case 1: printk(NORMAL, KERN_OVERWRITE "\n[**] %s", msg);  sleep(50); break;
-        case 2: printk(NORMAL, KERN_OVERWRITE "\n[*] %s", msg);   sleep(50); break;
-        case 4: 
-            printk(NORMAL, KERN_OVERWRITE "\n[**] %s", msg);
-            sleep(50);
-            iter = 0;
-            return;
-    }
-    ++iter;
-}
-
 void kmain(struct stivale2_struct *stv)
 {
     /* Get memory map */
@@ -108,20 +91,18 @@ void kmain(struct stivale2_struct *stv)
 
     /* Initialize fbterm with kernel handle */
     shrimp_init(kern_ctx.handle);
-    printk(NORMAL, "daphne (forbia %s, running on %s)\n", KERNEL_VERSION, KERNEL_ARCH);
-
-    ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
+    info("daphne (forbia %s, running on %s)", KERNEL_VERSION, KERNEL_ARCH);
     info("display info - width: %i, height: %i, pitch: %i", 
         info.screen_width,
         info.screen_height,
         info.screen_pitch
     );
+    ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
     /* Houston, we've got interrupts */
     enable_interrupts();
 
     for (;;) {
-        print_progress("Kernel hung...\n");
         asm("hlt");
     }
 }
