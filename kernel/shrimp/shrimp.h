@@ -27,7 +27,7 @@
 
 #include "font.h"
 
-#define BG_COLOR (struct color) {12, 12, 12, 255}
+#define BG_COLOR (struct color) {0, 0, 0, 0}
 #define FG_COLOR (struct color) {255, 255, 255, 255}
 
 #define ESCAPE_SEQ         '\xff'

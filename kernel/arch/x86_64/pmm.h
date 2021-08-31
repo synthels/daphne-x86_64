@@ -26,6 +26,8 @@
 #include <mem/mem.h>
 #include <malloc/malloc.h>
 
+#define BASE_OFFS 1
+
 /**
  * pmm_init
  *   brief: init pmm

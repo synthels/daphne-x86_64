@@ -23,11 +23,11 @@ static int log_level = NORMAL;
 declare_lock(printk_lock);
 
 /* Not too bad, right? */
-int vsprintf(const char *fmt, va_list args)
+int vsprintf(char *buf, const char *fmt, va_list args)
 {
     char c;
     for (int i = 0; (c = *fmt++);) {
-        printk_buf[i++] = c;
+        buf[i++] = c;
         if (c == '%') {
             c = *fmt++;
             /* Allocate memory for the va_arg strings */
@@ -82,7 +82,7 @@ int vsprintf(const char *fmt, va_list args)
             i--;
             /* Copy string to buffer */
             for (; (c = *str++); i++) {
-                printk_buf[i] = c;
+                buf[i] = c;
             }
 
             /* We don't need str anymore */
@@ -106,7 +106,7 @@ int printk(int level, const char *fmt, ...)
 
         va_list ap;
         va_start(ap, fmt);
-        int err = vsprintf(fmt, ap);
+        int err = vsprintf(printk_buf, fmt, ap);
         va_end(ap);
         shrimp_print(printk_buf);
 

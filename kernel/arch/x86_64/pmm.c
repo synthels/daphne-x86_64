@@ -20,21 +20,35 @@
 
 declare_lock(pmm_lock);
 
+static bool PMM_ALLOC_FIRST_CALL = true;
+
 void *pmm_alloc(size_t n)
 {
     lock(&pmm_lock);
     mmap_entry_t *mmap = get_memsp()->mmap;
-    for (size_t i = 0; i < get_memsp()->size; i++) {
+    static int last_index = -1;
+    int i = 0;
+    for (; i < (int) get_memsp()->size; i++) {
         if (mmap[i].type == USABLE) {
-            if (mmap[i].length >= n) {
-                mmap[i].length -= n;
-                mmap[i].base += n;
+            uint64_t len = mmap[i].length;
+            volatile uint64_t *base = (uint64_t *) mmap[i].base;
+            /* check if we used a new entry this time
+               so that we don't screw with the entry's
+               length */
+            if ((i > last_index) || PMM_ALLOC_FIRST_CALL) {
+                *base = len;
+                PMM_ALLOC_FIRST_CALL = false;
+            }
+            if (*base >= n) {
+                *(base) -= n;
+                last_index = i;
                 unlock(&pmm_lock);
-                return (void *) mmap[i].base;
+                return (void *) ((*base - n) + (mmap[i].base + BASE_OFFS));
             }
         }
     }
 
+    last_index = i;
     unlock(&pmm_lock);
     return NULL;
 }

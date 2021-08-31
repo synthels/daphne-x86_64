@@ -32,7 +32,7 @@
 
 #define HEAP_PAGES 500 /* Pages in the heap (2MiB) */
 
-#define VMM_DEFAULT_PERMISSIONS 0x03 /* wr supervisor only */
+#define VMM_DEFAULT_PERMISSIONS 3 /* wrkr */
 
 /**
  * init_vmm
@@ -44,6 +44,12 @@ void vmm_init(void);
  * map_page
  *   brief: Map single page
  */
-void map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags);
+void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t flags);
+
+/**
+ * vmm_space
+ *   brief: Create new virtual space of size n
+ */
+void vmm_space(size_t n);
 
 #endif

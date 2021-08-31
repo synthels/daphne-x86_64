@@ -50,6 +50,12 @@ int printk(int level, const char *fmt, ...);
  */
 int get_log_level(void);
 
+/**
+ * vsprintf
+ *   brief: print formatted string to buffer
+ */
+int vsprintf(char *buf, const char *fmt, va_list args);
+
 /* Shrimp colors */
 #define KERN_COLOR_SUCCESS "\xff[10v0020"
 #define KERN_COLOR_INFO "\xff[10vv022"
