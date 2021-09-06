@@ -12,27 +12,33 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef KERNEL_PROC
+#define KERNEL_PROC
 
-#include <stdint.h>
-#include <forbia/kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <malloc/malloc.h>
-#include <dev/dev.h>
-#include <vid/lfb.h>
-#include <shrimp/shrimp.h>
 #include <libk/printk.h>
 
-#include <proc/process.h>
+#include <malloc/malloc.h>
 
-#define STACK_SIZE 65536 /* 64KiB */
+typedef int16_t pid_t;
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/gdt.h>
-    #include <arch/x86_64/vmm.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
+enum proc_state {
+    ACTIVE = 0,
+    SLEEPING = 1,
+    DEAD = 2
+};
+
+struct proc {
+    pid_t pid;
+    pid_t parent_pid;
+    int state;
+    char *name;
+    struct proc *next;
+};
+
+/**
+ * new_process
+ *   brief: create new process
+ */
+pid_t new_process(char *name);
 
 #endif

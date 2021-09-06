@@ -10,29 +10,31 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * General process management
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "process.h"
 
-#include <stdint.h>
-#include <forbia/kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <malloc/malloc.h>
-#include <dev/dev.h>
-#include <vid/lfb.h>
-#include <shrimp/shrimp.h>
-#include <libk/printk.h>
+struct proc initial_proc = {
+    0, 0, ACTIVE, "", NULL
+};
 
-#include <proc/process.h>
+pid_t new_process(char *name)
+{
+    static struct proc *last_proc = &initial_proc;
+    if (strlen(name) > 128) {
+        err("failed to init process %i: name is too long!", last_proc->pid + 1);
+        return -1;
+    }
 
-#define STACK_SIZE 65536 /* 64KiB */
+    struct proc *pr = kmalloc(sizeof(struct proc));
+    pr->name = name;
+    pr->pid = last_proc->pid + 1;    
+    pr->state = ACTIVE;
+    pr->next = NULL;
+    last_proc->next = pr;
+    last_proc = pr;
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/gdt.h>
-    #include <arch/x86_64/vmm.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
-
-#endif
+    return pr->pid;
+}
