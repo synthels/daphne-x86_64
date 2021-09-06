@@ -17,57 +17,7 @@
 #include "vmm.h"
 
 static uint64_t *pml4;
-static uint64_t *swp_pml4;
 extern uint64_t kernel_end;
-
-void map_kernel(uint64_t *pml)
-{
-    /* Map memory map */
-    mmap_entry_t *mmap = get_memsp()->mmap;
-    for (size_t i = 0; i < get_memsp()->size; i++) {
-        mmap_entry_t *entry = &mmap[i];
-        size_t base = entry->base - (entry->base % PAGE_SIZE);
-        size_t length = MMU_CEIL(entry->length, PAGE_SIZE);
-        if (entry->base % PAGE_SIZE)
-            length += PAGE_SIZE;
-
-        for (size_t j = 0; j < length; j++) {
-            size_t addr = base + j * PAGE_SIZE;
-            map_page(pml, MEM_PHYS_OFFSET + addr, addr, VMM_DEFAULT_PERMISSIONS);
-        }
-    }
-
-    /* Map 0x00000000 -> 0xffffffff80000000 as per the spec */
-    for (uint64_t addr = 0; addr < 0x80000000; addr += PAGE_SIZE) {
-        map_page(pml, addr + MEM_KERN_OFFSET, addr, VMM_DEFAULT_PERMISSIONS);
-    }
-
-    /* Map kernel heap */
-    for (uint64_t i = 0; i < HEAP_PAGES; i++) {
-        map_page(pml, KERNEL_HEAP_LOW + (i * PAGE_SIZE), (uint64_t) pmm_alloc(PAGE_SIZE), VMM_DEFAULT_PERMISSIONS);
-    }
-
-    /* Load pml4 */
-    asm volatile ("movq %0, %%cr3" : : "r"((uint64_t) pml));
-}
-
-void vmm_init(void)
-{
-    pml4 = pmm_alloc_page();
-    memset(pml4, 0, PAGE_SIZE);
-    /* Recursive mapping */
-    pml4[511] = (uint64_t) pml4;
-    map_kernel(pml4);
-}
-
-void vmm_init_pml(uint64_t *pml)
-{
-    pml = pmm_alloc_page();
-    memset(pml, 0, PAGE_SIZE);
-    /* Recursive mapping */
-    pml[511] = (uint64_t) pml;
-    map_kernel(pml);
-}
 
 uint64_t *next_level_or_alloc(uint64_t *current_level, size_t entry)
 {
@@ -77,6 +27,67 @@ uint64_t *next_level_or_alloc(uint64_t *current_level, size_t entry)
         current_level[entry] |= 3;
     }
     return (uint64_t *)((current_level[entry] & ~(0x1ff)));
+}
+
+size_t get_pml_index(uint64_t addr)
+{
+    return (addr >> 12) & 0x1ff;
+}
+
+/* Copy a page from pml src to pml dst */
+void copy_page(uint64_t *src, uint64_t *dst, uint64_t addr)
+{
+    size_t idx = get_pml_index(addr);
+    map_page(dst, addr, src[idx], FLAGS_READ_WRITE);
+}
+
+/* Map spec regions */
+void map_spec(uint64_t *pml)
+{
+    /* Map first 4 GB */
+    for (uintptr_t i = 0; i < 4 * GB; i += PAGE_SIZE) {
+        map_page(pml, MEM_PHYS_OFFSET + i, i, FLAGS_READ_WRITE);
+        map_page(pml, i, i, FLAGS_READ_WRITE);
+    }
+    /* Map 0x00000000 -> 0xffffffff80000000 as per the spec */
+    for (uint64_t addr = 0; addr < 0x80000000; addr += PAGE_SIZE) {
+        map_page(pml, addr + MEM_KERN_OFFSET, addr, FLAGS_READ_WRITE);
+    }
+}
+
+/* Map kernel space */
+void map_kernel(uint64_t *pml, bool load_pml)
+{
+    map_spec(pml);
+    if (load_pml) {
+        /* Map kernel heap */
+        for (uint64_t i = 0; i < HEAP_PAGES; i++) {
+            map_page(pml, KERNEL_HEAP_LOW + (i * PAGE_SIZE), (uint64_t) pmm_alloc_page(), FLAGS_READ_WRITE);
+        }
+        asm volatile ("movq %0, %%cr3" : : "r"((uint64_t) pml));
+    } else {
+        uint64_t *swp_pml4 = pmm_alloc_page();
+        map_spec(pml);
+        /* Copy heap over */
+        for (uint64_t i = 0; i < HEAP_PAGES; i++) {
+            copy_page(pml4, swp_pml4, KERNEL_HEAP_LOW + (i * PAGE_SIZE));
+        }
+        pml4 = swp_pml4;
+    }
+}
+
+void vmm_init(void)
+{
+    pml4 = pmm_alloc_page();
+    memset(pml4, 0, PAGE_SIZE);
+    /* Recursive mapping */
+    pml4[511] = (uint64_t) pml4;
+    map_kernel(pml4, true);
+}
+
+void vmm_init_pml(uint64_t *pml)
+{
+    map_kernel(pml, false);
 }
 
 void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
@@ -96,10 +107,10 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
     pml1[pml1_entry] = (uint64_t) (phys_addr | flags);
 }
 
-void vmm_space(size_t n)
+void vmalloc(size_t n)
 {
-    swp_pml4 = pmm_alloc_page();
+    vmm_init_pml(pml4);
     for (uint64_t i = 0; i < n; i++) {
-        map_page(swp_pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), VMM_DEFAULT_PERMISSIONS);
+        map_page(pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
     }
 }

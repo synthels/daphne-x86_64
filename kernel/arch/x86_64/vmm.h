@@ -32,7 +32,9 @@
 
 #define HEAP_PAGES 500 /* Pages in the heap (2MiB) */
 
-#define VMM_DEFAULT_PERMISSIONS 3 /* wrkr */
+#define FLAGS_READ_WRITE 0x03
+
+#define GB 0x40000000UL
 
 /**
  * init_vmm
@@ -47,9 +49,9 @@ void vmm_init(void);
 void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t flags);
 
 /**
- * vmm_space
- *   brief: Create new virtual space of size n
+ * vmalloc
+ *   brief: Create new virtual address space of size n
  */
-void vmm_space(size_t n);
+void vmalloc(size_t n);
 
 #endif
