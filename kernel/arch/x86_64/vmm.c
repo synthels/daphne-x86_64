@@ -107,10 +107,16 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
     pml1[pml1_entry] = (uint64_t) (phys_addr | flags);
 }
 
-void vmalloc(size_t n)
+uint64_t *vmalloc(size_t n)
 {
     vmm_init_pml(pml4);
     for (uint64_t i = 0; i < n; i++) {
         map_page(pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
     }
+    return pml4;
+}
+
+void vswitch(uint64_t *pml)
+{
+    pml4 = pml;
 }

@@ -33,6 +33,7 @@ pid_t new_process(char *name)
     pr->pid = last_proc->pid + 1;    
     pr->state = ACTIVE;
     pr->cpu_state.regs.rsp = (uint64_t) pmm_alloc(PROC_STACK_SIZE);
+    pr->cpu_state.page_table = vmalloc(PROC_HEAP_SIZE);
     pr->next = NULL;
     last_proc->next = pr;
     last_proc = pr;
