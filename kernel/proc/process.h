@@ -19,7 +19,14 @@
 
 #include <malloc/malloc.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/pmm.h>
+#endif
+
 typedef int16_t pid_t;
+
+#define PROC_STACK_SIZE 65536
 
 enum proc_state {
     ACTIVE = 0,
@@ -27,10 +34,16 @@ enum proc_state {
     DEAD = 2
 };
 
+struct proc_cpu_state {
+    uint64_t *page_table;
+    regs_t regs;
+};
+
 struct proc {
     pid_t pid;
     pid_t parent_pid;
     int state;
+    struct proc_cpu_state cpu_state;
     char *name;
     struct proc *next;
 };
