@@ -27,9 +27,6 @@
 
 typedef int16_t pid_t;
 
-#define PROC_STACK_SIZE 65536
-#define PROC_HEAP_SIZE 128
-
 enum proc_state {
     ACTIVE = 0,
     SLEEPING = 1,

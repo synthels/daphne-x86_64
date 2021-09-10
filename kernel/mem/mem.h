@@ -17,7 +17,13 @@
 
 #include <stdint.h>
 
-#define KERNEL_HEAP_LOW 0x64000237F800 /* Kernel heap virtual addr (right at 100TiB) */
+#define KERNEL_HEAP_LOW 0x64000237F800 /* Kernel heap (109TB) */
+#define PROC_STACK_LOW  0x5AF3107A4000 /* Process stack (100TB) */
+#define PROC_HEAP_LOW   0x5F7F37B39000 /* Process heap (105TB) */
+
+/* ??? */
+#define PROC_STACK_SIZE 128
+#define PROC_HEAP_SIZE  128
 
 enum mmap_type {
     INVALID                = 0,

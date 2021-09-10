@@ -54,4 +54,10 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
  */
 uint64_t *vmalloc(size_t n);
 
+/**
+ * vswitch
+ *   brief: Switch pml
+ */
+void vswitch(uint64_t *pml);
+
 #endif
