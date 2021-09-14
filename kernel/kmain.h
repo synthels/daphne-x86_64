@@ -24,6 +24,7 @@
 #include <vid/lfb.h>
 #include <shrimp/shrimp.h>
 #include <libk/printk.h>
+#include <pci/pci.h>
 
 #include <proc/process.h>
 

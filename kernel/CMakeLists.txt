@@ -10,6 +10,7 @@ add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 add_subdirectory(${SRCROOT}/malloc)
 add_subdirectory(${SRCROOT}/proc)
+add_subdirectory(${SRCROOT}/pci)
 
 set(SRC
     ${SRCROOT}/kmain.c

@@ -38,7 +38,7 @@ pid_t new_process(char *name)
     last_proc->next = pr;
     last_proc = pr;
 
-    ok("Spawned process %s with PID=%i", name, pr->pid);
+    ok("spawned process %s with PID=%i", name, pr->pid);
 
     return pr->pid;
 }

@@ -16,6 +16,7 @@
 #define KERNEL_PROC
 
 #include <libk/printk.h>
+#include <libk/string.h>
 
 #include <malloc/malloc.h>
 

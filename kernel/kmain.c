@@ -63,6 +63,11 @@ void disable_interrupts(void)
     asm volatile("cli");
 }
 
+void found_sata(uint32_t dev)
+{
+    info("pci: found SATA controller (%i)", dev);
+}
+
 void kmain(struct stivale2_struct *stv)
 {
     /* Get memory map */
@@ -105,6 +110,8 @@ void kmain(struct stivale2_struct *stv)
 
     /* Houston, we've got interrupts */
     enable_interrupts();
+
+    pci_search(found_sata, 0x01, 0x01);
 
     for (;;) {
         asm("hlt");
