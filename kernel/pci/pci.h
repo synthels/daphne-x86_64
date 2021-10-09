@@ -24,8 +24,7 @@
 #define PCI_VENDOR_ID       0x00
 #define PCI_DEVICE_ID       0x02
 
-#define PCI_SUBCLASS        0x0a
-#define PCI_CLASS           0x0b
+#define PCI_CLASS           0x0a
 #define PCI_HEADER_TYPE     0x0e
 
 #define PCI_SECONDARY_BUS   0x19
@@ -40,8 +39,8 @@
 
 typedef void (*pci_callback_t)(uint32_t);
 
-#define PCI_GET_CLASS(dev)    (int) (pci_read_field(dev, PCI_CLASS, 1) << 8)
-#define PCI_GET_SUBCLASS(dev) (int) (pci_read_field(dev, PCI_SUBCLASS, 1))
+#define PCI_GET_CLASS(dev, bus, f)    (int) (pci_read_field(dev, f, PCI_CLASS, 1))
+#define PCI_GET_SUBCLASS(dev, bus, f) (int) (pci_read_field(dev, f, PCI_CLASS, 1) >> 8)
 
 /**
  * pci_search

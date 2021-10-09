@@ -16,9 +16,7 @@
 
 #include "pci.h"
 
-uint32_t last_dev = 0x0;
-
-bool pci_scan_bus(int class, int subclass, int bus);
+void pci_scan_bus(int class, int subclass, int bus, pci_callback_t fn);
 
 static inline int pci_bus(uint32_t device)
 {
@@ -42,63 +40,51 @@ static inline uint32_t pci_get_addr(uint32_t device, int field)
 
 static inline uint32_t pci_pack_dev(int bus, int slot, int func)
 {
-    return (uint32_t) ((bus << 16) | (slot << 8) | func);
+    return (uint32_t) ((bus << 16) | (slot << 8) | func << 5);
 }
 
-uint32_t pci_read_field(uint32_t device, int field, int size)
+uint16_t pci_read_field(uint8_t bus, uint8_t device, uint8_t function, uint8_t offset)
 {
-    outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
-    if (size == 4) {
-        return inl(PCI_VALUE_PORT);
-    } else if (size == 2) {
-        return ins(PCI_VALUE_PORT + (field & 2));
-    } else if (size == 1) {
-        return inb(PCI_VALUE_PORT + (field & 3));
-    }
-
-    return PCI_NONE;
+	uint32_t addr = (uint32_t)(bus << 16) | (device << 11) | (function << 8) | (offset & 0xFC) | (1 << 31);
+	outb(PCI_ADDRESS_PORT, addr);
+	uint16_t tmp = (uint16_t)((inb(PCI_VALUE_PORT) >> ((offset & 2) * 8)) & 0xFFFF);
+	return tmp;
 }
 
-bool pci_scan_func(int class, int subclass, int bus, int slot, int func) {
-    last_dev = pci_pack_dev(bus, slot, func);
+void pci_scan_func(int class, int subclass, int bus, int slot, int func, pci_callback_t fn) {
+    uint32_t dev = pci_pack_dev(bus, slot, func);
     /* Device found */
-    if ((class == PCI_GET_CLASS(last_dev)) && (subclass == PCI_GET_SUBCLASS(last_dev))) {
-        return true;
+    if ((class == PCI_GET_CLASS(dev, bus, func)) && (subclass == PCI_GET_SUBCLASS(dev, bus, func))) {
+        fn(dev);
     }
     /* Handle bridge */
-    if (PCI_GET_CLASS(last_dev) == PCI_CLASS_BRIDGE) {
-        pci_scan_bus(class, subclass, pci_read_field(last_dev, PCI_SECONDARY_BUS, 1));
+    if (PCI_GET_CLASS(dev, bus, func) == PCI_CLASS_BRIDGE) {
+        pci_scan_bus(class, subclass, pci_read_field(bus, dev, func, PCI_SECONDARY_BUS), fn);
     }
-    return false;
 }
 
-bool pci_scan_slot(int class, int subclass, int bus, int slot)
+void pci_scan_slot(int class, int subclass, int bus, int slot, pci_callback_t fn)
 {
-    uint32_t dev = pci_pack_dev(bus, slot, 0);
-    if ((pci_read_field(dev, PCI_VENDOR_ID, 2) == PCI_NONE) || !pci_read_field(dev, PCI_HEADER_TYPE, 1)) {
-        return false;
-    }
     for (int func = 0; func < 8; func++) {
         uint32_t dev = pci_pack_dev(bus, slot, func);
-        if (pci_read_field(dev, PCI_VENDOR_ID, 2) != PCI_NONE) {
-            if (pci_scan_func(class, subclass, bus, slot, func)) return true;
+        if (pci_read_field(bus, dev, func, PCI_VENDOR_ID) != PCI_NONE) {
+            pci_scan_func(class, subclass, bus, slot, func, fn);
         }
     }
-    return false;
 }
 
-bool pci_scan_bus(int class, int subclass, int bus)
+void pci_scan_bus(int class, int subclass, int bus, pci_callback_t fn)
 {
     for (int slot = 0; slot < 32; ++slot) {
-        if (pci_scan_slot(class, subclass, bus, slot)) return true;
+        pci_scan_slot(class, subclass, bus, slot, fn);
     }
-    return false;
 }
 
-/* TODO: brute force... */
+/* TODO: brute force... Obviously we need to do this once &
+         then pick from an array */
 void pci_search(pci_callback_t fn, int class, int subclass)
 {
     for (int bus = 0; bus < 256; ++bus) {
-        if (pci_scan_bus(class, subclass, bus)) fn(last_dev);
+        pci_scan_bus(class, subclass, bus, fn);
     }
 }

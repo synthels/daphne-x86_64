@@ -105,13 +105,11 @@ void kmain(struct stivale2_struct *stv)
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
     if (new_process("init") < 0) {
-        panic("Couldn't create init!");
+        panic("couldn't create init!");
     }
 
     /* Houston, we've got interrupts */
     enable_interrupts();
-
-    pci_search(found_sata, 0x01, 0x01);
 
     for (;;) {
         asm("hlt");
