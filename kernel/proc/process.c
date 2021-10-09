@@ -16,7 +16,7 @@
 
 #include "process.h"
 
-struct proc initial_proc = {
+static struct proc initial_proc = {
     0, 0, ACTIVE, {0}, "", NULL
 };
 
@@ -31,7 +31,7 @@ pid_t new_process(char *name)
     struct proc *pr = kmalloc(sizeof(struct proc));
     pr->name = name;
     pr->pid = last_proc->pid + 1;    
-    pr->state = ACTIVE;
+    pr->state = SLEEPING;
     pr->cpu_state.regs.rsp = PROC_STACK_LOW;
     pr->cpu_state.page_table = vmalloc(PROC_HEAP_SIZE);
     pr->next = NULL;
