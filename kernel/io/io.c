@@ -66,7 +66,7 @@ uint8_t ins(uint16_t port)
 uint32_t ind(uint16_t port)
 {
 	uint32_t ret;
-	asm volatile("in %1, %0" : "=a" (ret) : "dN" (port));
+	asm volatile("in %1, %0" : "=a" (ret) : "d" (port));
 	return ret;
 }
 

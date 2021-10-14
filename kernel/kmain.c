@@ -111,6 +111,8 @@ void kmain(struct stivale2_struct *stv)
     /* Houston, we've got interrupts */
     enable_interrupts();
 
+    pci_search(found_sata, 0x1, 0x8);
+
     for (;;) {
         asm("hlt");
     }
