@@ -20,6 +20,7 @@
 
 #include <forbia/types.h>
 #include <libk/printk.h>
+#include <malloc/malloc.h>
 
 #define PCI_VENDOR_ID       0x00
 #define PCI_DEVICE_ID       0x02
@@ -36,17 +37,33 @@
 
 #define PCI_NONE            0xFFFF
 
-typedef void (*pci_callback_t)(uint32_t);
+#define PCI_SUBCLASS        0x0a
+#define PCI_CLASS           0x0b
 
-#define PCI_GET_CLASS(dev, bus, f)    (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 24)
-#define PCI_GET_SUBCLASS(dev, bus, f) (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 16)
+struct pci_device {
+    uint16_t class_id;
+    uint16_t subclass_id;
+    uint16_t vendor_id;
+    uint16_t bus;
+    uint16_t slot;
+    uint16_t func;
+    struct pci_device *next;
+};
 
-#define PCI_GET_VENDOR_ID(dev, bus, f) (uint16_t) (pci_read_field(bus, dev, f, 0, 2))
+#define PCI_GET_CLASS(dev, bus, f)      (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 24)
+#define PCI_GET_SUBCLASS(dev, bus, f)   (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 16)
+#define PCI_GET_VENDOR_ID(dev, bus, f)  (uint16_t) (pci_read_field(bus, dev, f, 0, 2))
 
 /**
- * pci_search
- *   brief: search for devices of a certain type
+ * pci_scan
+ *   brief: scan all PCI buses
  */
-void pci_search(pci_callback_t fn, int class, int subclass);
+void pci_scan(void);
+
+/**
+ * pci_fetch
+ *   brief: fetch device by id
+ */
+struct pci_device *pci_fetch(uint32_t class, uint32_t subclass);
 
 #endif

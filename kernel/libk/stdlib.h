@@ -18,7 +18,7 @@
 #include "string.h"
 
 /**
- * itoa 
+ * itoa
  *   brief: Convert n to string and copy to s
  *   parameters:
  *     - n: integer to convert
@@ -27,12 +27,21 @@
 void itoa(int n, char s[]);
 
 /**
- * uitoa 
+ * uitoa
  *   brief: Convert n to string and copy to s
  *   parameters:
  *     - n: unsigned integer to convert
  *     - s: output string
  */
 void uitoa(unsigned n, char s[]);
+
+/**
+ * uitoh
+ *   brief: Convert n to a string (in hex format) and copy to s
+ *   parameters:
+ *     - n: unsigned integer to convert
+ *     - s: output string
+ */
+void uitoh(unsigned n, char s[]);
 
 #endif

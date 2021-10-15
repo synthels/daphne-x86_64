@@ -44,11 +44,21 @@ void itoa(int n, char s[])
 
 void uitoa(unsigned n, char s[])
 {
-    unsigned i;
-    i = 0;
+    unsigned i = 0;
     do {
         s[i++] = n % 10 + '0';
     } while ((n /= 10) > 0);
+    s[i] = '\0';
+    reverse(s);
+}
+
+void uitoh(unsigned n, char s[])
+{
+    unsigned rem = 0, i = 0;
+    do {
+        rem = n % 16;
+        s[i++] = rem < 10 ? (char) rem + 48 : (char) rem + 55;
+    } while ((n /= 16) > 0);
     s[i] = '\0';
     reverse(s);
 }

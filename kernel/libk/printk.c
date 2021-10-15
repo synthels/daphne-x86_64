@@ -47,14 +47,6 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                         case 'i':
                             uitoa(va_arg(args, uint64_t), str);
                             break;
-                        /* Hex */
-                        case 'x':
-                            /* TODO */
-                            break;
-                        /* Binary */
-                        case 'b':
-                            /* TODO */
-                            break;
                     }
                     break;
                 case 'i':
@@ -62,7 +54,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                     break;
                 /* Hex */
                 case 'x':
-                    /* TODO */
+                    uitoh(va_arg(args, uint64_t), str);
                     break;
                 /* Binary */
                 case 'b':

@@ -21,19 +21,19 @@ void outb(uint16_t port, uint8_t val)
     asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
 }
 
-void outl(uint16_t port, uint8_t val)
+void outl(uint16_t port, uint32_t val)
 {
     asm volatile ( "outl %%eax, %%dx" : : "d" (port), "a" (val) );
 }
 
-void outs(uint16_t port, uint8_t val)
+void outs(uint16_t port, uint16_t val)
 {
     asm volatile ( "outw %%ax, %%dx" : : "d" (port), "a" (val) );
 }
 
-void outd(uint16_t port, uint32_t value)
+void outd(uint16_t port, uint16_t val)
 {
-	asm volatile ("out %1, %0" : : "dN" (port), "a" (value));
+	asm volatile ("out %1, %0" : : "dN" (port), "a" (val));
 }
 
 uint8_t inb(uint16_t port)
@@ -45,27 +45,27 @@ uint8_t inb(uint16_t port)
     return ret;
 }
 
-uint8_t inl(uint16_t port)
+uint32_t inl(uint16_t port)
 {
-    uint8_t ret;
+    uint32_t ret;
     asm volatile ( "inl %%dx, %%eax"
         : "=a"(ret)
         : "d"(port) );
     return ret;
 }
 
-uint8_t ins(uint16_t port)
+uint16_t ins(uint16_t port)
 {
-    uint8_t ret;
+    uint16_t ret;
     asm volatile ( "inl %%dx, %%eax" 
         : "=a" (ret) 
         : "dN" (port) );
     return ret;
 }
 
-uint32_t ind(uint16_t port)
+uint16_t ind(uint16_t port)
 {
-	uint32_t ret;
+	uint16_t ret;
 	asm volatile("in %1, %0" : "=a" (ret) : "d" (port));
 	return ret;
 }
