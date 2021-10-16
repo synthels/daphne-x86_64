@@ -37,6 +37,8 @@ void switch_task(struct proc *tasks)
     static bool first_call = true;
     static struct proc *curr_task;
     static struct proc *first;
+    /* Task killed */
+    if (curr_task->state == DEAD) return;
     if (first_call) {
         curr_task = tasks;
         first = tasks;
@@ -44,7 +46,8 @@ void switch_task(struct proc *tasks)
     }
     halt(curr_task);
     if (curr_task->next != NULL) {
-        fire(curr_task->next);
+        /* Check if next task is dead */
+        if (curr_task->next->state != DEAD) fire(curr_task->next);
         curr_task = curr_task->next;
     } else {
         fire(first);
