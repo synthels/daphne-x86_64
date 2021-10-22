@@ -22,13 +22,7 @@
 #include <libk/printk.h>
 #include <malloc/malloc.h>
 
-#define PCI_VENDOR_ID       0x00
-#define PCI_DEVICE_ID       0x02
-
-#define PCI_HEADER_TYPE     0x0e
-
 #define PCI_SECONDARY_BUS   0x19
-
 #define PCI_CLASS_BRIDGE    0x06
 
 #define PCI_ADDRESS_PORT    0xCF8
@@ -36,9 +30,6 @@
 #define PCI_ADDR            0x80000000
 
 #define PCI_NONE            0xFFFF
-
-#define PCI_SUBCLASS        0x0a
-#define PCI_CLASS           0x0b
 
 struct pci_device {
     uint16_t class_id;
@@ -50,8 +41,8 @@ struct pci_device {
     struct pci_device *next;
 };
 
-#define PCI_GET_CLASS(dev, bus, f)      (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 24)
-#define PCI_GET_SUBCLASS(dev, bus, f)   (uint16_t) (pci_read_field(bus, dev, f, 0x8, 2) >> 16)
+#define PCI_GET_CLASS(dev, bus, f)      (uint32_t) (pci_read_field(bus, dev, f, 0x0a, 1))
+#define PCI_GET_SUBCLASS(dev, bus, f)   (uint32_t) (pci_read_field(bus, dev, f, 0x0b, 1))
 #define PCI_GET_VENDOR_ID(dev, bus, f)  (uint16_t) (pci_read_field(bus, dev, f, 0, 2))
 
 /**
