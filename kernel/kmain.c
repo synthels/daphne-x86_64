@@ -18,6 +18,20 @@
 #include <stddef.h>
 #include <stivale2.h>
 
+#include <stdint.h>
+#include <forbia/kernel.h>
+#include <io/io.h>
+#include <mem/mem.h>
+#include <malloc/malloc.h>
+#include <dev/dev.h>
+#include <vid/lfb.h>
+#include <shrimp/shrimp.h>
+#include <libk/printk.h>
+#include <pci/pci.h>
+#include <dev/ahci/ahci.h>
+
+#include <proc/process.h>
+
 #include "kmain.h"
 
 /* Kernel stack */
@@ -106,6 +120,7 @@ void kmain(struct stivale2_struct *stv)
     /* Houston, we've got interrupts */
     enable_interrupts();
     pci_scan();
+    ahci_init();
 
     for (;;) {
         asm("hlt");

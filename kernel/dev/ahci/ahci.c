@@ -10,17 +10,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * AHCI
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#include "ahci.h"
 
-#define STACK_SIZE 65536 /* 64KiB */
-
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/gdt.h>
-    #include <arch/x86_64/vmm.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
-
-#endif
+void ahci_init(void)
+{
+    struct pci_device * dev;
+    if ((dev = pci_fetch(0x01, 0x06)) != NULL) {
+        info("ahci: AHCI controller detected (%ui:%ui:%ui)", dev->bus, dev->slot, dev->func);
+    } else {
+        warn("ahci: No AHCI controller found!");
+        return;
+    }
+}

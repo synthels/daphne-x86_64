@@ -12,15 +12,11 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#ifndef DEV_AHCI
+#define DEV_AHCI
 
-#define STACK_SIZE 65536 /* 64KiB */
+#include <pci/pci.h>
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/gdt.h>
-    #include <arch/x86_64/vmm.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
+void ahci_init(void);
 
 #endif
