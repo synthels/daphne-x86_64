@@ -18,8 +18,8 @@
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 
-#include <dev/kbd.h>
-#include <dev/pit.h>
+#include <dev/kbd/kbd.h>
+#include <dev/pit/pit.h>
 
 #include <libk/printk.h>
 

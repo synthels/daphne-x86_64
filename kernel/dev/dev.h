@@ -15,9 +15,9 @@
 #ifndef DEV_H
 #define DEV_H
 
-#include "pit.h"
-#include "kbd.h"
-#include "pcspk.h"
+#include "pit/pit.h"
+#include "kbd/kbd.h"
+#include "pcspk/pcspk.h"
 
 void dev_init(void);
 

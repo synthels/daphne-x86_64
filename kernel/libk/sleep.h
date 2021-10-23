@@ -15,7 +15,7 @@
 #ifndef LIBK_SLEEP
 #define LIBK_SLEEP
 
-#include <dev/pit.h>
+#include <dev/pit/pit.h>
 #include <stdint.h>
 
 /**

@@ -17,7 +17,6 @@
 /* TODO: pmm_free? Integrate malloc?? */
 
 #include "pmm.h"
-#include <dev/pcspk.h>
 
 declare_lock(pmm_lock);
 
