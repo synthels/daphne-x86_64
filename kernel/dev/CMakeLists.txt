@@ -4,6 +4,7 @@ add_subdirectory(${SRCROOT}/kbd)
 add_subdirectory(${SRCROOT}/pcspk)
 add_subdirectory(${SRCROOT}/pit)
 add_subdirectory(${SRCROOT}/ahci)
+add_subdirectory(${SRCROOT}/fb)
 
 set(SRC
     ${SRCROOT}/dev.c

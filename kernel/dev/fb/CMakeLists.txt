@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/vid)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/dev/fb)
 
 set(SRC
     ${SRCROOT}/lfb.c

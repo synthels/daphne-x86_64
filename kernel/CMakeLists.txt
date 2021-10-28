@@ -1,7 +1,6 @@
 set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel)
 
 add_subdirectory(${SRCROOT}/arch)
-add_subdirectory(${SRCROOT}/vid)
 add_subdirectory(${SRCROOT}/libk)
 add_subdirectory(${SRCROOT}/dev)
 add_subdirectory(${SRCROOT}/shrimp)
@@ -22,6 +21,8 @@ set(SRC
     ${SRCROOT}/process.h
     ${SRCROOT}/sched.c
     ${SRCROOT}/sched.h
+    ${SRCROOT}/space.c
+    ${SRCROOT}/space.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

@@ -24,7 +24,7 @@
 #include <mem.h>
 #include <malloc.h>
 #include <dev/dev.h>
-#include <vid/lfb.h>
+#include <dev/fb/lfb.h>
 #include <shrimp/shrimp.h>
 #include <libk/printk.h>
 #include <pci.h>

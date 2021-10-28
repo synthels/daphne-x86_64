@@ -33,7 +33,7 @@ pid_t new_process(char *name)
     pr->pid = last_proc->pid + 1;    
     pr->state = SLEEPING;
     pr->cpu_state.regs.rsp = PROC_STACK_LOW;
-    pr->cpu_state.page_table = vmalloc(PROC_HEAP_SIZE);
+    pr->cpu_state.page_table = generic_vmalloc(PROC_HEAP_SIZE);
     pr->next = NULL;
     last_proc->next = pr;
     last_proc = pr;
