@@ -14,12 +14,12 @@
  * Interrupt handlers
  */
 
-#include <io.h>
+#include <io/io.h>
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 
-#include <dev/kbd/kbd.h>
-#include <dev/pit/pit.h>
+#include <mod/kbd/kbd.h>
+#include <mod/pit/pit.h>
 
 #include <libk/printk.h>
 

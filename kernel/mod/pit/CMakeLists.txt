@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/dev/pit)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/mod/pit)
 
 set(SRC
     ${SRCROOT}/pit.c

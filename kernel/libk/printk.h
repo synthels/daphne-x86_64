@@ -23,7 +23,7 @@
 #include <forbia/types.h>
 #include <forbia/lock.h>
 
-#include <malloc.h>
+#include <malloc/malloc.h>
 #include <libk/stdlib.h>
 
 #define __PRINTK_BUFFER_SIZE 256

@@ -1,9 +1,10 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/dev)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/mod)
 
 add_subdirectory(${SRCROOT}/kbd)
 add_subdirectory(${SRCROOT}/pcspk)
 add_subdirectory(${SRCROOT}/pit)
 add_subdirectory(${SRCROOT}/ahci)
+add_subdirectory(${SRCROOT}/pci)
 add_subdirectory(${SRCROOT}/fb)
 
 set(SRC

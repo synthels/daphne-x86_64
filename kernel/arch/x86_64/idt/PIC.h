@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <io.h>
+#include <io/io.h>
 #include <stdint.h>
 
 /* Remap the PIC */

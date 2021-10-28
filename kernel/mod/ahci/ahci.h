@@ -14,6 +14,6 @@
 
 #pragma once
 
-#include <pci.h>
+#include <mod/pci/pci.h>
 
 void ahci_init(void);

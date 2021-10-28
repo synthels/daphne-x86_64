@@ -19,7 +19,7 @@
 #include <forbia/kernel.h>
 #include <forbia/types.h>
 #include <forbia/panic.h>
-#include <mem.h>
+#include <memory/mem.h>
 
 #include "pmm.h"
 

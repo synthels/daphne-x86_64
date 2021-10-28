@@ -14,7 +14,7 @@
  * General process management
  */
 
-#include "process.h"
+#include <sched/process.h>
 
 static struct proc initial_proc = {
     0, 0, ACTIVE, {0}, "", NULL

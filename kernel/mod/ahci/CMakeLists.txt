@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/dev/ahci)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/mod/ahci)
 
 set(SRC
     ${SRCROOT}/ahci.c

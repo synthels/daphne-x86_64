@@ -15,7 +15,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <malloc.h>
+#include <malloc/malloc.h>
 #include <forbia/kernel.h>
 
 #define MAX_CONTEXTS 50

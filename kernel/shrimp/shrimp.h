@@ -17,8 +17,8 @@
 #define FBTERM_OFFSET 5
 
 #include <forbia/kernel.h>
-#include <dev/fb/lfb.h>
-#include <malloc.h>
+#include <mod/fb/lfb.h>
+#include <malloc/malloc.h>
 #include <forbia/types.h>
 
 #include <libk/string.h>

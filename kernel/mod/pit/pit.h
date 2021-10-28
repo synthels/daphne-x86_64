@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 synthels <synthels.me@gmail.com>
  *
@@ -14,33 +15,25 @@
 
 #pragma once
 
-#include <stddef.h>
-#include <stdint.h>
-
+#include <io/io.h>
 #include <forbia/kernel.h>
-#include <forbia/panic.h>
-#include <forbia/lock.h>
 
-#include <libk/string.h>
-#include <memory/mem.h>
-#include <malloc/malloc.h>
-
-#define BASE_OFFS 1
+#define TIMER_FREQ 100
 
 /**
- * pmm_init
- *   brief: init pmm
+ * pit_init
+ *   brief: init pit
  */
-void pmm_init(void);
+void pit_init(void);
 
 /**
- * pmm_alloc
- *   brief: allocate n bytes in physical memory
+ * pit_tick
+ *   brief: do one tick
  */
-void *pmm_alloc(size_t n);
+void pit_tick(void);
 
 /**
- * pmm_alloc_page
- *   brief: allocate single page
+ * pit_get_ticks
+ *   brief: get current tick count
  */
-void *pmm_alloc_page(void);
+void pit_get_ticks(uint32_t *data);

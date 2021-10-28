@@ -15,11 +15,11 @@
 #pragma once
 
 #include <stdint.h>
-#include <io.h>
+#include <io/io.h>
 
 #include <forbia/types.h>
 #include <libk/printk.h>
-#include <malloc.h>
+#include <malloc/malloc.h>
 
 #define PCI_SECONDARY_BUS   0x19
 #define PCI_CLASS_BRIDGE    0x06

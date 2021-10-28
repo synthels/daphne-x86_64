@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2020 synthels <synthels.me@gmail.com>
  *
@@ -15,25 +14,28 @@
 
 #pragma once
 
-#include <io.h>
-#include <forbia/kernel.h>
-
-#define TIMER_FREQ 100
+#include <sched/process.h>
 
 /**
- * pit_init
- *   brief: init pit
+ * fire
+ *   brief: fire a task
  */
-void pit_init(void);
+void fire(struct proc *task);
 
 /**
- * pit_tick
- *   brief: do one tick
+ * halt
+ *   brief: halt a task
  */
-void pit_tick(void);
+void halt(struct proc *task);
 
 /**
- * pit_get_ticks
- *   brief: get current tick count
+ * kill
+ *   brief: kill a task
  */
-void pit_get_ticks(uint32_t *data);
+void kill(struct proc *task);
+
+/**
+ * switch_task
+ *   brief: switch tasks
+ */
+void switch_task(struct proc *tasks);

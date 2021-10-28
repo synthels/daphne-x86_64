@@ -14,14 +14,43 @@
 
 #pragma once
 
-#include "process.h"
+#include <libk/printk.h>
+#include <libk/string.h>
+
+#include <malloc/malloc.h>
 
 #ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/pmm.h>
     #include <arch/x86_64/vmm.h>
 #endif
 
+#include <memory/space.h>
+
+typedef int16_t pid_t;
+
+enum proc_state {
+    ACTIVE = 0,
+    SLEEPING = 1,
+    DEAD = 2
+};
+
+struct proc_cpu_state {
+    uint64_t *page_table;
+    regs_t regs;
+};
+
+struct proc {
+    pid_t pid;
+    pid_t parent_pid;
+    int state;
+    struct proc_cpu_state cpu_state;
+    char *name;
+    struct proc *next;
+};
+
 /**
- * generic_vmalloc
- *   brief: Create new virtual address space of size n
+ * new_process
+ *   brief: create new process
  */
-uint64_t *generic_vmalloc(size_t n);
+pid_t new_process(char *name);

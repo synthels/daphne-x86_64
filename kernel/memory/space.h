@@ -14,28 +14,14 @@
 
 #pragma once
 
-#include "process.h"
+#include <sched/process.h>
+
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/vmm.h>
+#endif
 
 /**
- * fire
- *   brief: fire a task
+ * generic_vmalloc
+ *   brief: Create new virtual address space of size n
  */
-void fire(struct proc *task);
-
-/**
- * halt
- *   brief: halt a task
- */
-void halt(struct proc *task);
-
-/**
- * kill
- *   brief: kill a task
- */
-void kill(struct proc *task);
-
-/**
- * switch_task
- *   brief: switch tasks
- */
-void switch_task(struct proc *tasks);
+uint64_t *generic_vmalloc(size_t n);
