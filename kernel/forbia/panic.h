@@ -14,13 +14,10 @@
  * Kernel panic
  */
 
-#ifndef PANIC_H
-#define PANIC_H
+#pragma once
 
 #include <libk/printk.h>
 #include <forbia/kernel.h>
 
 /* Throws a tantrum */
 void panic(const char *msg);
-
-#endif

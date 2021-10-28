@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_SPACE
-#define KERNEL_SPACE
+#pragma once
 
 #include "process.h"
 
@@ -26,5 +25,3 @@
  *   brief: Create new virtual address space of size n
  */
 uint64_t *generic_vmalloc(size_t n);
-
-#endif

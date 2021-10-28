@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_IO
-#define KERNEL_IO
+#pragma once
 
 #include <stdint.h>
 
@@ -27,5 +26,3 @@ uint16_t ind(uint16_t port);
 uint32_t inl(uint16_t port);
 
 void io_wait(void);
-
-#endif

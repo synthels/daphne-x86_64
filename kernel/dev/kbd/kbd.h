@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DEV_KBD
-#define DEV_KBD
+#pragma once
 
 #include <io.h>
 #include <stdint.h>
@@ -63,5 +62,3 @@ int kbd_get_event();
  *   brief: flush latest keyboard event
  */
 void kbd_ack();
-
-#endif

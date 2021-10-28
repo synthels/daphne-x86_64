@@ -14,8 +14,7 @@
  * x64 shit
  */
 
-#ifndef x64_H
-#define x64_H
+#pragma once
 
 typedef struct {
     uintptr_t r15;
@@ -41,5 +40,3 @@ typedef struct {
     uintptr_t rsp;
     uintptr_t ss;
 } __attribute__((packed)) regs_t;
-
-#endif

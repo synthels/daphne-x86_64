@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef MEM_BITMAP
-#define MEM_BITMAP
+#pragma once
 
 #include <stdint.h>
 #include <stddef.h>
@@ -53,5 +52,3 @@ bool bitmap_get(struct bitmap *bmp, size_t i);
  *   brief: get first free page
  */
 int bitmap_find_free(struct bitmap *bmp);
-
-#endif

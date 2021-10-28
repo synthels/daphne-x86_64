@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_64_VMM
-#define KERNEL_x86_64_VMM
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -59,5 +58,3 @@ uint64_t *vmalloc(size_t n);
  *   brief: Switch pml
  */
 void vswitch(uint64_t *pml);
-
-#endif

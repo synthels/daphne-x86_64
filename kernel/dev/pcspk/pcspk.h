@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DEV_PCSPK
-#define DEV_PCSPK
+#pragma once
 
 #include <stdint.h>
 #include <io.h>
@@ -25,5 +24,3 @@
  *          a few ticks
  */
 void pcspk_beep(uint16_t freq, uint16_t ticks);
-
-#endif

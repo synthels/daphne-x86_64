@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LOCK_H
-#define LOCK_H
+#pragma once
 
 typedef volatile int mutex_t;
 
@@ -24,5 +23,3 @@ void lock(mutex_t *mutex);
 
 /* Release lock */
 void unlock(mutex_t *mutex);
-
-#endif

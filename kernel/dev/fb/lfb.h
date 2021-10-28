@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __LFB
-#define __LFB
+#pragma once
 
 #include <stdint.h>
 #include <malloc.h>
@@ -83,5 +82,3 @@ int lfb_destroy_ctx(int handle);
  *          ctx
  */
 int lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c);
-
-#endif

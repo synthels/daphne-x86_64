@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_INIT
-#define KERNEL_INIT
+#pragma once
 
 #define STACK_SIZE 65536 /* 64KiB */
 
@@ -21,6 +20,4 @@
     #include <arch/x86_64/gdt.h>
     #include <arch/x86_64/vmm.h>
     #include <arch/x86_64/idt/idt.h>
-#endif
-
 #endif

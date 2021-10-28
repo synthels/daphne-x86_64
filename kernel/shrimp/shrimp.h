@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __FBTERM
-#define __FBTERM
+#pragma once
 
 #define FBTERM_OFFSET 5
 
@@ -55,5 +54,3 @@ void shrimp_print(char *str);
  *   brief: kill fbterm
  */
 void shrimp_kill(void);
-
-#endif

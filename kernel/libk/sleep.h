@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LIBK_SLEEP
-#define LIBK_SLEEP
+#pragma once
 
 #include <dev/pit/pit.h>
 #include <stdint.h>
@@ -23,5 +22,3 @@
  *   brief: sleep kernel for n ticks 
  */
 void sleep(uint32_t ticks);
-
-#endif

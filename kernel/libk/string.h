@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LIBK_STRING
-#define LIBK_STRING
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -84,5 +83,3 @@ void *memmove(void *dest, const void *src, size_t n);
  *     - n:     length
  */
 int memcmp(const void *str1, const void *str2, size_t n);
-
-#endif

@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_64_PMM
-#define KERNEL_x86_64_PMM
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -45,5 +44,3 @@ void *pmm_alloc(size_t n);
  *   brief: allocate single page
  */
 void *pmm_alloc_page(void);
-
-#endif

@@ -12,13 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_PIC
-#define KERNEL_PIC
+#pragma once
 
 #include <io.h>
 #include <stdint.h>
 
 /* Remap the PIC */
 void remap_pic(void);
-
-#endif

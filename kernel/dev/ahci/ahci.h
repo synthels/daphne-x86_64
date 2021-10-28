@@ -12,11 +12,8 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DEV_AHCI
-#define DEV_AHCI
+#pragma once
 
 #include <pci.h>
 
 void ahci_init(void);
-
-#endif

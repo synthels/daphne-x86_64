@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_64_IDT
-#define KERNEL_x86_64_IDT
+#pragma once
 
 #include <stdint.h>
 #include <forbia/panic.h>
@@ -62,5 +61,3 @@ void idt_install_irq_handler(void (*handler)(void), int i);
  *   brief: Load the kernel IDT
  */
 void init_idt(void);
-
-#endif

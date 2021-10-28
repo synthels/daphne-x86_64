@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_MEM
-#define KERNEL_MEM
+#pragma once
 
 #include <stdint.h>
 
@@ -63,9 +62,7 @@ void mem_init(void *mmap_ptr, uint64_t size);
 memsp_t *get_memsp(void);
 
 /**
- * get_memsp
+ * set_memsp
  *   brief: Set memsp
  */
 void set_memsp(memsp_t msp);
-
-#endif

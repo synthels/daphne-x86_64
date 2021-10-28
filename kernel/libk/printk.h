@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LIBK_PRINTK
-#define LIBK_PRINTK
+#pragma once
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -67,5 +66,3 @@ int vsprintf(char *buf, const char *fmt, va_list args);
 #define info(fmt, ...)  printk(NORMAL,  "%s[ info ]%s " fmt "\n", KERN_COLOR_INFO, KERN_COLOR_RESET, ##__VA_ARGS__)
 #define warn(fmt, ...)  printk(WARNING, "%s[ warn ]%s " fmt "\n", KERN_COLOR_WARN, KERN_COLOR_RESET, ##__VA_ARGS__)
 #define err(fmt, ...)   printk(ERROR,   "%s[  :(  ]%s " fmt "\n", KERN_COLOR_ERR, KERN_COLOR_RESET, ##__VA_ARGS__)
-
-#endif

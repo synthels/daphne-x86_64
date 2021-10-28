@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_PCI
-#define KERNEL_PCI
+#pragma once
 
 #include <stdint.h>
 #include <io.h>
@@ -76,5 +75,3 @@ struct pci_device *pci_fetch(uint32_t class, uint32_t subclass);
  *   brief: get bar (id) for dev
  */
 struct pci_bar_data pci_get_bar(uint64_t id, struct pci_device *dev);
-
-#endif

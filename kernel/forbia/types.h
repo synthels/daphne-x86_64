@@ -14,8 +14,7 @@
  * Kernel types
  */
 
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 
 #define bool _Bool
 
@@ -53,5 +52,3 @@ typedef struct {
     efi_mmap_t *mmap;
     efi_gop_info_t *gop;
 } efi_info_t;
-
-#endif

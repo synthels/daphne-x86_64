@@ -12,13 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DEV_H
-#define DEV_H
+#pragma once
 
 #include "pit/pit.h"
 #include "kbd/kbd.h"
 #include "pcspk/pcspk.h"
 
 void dev_init(void);
-
-#endif

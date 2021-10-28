@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_SCHED
-#define KERNEL_SCHED
+#pragma once
 
 #include "process.h"
 
@@ -40,5 +39,3 @@ void kill(struct proc *task);
  *   brief: switch tasks
  */
 void switch_task(struct proc *tasks);
-
-#endif

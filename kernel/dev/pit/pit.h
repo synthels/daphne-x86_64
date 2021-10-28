@@ -13,8 +13,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef DEV_PIT
-#define DEV_PIT
+#pragma once
 
 #include <io.h>
 #include <forbia/kernel.h>
@@ -38,5 +37,3 @@ void pit_tick(void);
  *   brief: get current tick count
  */
 void pit_get_ticks(uint32_t *data);
-
-#endif

@@ -112,10 +112,7 @@ All header files must follow C convention, leaving us with a format like this:
  * GNU General Public License for more details.
  */
 
-#ifndef NAME_OF_FILE
-#define NAME_OF_FILE
+#pragma once
 
 /* All includes go here... */
-
-#endif
 ```

@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_x86_64_GDT
-#define KERNEL_x86_64_GDT
+#pragma once
 
 #include <stdint.h>
 #include <libk/string.h>
@@ -57,5 +56,3 @@ struct gdt_ptr {
  *   brief: Load the kernel GDT
  */
 void init_gdt(void);
-
-#endif

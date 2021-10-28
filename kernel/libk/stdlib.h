@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef LIBK_STDLIB
-#define LIBK_STDLIB
+#pragma once
 
 #include "string.h"
 
@@ -43,5 +42,3 @@ void uitoa(unsigned n, char s[]);
  *     - s: output string
  */
 void uitoh(unsigned n, char s[]);
-
-#endif

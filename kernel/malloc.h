@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef __MALLOC
-#define __MALLOC
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -86,5 +85,3 @@ void *kalloc_mem_aligned(size_t n);
  *   brief: allocate page
  */
 void *kalloc_mem_page_aligned(size_t n);
-
-#endif

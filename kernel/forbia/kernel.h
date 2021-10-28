@@ -14,8 +14,7 @@
  * Symbols used throughout the kernel
  */
 
-#ifndef KERNEL_H
-#define KERNEL_H
+#pragma once
 
 #include <stddef.h>
 #include <stdint.h>
@@ -95,5 +94,3 @@ void kernel_hang(void);
 
 /* printk escape sequences */
 #define KERN_OVERWRITE "\xff[0000000"
-
-#endif

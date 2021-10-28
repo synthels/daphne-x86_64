@@ -12,8 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#ifndef KERNEL_PROC
-#define KERNEL_PROC
+#pragma once
 
 #include <libk/printk.h>
 #include <libk/string.h>
@@ -55,5 +54,3 @@ struct proc {
  *   brief: create new process
  */
 pid_t new_process(char *name);
-
-#endif
