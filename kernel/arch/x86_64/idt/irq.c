@@ -14,7 +14,7 @@
  * Interrupt handlers
  */
 
-#include <io/io.h>
+#include <io.h>
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 

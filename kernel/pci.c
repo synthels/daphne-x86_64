@@ -33,6 +33,13 @@ uint16_t pci_read_field(uint32_t bus, uint32_t device, uint32_t function, uint32
     }
 }
 
+void write_dword(uint32_t bus, uint32_t device, uint32_t function, uint8_t offset, uint32_t value)
+{
+    uint32_t target = (1 << 31) | (bus << 16) | ((device & 0b11111) << 11) | ((function & 0b111) << 8) | (offset & ~(0b11));
+    outl(PCI_ADDRESS_PORT, target);
+    outl(PCI_VALUE_PORT, value);
+}
+
 void pci_scan_func(int bus, int slot, int func)
 {
     static struct pci_device *last_dev = &root_device;
@@ -65,6 +72,28 @@ void pci_scan_func(int bus, int slot, int func)
     }
 }
 
+static void send_address(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset)
+{
+    outd(PCI_ADDRESS_PORT, 0x80000000 | (bus << 16) | (slot << 11) | (function << 8) | (offset & 0xfc));
+}
+
+void pci_cfg_write_word(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset, uint16_t data)
+{
+    send_address(bus, slot, function, offset);
+    outd(PCI_VALUE_PORT + (offset & 2), data);
+}
+
+void pci_cfg_write_dword(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset, uint32_t data)
+{
+    send_address(bus, slot, function, offset);
+    outd(PCI_VALUE_PORT, data);
+}
+
+uint32_t pci_cfg_read_dword(uint8_t bus, uint8_t slot, uint8_t function, uint8_t offset) {
+    send_address(bus, slot, function, offset);
+    return ind(PCI_ADDRESS_PORT);
+}
+
 void pci_scan_slot(int bus, int slot)
 {
     for (int func = 0; func < 8; func++) {
@@ -84,6 +113,23 @@ void pci_scan(void)
     for (int bus = 0; bus < 256; ++bus) {
         pci_scan_bus(bus);
     }
+}
+
+struct pci_bar_data pci_get_bar(uint64_t bar, struct pci_device *dev)
+{
+    struct pci_bar_data ret;
+    uint32_t value = pci_read_field(dev->bus, dev->slot, dev->func, PCI_CFG_BAR0 + (bar * 4), 4);
+    if (value & 1) {
+        ret.base = (uint64_t) ((uint16_t) value & ~0x03);
+    }
+    if (((value >> 1) & 0x03) == 0) {
+        ret.base = (uint64_t) (value & ~0x0f);
+    }
+    if (((value >> 1) & 0x03) == 2) {
+        ret.base = ((uint64_t) pci_cfg_read_dword(dev->bus, dev->slot, dev->func, PCI_CFG_BAR0 + ((bar + 1) * 4)) << 32) | (value & ~0x0f);
+    }
+
+    return ret;
 }
 
 struct pci_device *pci_fetch(uint32_t class, uint32_t subclass)

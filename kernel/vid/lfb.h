@@ -16,7 +16,7 @@
 #define __LFB
 
 #include <stdint.h>
-#include <malloc/malloc.h>
+#include <malloc.h>
 #include <forbia/kernel.h>
 
 #define MAX_CONTEXTS 50

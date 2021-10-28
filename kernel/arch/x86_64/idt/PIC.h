@@ -15,7 +15,7 @@
 #ifndef KERNEL_PIC
 #define KERNEL_PIC
 
-#include <io/io.h>
+#include <io.h>
 #include <stdint.h>
 
 /* Remap the PIC */

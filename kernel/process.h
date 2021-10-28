@@ -18,7 +18,7 @@
 #include <libk/printk.h>
 #include <libk/string.h>
 
-#include <malloc/malloc.h>
+#include <malloc.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>

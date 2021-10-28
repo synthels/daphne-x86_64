@@ -18,11 +18,13 @@
 
 void ahci_init(void)
 {
-    struct pci_device * dev;
+    struct pci_device *dev;
     if ((dev = pci_fetch(0x01, 0x06)) != NULL) {
         info("ahci: AHCI controller detected (%ui:%ui:%ui)", dev->bus, dev->slot, dev->func);
     } else {
         warn("ahci: No AHCI controller found!");
         return;
     }
+    struct pci_bar_data bar = pci_get_bar(5, dev);
+    info("ahci: bar base: 0x%x", bar.base);
 }

@@ -20,17 +20,17 @@
 
 #include <stdint.h>
 #include <forbia/kernel.h>
-#include <io/io.h>
-#include <mem/mem.h>
-#include <malloc/malloc.h>
+#include <io.h>
+#include <mem.h>
+#include <malloc.h>
 #include <dev/dev.h>
 #include <vid/lfb.h>
 #include <shrimp/shrimp.h>
 #include <libk/printk.h>
-#include <pci/pci.h>
+#include <pci.h>
 #include <dev/ahci/ahci.h>
 
-#include <proc/process.h>
+#include <process.h>
 
 #include "kmain.h"
 

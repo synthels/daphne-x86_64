@@ -15,7 +15,7 @@
 #ifndef DEV_AHCI
 #define DEV_AHCI
 
-#include <pci/pci.h>
+#include <pci.h>
 
 void ahci_init(void);
 

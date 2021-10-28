@@ -23,8 +23,8 @@
 #include <forbia/lock.h>
 
 #include <libk/string.h>
-#include <mem/mem.h>
-#include <malloc/malloc.h>
+#include <mem.h>
+#include <malloc.h>
 
 #define BASE_OFFS 1
 

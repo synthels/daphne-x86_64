@@ -16,7 +16,7 @@
 #define DEV_PCSPK
 
 #include <stdint.h>
-#include <io/io.h>
+#include <io.h>
 #include <libk/sleep.h>
 
 /**
