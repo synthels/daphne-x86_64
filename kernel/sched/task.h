@@ -29,28 +29,28 @@
 
 typedef int16_t pid_t;
 
-enum proc_state {
+enum task_state {
     ACTIVE = 0,
     SLEEPING = 1,
     DEAD = 2
 };
 
-struct proc_cpu_state {
+struct task_cpu_state {
     uint64_t *page_table;
     regs_t regs;
 };
 
-struct proc {
+struct task {
     pid_t pid;
     pid_t parent_pid;
     int state;
-    struct proc_cpu_state cpu_state;
+    struct task_cpu_state cpu_state;
     char *name;
-    struct proc *next;
+    struct task *next;
 };
 
 /**
- * new_process
+ * spawn_task
  *   brief: create new process
  */
-pid_t new_process(char *name);
+pid_t spawn_task(char *name);

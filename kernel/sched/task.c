@@ -14,21 +14,21 @@
  * General process management
  */
 
-#include <sched/process.h>
+#include <sched/task.h>
 
-static struct proc initial_proc = {
+static struct task initial_proc = {
     0, 0, ACTIVE, {0}, "", NULL
 };
 
-pid_t new_process(char *name)
+pid_t spawn_task(char *name)
 {
-    static struct proc *last_proc = &initial_proc;
+    static struct task *last_proc = &initial_proc;
     if (strlen(name) > 128) {
         err("failed to init process %i: name is too long!", last_proc->pid + 1);
         return -1;
     }
 
-    struct proc *pr = kmalloc(sizeof(struct proc));
+    struct task *pr = kmalloc(sizeof(struct task));
     pr->name = name;
     pr->pid = last_proc->pid + 1;    
     pr->state = SLEEPING;

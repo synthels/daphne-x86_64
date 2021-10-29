@@ -16,41 +16,33 @@
 
 #include "sched.h"
 
-void fire(struct proc *task)
+void context_switch(regs_t *regs);
+
+void fire(struct task *task)
 {
+    if (task == NULL) return;
     task->state = ACTIVE;
 }
 
-void halt(struct proc *task)
+void halt(struct task *task)
 {
+    if (task == NULL) return;
     task->state = SLEEPING;
 }
 
-void kill(struct proc *task)
+void kill(struct task *task)
 {
+    if (task == NULL) return;
     task->state = DEAD;
 }
 
-void switch_task(struct proc *tasks)
+void switch_to(struct task *tasks, size_t n)
 {
-    /* C99 really doesn't want me to be elegant here */
-    static bool first_call = true;
-    static struct proc *curr_task;
-    static struct proc *first;
-    /* Task killed */
-    if (curr_task->state == DEAD) return;
-    if (first_call) {
-        curr_task = tasks;
-        first = tasks;
-        first_call = true;
+    static struct task *last_task = NULL;
+    if (tasks[n].state == ACTIVE) {
+        halt(last_task);
+        context_switch(&(tasks[n].cpu_state.regs));
+        fire(&tasks[n]);
     }
-    halt(curr_task);
-    if (curr_task->next != NULL) {
-        /* Check if next task is dead */
-        if (curr_task->next->state != DEAD) fire(curr_task->next);
-        curr_task = curr_task->next;
-    } else {
-        fire(first);
-        curr_task = first;
-    }
+    last_task = &tasks[n];
 }

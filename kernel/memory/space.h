@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <sched/process.h>
+#include <sched/task.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/vmm.h>

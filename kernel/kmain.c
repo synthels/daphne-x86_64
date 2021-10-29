@@ -30,7 +30,7 @@
 #include <mod/pci/pci.h>
 #include <mod/ahci/ahci.h>
 
-#include <sched/process.h>
+#include <sched/task.h>
 
 #include "kmain.h"
 
@@ -113,7 +113,7 @@ void kmain(struct stivale2_struct *stv)
     );
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
-    if (new_process("init") < 0) {
+    if (spawn_task("init") < 0) {
         panic("couldn't create init!");
     }
 

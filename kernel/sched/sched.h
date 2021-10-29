@@ -14,28 +14,29 @@
 
 #pragma once
 
-#include <sched/process.h>
+#include <sched/task.h>
+#include <stddef.h>
 
 /**
  * fire
  *   brief: fire a task
  */
-void fire(struct proc *task);
+void fire(struct task *task);
 
 /**
  * halt
  *   brief: halt a task
  */
-void halt(struct proc *task);
+void halt(struct task *task);
 
 /**
  * kill
  *   brief: kill a task
  */
-void kill(struct proc *task);
+void kill(struct task *task);
 
 /**
- * switch_task
+ * switch_to
  *   brief: switch tasks
  */
-void switch_task(struct proc *tasks);
+void switch_to(struct task *tasks, size_t n);
