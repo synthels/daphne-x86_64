@@ -21,7 +21,7 @@
 #include <mod/kbd/kbd.h>
 #include <mod/pit/pit.h>
 
-#include <libk/printk.h>
+#include <lib/printk.h>
 
 /* PIT IRQ */
 void pit_irq_handler(void)

@@ -1,7 +1,7 @@
 set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel)
 
 add_subdirectory(${SRCROOT}/arch)
-add_subdirectory(${SRCROOT}/libk)
+add_subdirectory(${SRCROOT}/lib)
 add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 add_subdirectory(${SRCROOT}/malloc)

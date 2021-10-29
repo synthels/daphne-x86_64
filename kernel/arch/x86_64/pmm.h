@@ -21,7 +21,7 @@
 #include <forbia/panic.h>
 #include <forbia/lock.h>
 
-#include <libk/string.h>
+#include <lib/string.h>
 #include <memory/mem.h>
 #include <malloc/malloc.h>
 

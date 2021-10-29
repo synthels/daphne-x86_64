@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <libk/printk.h>
+#include <lib/printk.h>
 #include <forbia/kernel.h>
 
 /* Throws a tantrum */

@@ -21,8 +21,8 @@
 #include <malloc/malloc.h>
 #include <forbia/types.h>
 
-#include <libk/string.h>
-#include <libk/printk.h>
+#include <lib/string.h>
+#include <lib/printk.h>
 
 #include "font.h"
 

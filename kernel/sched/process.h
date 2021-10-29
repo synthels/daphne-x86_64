@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include <libk/printk.h>
-#include <libk/string.h>
+#include <lib/printk.h>
+#include <lib/string.h>
 
 #include <malloc/malloc.h>
 

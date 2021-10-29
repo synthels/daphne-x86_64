@@ -15,7 +15,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <libk/string.h>
+#include <lib/string.h>
 #include <forbia/kernel.h>
 
 struct gdt_entry {

@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/libk)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/kernel/lib)
 
 set(SRC
     ${SRCROOT}/string.c

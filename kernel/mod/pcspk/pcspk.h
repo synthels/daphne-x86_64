@@ -16,7 +16,7 @@
 
 #include <stdint.h>
 #include <io/io.h>
-#include <libk/sleep.h>
+#include <lib/sleep.h>
 
 /**
  * pcspk_beep

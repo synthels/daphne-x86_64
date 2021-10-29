@@ -26,7 +26,7 @@
 #include <mod/dev.h>
 #include <mod/fb/lfb.h>
 #include <shrimp/shrimp.h>
-#include <libk/printk.h>
+#include <lib/printk.h>
 #include <mod/pci/pci.h>
 #include <mod/ahci/ahci.h>
 

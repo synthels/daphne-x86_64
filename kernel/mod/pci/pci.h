@@ -18,7 +18,7 @@
 #include <io/io.h>
 
 #include <forbia/types.h>
-#include <libk/printk.h>
+#include <lib/printk.h>
 #include <malloc/malloc.h>
 
 #define PCI_SECONDARY_BUS   0x19

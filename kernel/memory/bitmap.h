@@ -19,7 +19,7 @@
 
 #include <forbia/types.h>
 
-#include <libk/string.h>
+#include <lib/string.h>
 
 struct bitmap {
     char *buf;
