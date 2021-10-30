@@ -5,7 +5,6 @@ set(SRC
     ${SRCROOT}/task.h
     ${SRCROOT}/sched.c
     ${SRCROOT}/sched.h
-    ${SRCROOT}/sched.asm
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})
