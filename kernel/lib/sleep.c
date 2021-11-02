@@ -20,8 +20,8 @@ void sleep(uint32_t ticks)
 {
     uint32_t start;
     uint32_t now;
-    pit_get_ticks(&start);
-    pit_get_ticks(&now);
+    start = pit_get_ticks();
+    now = pit_get_ticks();
     while ((now - start) < ticks)
-        pit_get_ticks(&now);
+        now = pit_get_ticks();
 }

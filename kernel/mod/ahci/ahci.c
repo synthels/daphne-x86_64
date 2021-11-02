@@ -20,7 +20,7 @@ void ahci_init(void)
 {
     struct pci_device *dev;
     if ((dev = pci_fetch(0x01, 0x06)) != NULL) {
-        info("ahci: AHCI controller detected (%ui:%ui:%ui)", dev->bus, dev->slot, dev->func);
+        info("ahci: AHCI controller found (%ui:%ui:%ui)", dev->bus, dev->slot, dev->func);
     } else {
         warn("ahci: No AHCI controller found!");
         return;

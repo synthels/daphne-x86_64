@@ -14,8 +14,31 @@
 
 #pragma once
 
-#include "pit/pit.h"
-#include "kbd/kbd.h"
-#include "pcspk/pcspk.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <malloc/malloc.h>
 
-void dev_init(void);
+typedef void (*tm_func_t)(uint64_t);
+
+struct tm_func_node {
+    tm_func_t _this;
+    struct tm_func_node *next;
+};
+
+/**
+ * tm_init
+ *   brief: init tm module
+ */
+void tm_init(void);
+
+/**
+ * tm_hook
+ *   brief: hook f to timer interrupt
+ */
+void tm_hook(tm_func_t f);
+
+/**
+ * tm_hook
+ *   brief: get ticks as of time of calling
+ */
+uint64_t tm_get_ticks(void);

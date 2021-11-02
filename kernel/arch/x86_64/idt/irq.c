@@ -19,7 +19,7 @@
 #include <arch/x86_64/x64.h>
 
 #include <mod/kbd/kbd.h>
-#include <mod/pit/pit.h>
+#include <mod/tm/pit.h>
 
 #include <lib/printk.h>
 

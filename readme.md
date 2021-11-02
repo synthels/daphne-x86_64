@@ -16,14 +16,14 @@ License
 ----
 daphne is licensed under the GPLv3 license. See [license](https://github.com/synthels/daphne/blob/master/license) for more details.
 
-# Build guide
+## Build guide
 
-## Supported environments
+### Supported environments
 * Any GNU/Linux distro
 * WSL
 * MinGW (will probably work, but not very well tested)
 
-## Supported emulators
+### Supported emulators
 * QEMU
 * Virtualbox
 * VMWare
@@ -37,7 +37,7 @@ Before building, you must also build the `x86_64-elf-gcc` compiler. The easiest 
 $ brew install x86_64-elf-gcc
 ```
 
-### WSL note
+#### WSL note
 On WSL/Some linux distros, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
 
 ```
@@ -50,17 +50,17 @@ $ export PATH="$PATH:$BREW_HOME"
 
 If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
-# Building for x64
+### Building for x64
 First, clone the repositorty with the following command
 
 ```
 $ git clone https://github.com/synthels/daphne.git --recursive
 ```
 
-## Building limine
+#### Building limine
 building limine is really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
 
-## Building the kernel
+#### Building the kernel
 First, run
 
 ```
@@ -91,9 +91,9 @@ $ cmake --build .
 
 If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
-# Building an ISO image
+### Building an ISO image
 
-## x86_64 UEFI/BIOS
+#### x86_64 UEFI/BIOS
 In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
@@ -102,10 +102,9 @@ $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/is
 ```
 
 Now, `cd` to `build` (not `limine/build`)
-
+/
 ```
 $ cp -v kernel.bin iso
-
 $ xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
         --efi-boot limine-eltorito-efi.bin \
@@ -114,41 +113,37 @@ $ xorriso -as mkisofs -b limine-cd.bin \
 ```
 
 if you also want BIOS, you might want to run these commands
-
+cd ../kernel/arch/x86_64/limine/bin
 ```
 $ cd ../kernel/arch/x86_64/limine/bin
-
 $ ./limine-install ../../../../../build/daphne_img_x64.iso
 ```
 
-## Testing x64 images in Virtualbox
+#### Testing x64 images in Virtualbox
 First, make sure the "Enable EFI (special OSes only)" checkbox under system is checked. Then, once
 you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
 
 ```
 $ fs1:
-
 $ cd EFI/BOOT
-
 $ BOOTX64.EFI
 ```
 
-## Testing x64 images in QEMU
+#### Testing x64 images in QEMU
 Testing under QEMU requires that you have an OVMF image installed, then, at least under linux, you can use
 this command
 
 ```
 # UEFI
 $ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso -vga virtio
-
 # Legacy BIOS
 $ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -vga virtio -soundhw pcspk
 ```
 
-# Contributing to daphne
+## Contributing to daphne
 All contributions to daphne are very welcome and needed. If you have decided to contribute to this project, all you have to do is follow a few minor guidelines.
 
-## Table of contents
+### Table of contents
 
 - [Writing commit messages](#commit-messages)
 - [Code style](#code-style)
@@ -157,7 +152,7 @@ All contributions to daphne are very welcome and needed. If you have decided to 
   - [If statements and loops](#if-statements-and-loops)
   - [Header files](#header-files)
 
-## Commit messages
+### Commit messages
 When writing a commit message, please make sure it is in the format of
 ```
 category: what you did here...
@@ -168,10 +163,10 @@ tty: printk bugfixes
 ```
 You can go into more detail, but make sure your commit messages aren't too long. While you are at it, make sure that the commits themselves aren't long. Split up large commits into smaller ones so that we don't end up with another horror like this [one](https://github.com/synthels/daphne/commit/51416efe92011e22a2f18008b4edc683bf8d8d42)...
 
-## Code style
+#### Code style
 I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with 4 spaces when writing C and CMakeLists.txt files.
 
-### Functions
+##### Functions
 All of the function singature must be on the same line, only putting the opening brace on the next.
 
 ```c
@@ -181,7 +176,7 @@ void foo(int p1, int p2)
 }
 ```
 
-### Comments
+##### Comments
 Please only write comments like this:
 
 ```c
@@ -194,7 +189,7 @@ Not like this:
 // Bad comment :(
 ```
 
-### If statements and loops
+##### If statements and loops
 All if statements, for and while loops must be written with a space left between the for/while or if and the opening parenthesis. The opening brace must be put on the same line.
 
 ```c
@@ -203,7 +198,7 @@ for (int i = 0; i < size; i++) {
 }
 ```
 
-### Header files
+##### Header files
 Header files must begin with a copyright header, like this
 
 ```c

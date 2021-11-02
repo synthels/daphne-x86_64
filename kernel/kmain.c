@@ -23,12 +23,13 @@
 #include <io/io.h>
 #include <memory/mem.h>
 #include <malloc/malloc.h>
-#include <mod/dev.h>
 #include <mod/fb/lfb.h>
 #include <shrimp/shrimp.h>
 #include <lib/printk.h>
+
 #include <mod/pci/pci.h>
 #include <mod/ahci/ahci.h>
+#include <mod/tm/tm.h>
 
 #include <sched/task.h>
 
@@ -88,7 +89,6 @@ void kmain(struct stivale2_struct *stv)
     init_idt(); /* idt */
     mem_init(mmap->memmap, mmap->entries); /* mm */
     vmm_init(); /* vmm */
-    dev_init(); /* essential devices */
     lfb_init(   /* video */
         fb_info->framebuffer_width, 
         fb_info->framebuffer_height,
@@ -117,10 +117,10 @@ void kmain(struct stivale2_struct *stv)
         panic("couldn't create init!");
     }
 
-    /* Houston, we've got interrupts */
-    enable_interrupts();
-    pci_scan();
-    ahci_init();
+    tm_init();           /* time */
+    enable_interrupts(); /* Houston, we've got interrupts */
+    pci_scan();          /* pci */
+    ahci_init();         /* achi */
 
     for (;;) {
         asm("hlt");

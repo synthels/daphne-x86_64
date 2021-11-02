@@ -11,27 +11,33 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * PIT driver
+ * Time module
  */
 
-#include "pit.h"
+#include "pit.h" /* TODO: APIC... */
+#include "tm.h"
 
-static uint64_t ticks = 0;
+static struct tm_func_node node = { NULL, NULL };
 
-void pit_init(void)
+void tm_init(void)
 {
-    int div = 1193180 / TIMER_FREQ;
-    outb(0x43, 0x34);
-    outb(0x40, div & 0xFF);
-    outb(0x40, div >> 8);
+    pit_init(&node);
 }
 
-void pit_tick(void)
+void tm_hook(tm_func_t f)
 {
-    ticks++;
+    struct tm_func_node *current = &node;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+
+    /* now we can add a new variable */
+    current->next = kmalloc(sizeof(struct tm_func_node));
+    current->_this = f;
+    current->next->next = NULL;
 }
 
-void pit_get_ticks(uint32_t *data)
+uint64_t tm_get_ticks(void)
 {
-    *data = ticks;
+    return pit_get_ticks();
 }

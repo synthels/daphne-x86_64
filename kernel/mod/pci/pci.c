@@ -50,7 +50,7 @@ void pci_scan_func(int bus, int slot, int func)
         return;
     }
     info(
-        "pci: device located {vendor: 0x%x, class: 0x%x, subclass: 0x%x} @ %ui:%ui:%ui", 
+        "pci: device located (vendor: 0x%x, class: 0x%x, subclass: 0x%x) @ %ui:%ui:%ui",
         vend, class, 
         subclass, bus, 
         slot, func

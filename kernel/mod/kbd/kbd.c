@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
  *
- * Simple PS/2 keyboard driver
+ * Simple PS/2 keyboard module
  */
 
 #include "kbd.h"

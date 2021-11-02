@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2020 synthels <synthels.me@gmail.com>
  *
@@ -18,13 +17,15 @@
 #include <io/io.h>
 #include <forbia/kernel.h>
 
+#include "tm.h"
+
 #define TIMER_FREQ 100
 
 /**
  * pit_init
  *   brief: init pit
  */
-void pit_init(void);
+void pit_init(struct tm_func_node *head);
 
 /**
  * pit_tick
@@ -36,4 +37,4 @@ void pit_tick(void);
  * pit_get_ticks
  *   brief: get current tick count
  */
-void pit_get_ticks(uint32_t *data);
+uint64_t pit_get_ticks(void);

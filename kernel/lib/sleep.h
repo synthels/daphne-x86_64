@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mod/pit/pit.h>
+#include <mod/tm/pit.h>
 #include <stdint.h>
 
 /**
