@@ -16,13 +16,18 @@
 
 #include <sched/task.h>
 
-static struct task initial_proc = {
+static struct task head_task = {
     0, 0, ACTIVE, {0}, "", NULL
 };
 
+struct task *get_head_task(void)
+{
+    return &head_task;
+}
+
 pid_t spawn_task(char *name)
 {
-    static struct task *last_proc = &initial_proc;
+    static struct task *last_proc = &head_task;
     if (strlen(name) > 128) {
         err("failed to init process %i: name is too long!", last_proc->pid + 1);
         return -1;

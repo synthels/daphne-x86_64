@@ -32,6 +32,7 @@
 #include <mod/tm/tm.h>
 
 #include <sched/task.h>
+#include <sched/sched.h>
 
 #include "kmain.h"
 
@@ -118,6 +119,7 @@ void kmain(struct stivale2_struct *stv)
     }
 
     tm_init();           /* time */
+    sched_init();        /* sched */
     enable_interrupts(); /* Houston, we've got interrupts */
     pci_scan();          /* pci */
     ahci_init();         /* achi */

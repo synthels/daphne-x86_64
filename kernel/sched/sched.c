@@ -17,6 +17,13 @@
 #include "sched.h"
 
 void context_switch(regs_t *regs);
+static void __task_switch_internal(uint64_t ticks);
+
+void sched_init(void)
+{
+    /* Hook switch_task to PIT/AHCI */
+    tm_hook(&__task_switch_internal);
+}
 
 void fire(struct task *task)
 {
@@ -58,4 +65,10 @@ void switch_task(struct task *tasks)
         fire(first);
         curr_task = first;
     }
+}
+
+static void __task_switch_internal(uint64_t ticks)
+{
+    UNUSED(ticks);
+    switch_task(get_head_task());
 }

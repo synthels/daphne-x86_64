@@ -16,6 +16,15 @@
 
 #include <sched/task.h>
 #include <stddef.h>
+#include <mod/tm/tm.h>
+#include <forbia/kernel.h>
+
+/**
+ * sched_init
+ *   brief: init scheduling
+ *   warning: CALL AFTER tm_init!
+ */
+void sched_init(void);
 
 /**
  * fire

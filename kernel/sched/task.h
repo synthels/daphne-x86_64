@@ -50,6 +50,12 @@ struct task {
 };
 
 /**
+ * get_head_task
+ *   brief: get head task
+ */
+struct task *get_head_task(void);
+
+/**
  * spawn_task
  *   brief: create new process
  */
