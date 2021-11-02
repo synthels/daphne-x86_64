@@ -36,7 +36,7 @@ void halt(struct task *task);
 void kill(struct task *task);
 
 /**
- * switch_to
+ * switch_task
  *   brief: switch tasks
  */
-void switch_to(struct task *tasks, size_t n);
+void switch_task(struct task *tasks);
