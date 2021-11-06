@@ -27,16 +27,19 @@ struct gdt_entry {
     uint8_t base_hi;
 } __attribute__((packed));
 
-struct gdt_full {
-	struct gdt_entry null;
-	struct gdt_entry kernel_code;
-	struct gdt_entry kernel_data;
-	struct gdt_entry user_code;
-	struct gdt_entry user_data;
+struct tss {
+    uint32_t reserved;
+    uint64_t rsp[3];
+    uint64_t reserved0;
+    uint64_t ist[7];
+    uint32_t reserved1;
+    uint32_t reserved2;
+    uint16_t reserved3;
+    uint16_t iopb_offset;
 } __attribute__((packed));
 
-struct tss_entry {
-    uint16_t length;
+struct gdt_tss_entry {
+    uint16_t len;
     uint16_t base_low16;
     uint8_t base_mid8;
     uint8_t flags1;
@@ -44,6 +47,15 @@ struct tss_entry {
     uint8_t base_high8;
     uint32_t base_upper32;
     uint32_t reserved;
+} __attribute__((packed));
+
+struct gdt_full {
+	struct gdt_entry null;
+	struct gdt_entry kernel_code;
+	struct gdt_entry kernel_data;
+	struct gdt_entry user_code;
+	struct gdt_entry user_data;
+    struct gdt_tss_entry tss;
 } __attribute__((packed));
 
 struct gdt_ptr {
