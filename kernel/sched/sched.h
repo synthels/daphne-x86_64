@@ -20,6 +20,7 @@
 #include <forbia/kernel.h>
 #include <lib/printk.h>
 #include <lib/sleep.h>
+#include <forbia/lock.h>
 
 /**
  * sched_init

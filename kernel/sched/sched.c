@@ -19,6 +19,8 @@
 void context_switch(regs_t *regs);
 static void __task_switch_internal(uint64_t ticks);
 
+declare_lock(sched_lock);
+
 void sched_init(void)
 {
     /* Hook switch_task to PIT/AHCI */
@@ -47,6 +49,7 @@ void task_kill(struct task *task)
 
 void switch_task(struct task *tasks)
 {
+    lock(&sched_lock);
     static struct task *first = NULL;
     static struct task *current = NULL;
     if (!first) {
@@ -69,6 +72,7 @@ void switch_task(struct task *tasks)
         task_run(first);
         current = first;
     }
+    unlock(&sched_lock);
 }
 
 static void __task_switch_internal(uint64_t ticks)
