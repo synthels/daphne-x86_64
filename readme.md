@@ -102,7 +102,7 @@ $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/is
 ```
 
 Now, `cd` to `build` (not `limine/build`)
-/
+
 ```
 $ cp -v kernel.bin iso
 $ xorriso -as mkisofs -b limine-cd.bin \
@@ -113,7 +113,7 @@ $ xorriso -as mkisofs -b limine-cd.bin \
 ```
 
 if you also want BIOS, you might want to run these commands
-cd ../kernel/arch/x86_64/limine/bin
+
 ```
 $ cd ../kernel/arch/x86_64/limine/bin
 $ ./limine-install ../../../../../build/daphne_img_x64.iso

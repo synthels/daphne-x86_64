@@ -31,7 +31,6 @@ void tm_hook(tm_func_t f)
         current = current->next;
     }
 
-    /* now we can add a new variable */
     current->next = kmalloc(sizeof(struct tm_func_node));
     current->_this = f;
     current->next->next = NULL;

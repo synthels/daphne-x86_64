@@ -37,7 +37,7 @@ enum task_state {
 
 struct task_cpu_state {
     uint64_t *page_table;
-    regs_t regs;
+    regs_t *regs;
 };
 
 struct task {
@@ -56,7 +56,7 @@ struct task {
 struct task *get_head_task(void);
 
 /**
- * spawn_task
- *   brief: create new process
+ * ktask_run
+ *   brief: create new task
  */
-pid_t spawn_task(char *name);
+pid_t ktask_run(char *name);

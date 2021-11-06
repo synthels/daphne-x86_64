@@ -25,25 +25,23 @@ struct task *get_head_task(void)
     return &head_task;
 }
 
-pid_t spawn_task(char *name)
+pid_t ktask_run(char *name)
 {
-    static struct task *last_proc = &head_task;
-    if (strlen(name) > 128) {
-        err("failed to init process %i: name is too long!", last_proc->pid + 1);
-        return -1;
+    struct task *current = &head_task;
+    while (current->next != NULL) {
+        current = current->next;
     }
 
-    struct task *pr = kmalloc(sizeof(struct task));
-    pr->name = name;
-    pr->pid = last_proc->pid + 1;    
-    pr->state = SLEEPING;
-    pr->cpu_state.regs.rsp = PROC_STACK_LOW;
-    pr->cpu_state.page_table = generic_vmalloc(PROC_HEAP_SIZE);
-    pr->next = NULL;
-    last_proc->next = pr;
-    last_proc = pr;
+    current->next = kmalloc(sizeof(struct task));
+    current->next->cpu_state.regs = kmalloc(sizeof(regs_t));
+    current->next->name = name;
+    current->next->pid = current->pid + 1;
+    current->next->state = SLEEPING;
+    current->next->cpu_state.regs->rsp = PROC_STACK_LOW;
+    current->next->cpu_state.page_table = generic_vmalloc(PROC_HEAP_SIZE);
+    current->next->next = NULL;
 
-    ok("spawned process %s with PID=%i", name, pr->pid);
+    ok("ktask_run: created task %s", name);
 
-    return pr->pid;
+    return current->next->pid;
 }

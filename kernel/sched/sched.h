@@ -18,6 +18,8 @@
 #include <stddef.h>
 #include <mod/tm/tm.h>
 #include <forbia/kernel.h>
+#include <lib/printk.h>
+#include <lib/sleep.h>
 
 /**
  * sched_init
@@ -27,22 +29,22 @@
 void sched_init(void);
 
 /**
- * fire
- *   brief: fire a task
+ * task_run
+ *   brief: run task
  */
-void fire(struct task *task);
+void task_run(struct task *task);
 
 /**
- * halt
- *   brief: halt a task
+ * task_yield
+ *   brief: yield from a task
  */
-void halt(struct task *task);
+void task_yield(struct task *task);
 
 /**
- * kill
+ * task_kill
  *   brief: kill a task
  */
-void kill(struct task *task);
+void task_kill(struct task *task);
 
 /**
  * switch_task

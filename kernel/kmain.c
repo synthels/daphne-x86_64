@@ -114,7 +114,7 @@ void kmain(struct stivale2_struct *stv)
     );
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
-    if (spawn_task("init") < 0) {
+    if (ktask_run("init") < 0) {
         panic("couldn't create init!");
     }
 

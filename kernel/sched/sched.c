@@ -25,19 +25,21 @@ void sched_init(void)
     tm_hook(&__task_switch_internal);
 }
 
-void fire(struct task *task)
+void task_run(struct task *task)
 {
     if (task == NULL) return;
     task->state = ACTIVE;
+    /* TSS */
+    /* context_switch(task->cpu_state.regs); */
 }
 
-void halt(struct task *task)
+void task_yield(struct task *task)
 {
     if (task == NULL) return;
     task->state = SLEEPING;
 }
 
-void kill(struct task *task)
+void task_kill(struct task *task)
 {
     if (task == NULL) return;
     task->state = DEAD;
@@ -45,25 +47,27 @@ void kill(struct task *task)
 
 void switch_task(struct task *tasks)
 {
-    /* C99 really doesn't want me to be elegant here */
-    static bool first_call = true;
-    static struct task *curr_task;
-    static struct task *first;
-    /* Task killed */
-    if (curr_task->state == DEAD) return;
-    if (first_call) {
-        curr_task = tasks;
-        first = tasks;
-        first_call = true;
+    static struct task *first = NULL;
+    static struct task *current = NULL;
+    if (!first) {
+        /*
+         * We take the next, because the first pointer
+         * in tasks is head_task while we want init
+         * instead
+         */
+        first = tasks->next;
+        current = first;
     }
-    halt(curr_task);
-    if (curr_task->next != NULL) {
-        /* Check if next task is dead */
-        if (curr_task->next->state != DEAD) fire(curr_task->next);
-        curr_task = curr_task->next;
+    /* Yield from current task */
+    task_yield(current);
+    if (current->next != NULL) {
+        if (current->state != DEAD) {
+            task_run(current->next);
+            current = current->next;
+        }
     } else {
-        fire(first);
-        curr_task = first;
+        task_run(first);
+        current = first;
     }
 }
 
