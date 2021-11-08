@@ -23,14 +23,18 @@
 
 #include <lib/printk.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+#endif
+
 /* PIT IRQ */
-void pit_irq_handler(void)
+void pit_irq_handler(regs_t *r)
 {
-    pit_tick();
+    pit_tick(r);
 }
 
 /* Keyboard IRQ */
-void kbd_irq_handler(void)
+void kbd_irq_handler()
 {
     kbd_read();
 }

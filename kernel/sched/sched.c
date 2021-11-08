@@ -16,8 +16,7 @@
 
 #include "sched.h"
 
-void context_switch(regs_t *regs);
-static void __task_switch_internal(uint64_t ticks);
+static void __task_switch_internal(regs_t *regs, uint64_t ticks);
 
 declare_lock(sched_lock);
 
@@ -31,8 +30,10 @@ void task_run(struct task *task)
 {
     if (task == NULL) return;
     task->state = ACTIVE;
-    /* TSS */
-    /* context_switch(task->cpu_state.regs); */
+
+    /* Context switch */
+    Q_vswitch(task->cpu_state.page_table);
+    Q_swapregs(task->cpu_state.regs);
 }
 
 void task_yield(struct task *task)
@@ -75,8 +76,9 @@ void switch_task(struct task *tasks)
     unlock(&sched_lock);
 }
 
-static void __task_switch_internal(uint64_t ticks)
+static void __task_switch_internal(regs_t *regs, uint64_t ticks)
 {
     UNUSED(ticks);
+    UNUSED(regs);
     switch_task(get_head_task());
 }

@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 typedef struct {
     uintptr_t r15;
     uintptr_t r14;
@@ -32,7 +34,7 @@ typedef struct {
     uintptr_t rcx;
     uintptr_t rbx;
     uintptr_t rax;
-    uintptr_t int_no;
+    uintptr_t irq;
     uintptr_t error_code;
     uintptr_t rip;
     uintptr_t cs;

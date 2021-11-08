@@ -144,17 +144,17 @@ void isr_handler(regs_t *r)
     };
 
     /* Exception/IRQ?? */
-    if (r->int_no < 32) {
-        panic(exceptions[r->int_no]);
-    } else if (r->int_no == __SYSCALL_INDEX) {
+    if (r->irq < 32) {
+        panic(exceptions[r->irq]);
+    } else if (r->irq == __SYSCALL_INDEX) {
         syscall_handler(r);
         return;
     } else {
-        (*irq_handlers[r->int_no - 32])();
+        (*irq_handlers[r->irq - 32])();
     }
 
     /* Slave EOI */
-    if (r->int_no >= 40)
+    if (r->irq >= 40)
        outb(0xA0, 0x20);
     /* Master EOI */
     outb(0x20, 0x20);

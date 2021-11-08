@@ -17,6 +17,10 @@
 #include <io/io.h>
 #include <forbia/kernel.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+#endif
+
 #include "tm.h"
 
 #define TIMER_FREQ 100
@@ -31,7 +35,7 @@ void pit_init(struct tm_func_node *head);
  * pit_tick
  *   brief: do one tick
  */
-void pit_tick(void);
+void pit_tick(regs_t *r);
 
 /**
  * pit_get_ticks

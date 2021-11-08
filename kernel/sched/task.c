@@ -38,7 +38,7 @@ pid_t ktask_run(char *name)
     current->next->pid = current->pid + 1;
     current->next->state = SLEEPING;
     current->next->cpu_state.regs->rsp = PROC_STACK_LOW;
-    current->next->cpu_state.page_table = generic_vmalloc(PROC_HEAP_SIZE);
+    current->next->cpu_state.page_table = Q_vmalloc(PROC_HEAP_SIZE);
     current->next->next = NULL;
 
     ok("ktask_run: created task %s", name);

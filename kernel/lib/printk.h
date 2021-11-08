@@ -57,12 +57,12 @@ int vsprintf(char *buf, const char *fmt, va_list args);
 
 /* Shrimp colors */
 #define KERN_COLOR_SUCCESS "\xff[10v0020"
-#define KERN_COLOR_INFO "\xff[10vv022"
+#define KERN_COLOR_INFO "\xff[10 703\13"
 #define KERN_COLOR_WARN "\xff[1vu0210"
 #define KERN_COLOR_ERR "\xff[1v00200"
 #define KERN_COLOR_RESET "\xff[1ffffff"
 
-#define ok(fmt, ...)    printk(NORMAL,  "%s[  ok  ]%s " fmt "\n", KERN_COLOR_SUCCESS, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define info(fmt, ...)  printk(NORMAL,  "%s[ info ]%s " fmt "\n", KERN_COLOR_INFO, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define warn(fmt, ...)  printk(WARNING, "%s[ warn ]%s " fmt "\n", KERN_COLOR_WARN, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define err(fmt, ...)   printk(ERROR,   "%s[  :(  ]%s " fmt "\n", KERN_COLOR_ERR, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define ok(fmt, ...)    printk(NORMAL,  "%s  ok  %s " fmt "\n", KERN_COLOR_SUCCESS, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define info(fmt, ...)  printk(NORMAL,  "%s info %s " fmt "\n", KERN_COLOR_INFO, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define warn(fmt, ...)  printk(WARNING, "%s warn %s " fmt "\n", KERN_COLOR_WARN, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define err(fmt, ...)   printk(ERROR,   "%s  :(  %s " fmt "\n", KERN_COLOR_ERR, KERN_COLOR_RESET, ##__VA_ARGS__)

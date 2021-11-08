@@ -7,7 +7,8 @@ set(SRC
     ${SRCROOT}/vmm.h
     ${SRCROOT}/pmm.c
     ${SRCROOT}/pmm.h
-    ${SRCROOT}/sched.asm
+    ${SRCROOT}/cpu.c
+    ${SRCROOT}/cpu.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

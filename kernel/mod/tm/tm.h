@@ -18,7 +18,11 @@
 #include <stddef.h>
 #include <malloc/malloc.h>
 
-typedef void (*tm_func_t)(uint64_t);
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+#endif
+
+typedef void (*tm_func_t)(regs_t *, uint64_t);
 
 struct tm_func_node {
     tm_func_t _this;

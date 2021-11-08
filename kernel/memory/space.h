@@ -21,7 +21,13 @@
 #endif
 
 /**
- * generic_vmalloc
+ * Q_vmalloc
  *   brief: Create new virtual address space of size n
  */
-uint64_t *generic_vmalloc(size_t n);
+uint64_t *Q_vmalloc(size_t n);
+
+/**
+ * Q_vswitch
+ *   brief: Switch to pml
+ */
+void Q_vswitch(uint64_t *pml);

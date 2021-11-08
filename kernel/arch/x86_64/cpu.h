@@ -10,36 +10,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * PIT module
  */
 
-#include "pit.h"
+#pragma once
 
-static uint64_t ticks = 0;
-static struct tm_func_node *head_fn;
+#include "x64.h"
 
-void pit_init(struct tm_func_node *head)
-{
-    head_fn = head;
-    int div = 1193180 / TIMER_FREQ;
-    outb(0x43, 0x34);
-    outb(0x40, div & 0xFF);
-    outb(0x40, div >> 8);
-}
-
-void pit_tick(regs_t *r)
-{
-    ++ticks;
-    struct tm_func_node *current = head_fn;
-    /* Call every hooked function */
-    while (current->next != NULL) {
-        (current->_this)(r, ticks);
-        current = current->next;
-    }
-}
-
-uint64_t pit_get_ticks(void)
-{
-    return ticks;
-}
+/**
+ * Q_swapregs
+ *   brief: Swap x64 registers
+ */
+void Q_swapregs(regs_t *regs);

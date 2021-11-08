@@ -18,9 +18,13 @@
 #include <stddef.h>
 #include <mod/tm/tm.h>
 #include <forbia/kernel.h>
+#include <forbia/lock.h>
 #include <lib/printk.h>
 #include <lib/sleep.h>
-#include <forbia/lock.h>
+
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/cpu.h>
+#endif
 
 /**
  * sched_init

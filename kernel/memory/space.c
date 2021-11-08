@@ -16,7 +16,12 @@
 
 #include "space.h"
 
-uint64_t *generic_vmalloc(size_t n)
+uint64_t *Q_vmalloc(size_t n)
 {
     return vmalloc(n);
+}
+
+void Q_vswitch(uint64_t *pml)
+{
+    vswitch(pml);
 }
