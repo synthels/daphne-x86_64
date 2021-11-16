@@ -1,6 +1,15 @@
 # daphne
-![License](https://img.shields.io/github/license/synthels/daphne)
-![Activity](https://img.shields.io/github/commit-activity/m/synthels/daphne)
+<p align="center">
+  ![License](https://img.shields.io/github/license/synthels/daphne)
+  ![Activity](https://img.shields.io/github/commit-activity/m/synthels/daphne)
+  ![Size](https://img.shields.io/github/repo-size/synthels/daphne)
+  ![Issues](https://img.shields.io/github/issues/synthels/daphne)
+</p>
+
+<p align="center">
+  [![forthebadge](https://forthebadge.com/images/badges/as-seen-on-tv.svg)](https://forthebadge.com)
+  [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
+</p>
 
 Daphne aims to be a modern and elegant 64-bit operating currently targetted at the x86 family of processors.
 
