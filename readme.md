@@ -1,14 +1,16 @@
 # daphne
 <p align="center">
-  ![License](https://img.shields.io/github/license/synthels/daphne)
-  ![Activity](https://img.shields.io/github/commit-activity/m/synthels/daphne)
-  ![Size](https://img.shields.io/github/repo-size/synthels/daphne)
-  ![Issues](https://img.shields.io/github/issues/synthels/daphne)
+  <img src="https://img.shields.io/github/license/synthels/daphne">
+  <img src="https://img.shields.io/github/commit-activity/m/synthels/daphne">
+  <img src="https://img.shields.io/tokei/lines/github/synthels/daphne">
+  <img src="https://img.shields.io/github/repo-size/synthels/daphne">
+  <img src="https://img.shields.io/github/last-commit/synthels/daphne/master">
+  <img src="https://img.shields.io/github/issues/synthels/daphne">
 </p>
 
 <p align="center">
-  [![forthebadge](https://forthebadge.com/images/badges/as-seen-on-tv.svg)](https://forthebadge.com)
-  [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
+  <img src="https://forthebadge.com/images/badges/as-seen-on-tv.svg">
+  <img src="https://forthebadge.com/images/badges/powered-by-black-magic.svg">
 </p>
 
 Daphne aims to be a modern and elegant 64-bit operating currently targetted at the x86 family of processors.
