@@ -27,12 +27,19 @@
 
 #include <memory/space.h>
 
+#define STASH_SIZE 64
+
 typedef int16_t pid_t;
 
 enum task_state {
     ACTIVE = 0,
     SLEEPING = 1,
     DEAD = 2
+};
+
+struct pt_stash {
+    uint64_t **tables;
+    size_t size;
 };
 
 struct task_cpu_state {
@@ -54,6 +61,24 @@ struct task {
  *   brief: get head task
  */
 struct task *get_head_task(void);
+
+/**
+ * init_stash
+ *   brief: init pt stash
+ */
+void init_stash(void);
+
+/**
+ * get_stashed_pt
+ *   brief: get pt from stash
+ */
+uint64_t *get_stashed_pt(void);
+
+/**
+ * stash_page_table
+ *   brief: add pt to stash
+ */
+void stash_page_table(uint64_t *pt);
 
 /**
  * ktask_run

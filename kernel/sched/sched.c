@@ -24,6 +24,7 @@ void sched_init(void)
 {
     /* Hook switch_task to PIT/AHCI */
     tm_hook(&__task_switch_internal);
+    init_stash();
 }
 
 void task_run(struct task *task)
@@ -45,6 +46,7 @@ void task_yield(struct task *task)
 void task_kill(struct task *task)
 {
     if (task == NULL) return;
+    stash_page_table(task->cpu_state.page_table);
     task->state = DEAD;
 }
 
