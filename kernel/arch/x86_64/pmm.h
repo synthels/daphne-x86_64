@@ -23,6 +23,7 @@
 
 #include <lib/string.h>
 #include <memory/mem.h>
+#include <memory/bitmap.h>
 #include <malloc/malloc.h>
 
 #define BASE_OFFS 1
@@ -44,3 +45,4 @@ void *pmm_alloc(size_t n);
  *   brief: allocate single page
  */
 void *pmm_alloc_page(void);
+

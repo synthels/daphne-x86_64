@@ -44,18 +44,18 @@ We use CMake as our build system, so you will have to install that first of all.
 If you haven't built gcc already, please run the `tools/gcc_pre.sh` script first.
 Before building, you must also build the `x86_64-elf-gcc` compiler. The easiest way to build it is to use brew like so
 
-```
+```bash
 $ brew install x86_64-elf-gcc
 ```
 
 #### WSL note
 On WSL/Some linux distros, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
 
-```
+```bash
 $ export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
 ```
 
-```
+```bash
 $ export PATH="$PATH:$BREW_HOME"
 ```
 
@@ -64,7 +64,7 @@ If there are no errors and everything went well, you should now have a multiboot
 ### Building for x64
 First, clone the repositorty with the following command
 
-```
+```bash
 $ git clone https://github.com/synthels/daphne.git --recursive
 ```
 
@@ -74,7 +74,7 @@ building limine is really simple. All you have to do is run `make` from inside t
 #### Building the kernel
 First, run
 
-```
+```bash
 $ ./tools/setup.sh -x64
 ```
 
@@ -82,13 +82,13 @@ from the root directory in order to create the `build` directory. In this direct
 
 Then run
 
-```
+```bash
 $ cd build
 ```
 
 Now that you're in the `build` directory, we can start fiddling with CMake!
 
-```
+```bash
 $ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
 
@@ -96,7 +96,7 @@ This command will create all the necessary files for CMake to build the project.
 
 To finally build the binary, you can run CMake's generic build command
 
-```
+```bash
 $ cmake --build .
 ```
 
@@ -108,13 +108,13 @@ If there are no errors and everything went well, you should now have a binary ca
 In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
-```
+```bash
 $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
 ```
 
 Now, `cd` to `build` (not `limine/build`)
 
-```
+```bash
 $ cp -v kernel.bin iso
 $ xorriso -as mkisofs -b limine-cd.bin \
         -no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -125,7 +125,7 @@ $ xorriso -as mkisofs -b limine-cd.bin \
 
 if you also want BIOS, you might want to run these commands
 
-```
+```bash
 $ cd ../kernel/arch/x86_64/limine/bin
 $ ./limine-install ../../../../../build/daphne_img_x64.iso
 ```
@@ -134,7 +134,7 @@ $ ./limine-install ../../../../../build/daphne_img_x64.iso
 First, make sure the "Enable EFI (special OSes only)" checkbox under system is checked. Then, once
 you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
 
-```
+```bash
 $ fs1:
 $ cd EFI/BOOT
 $ BOOTX64.EFI
@@ -144,7 +144,7 @@ $ BOOTX64.EFI
 Testing under QEMU requires that you have an OVMF image installed, then, at least under linux, you can use
 this command
 
-```
+```bash
 # UEFI
 $ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso -vga virtio
 # Legacy BIOS

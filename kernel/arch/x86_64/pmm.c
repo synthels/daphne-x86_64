@@ -20,6 +20,8 @@
 
 declare_lock(pmm_lock);
 
+void pmm_init(void) { }
+
 void *pmm_alloc(size_t n)
 {
     lock(&pmm_lock);

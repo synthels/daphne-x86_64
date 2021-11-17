@@ -21,6 +21,8 @@
 
 #include <lib/string.h>
 
+#include <malloc/malloc.h>
+
 struct bitmap {
     char *buf;
     size_t size;
