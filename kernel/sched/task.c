@@ -17,10 +17,10 @@
 #include <sched/task.h>
 
 static struct task head_task = {
-    0, 0, ACTIVE, {0}, "", NULL
+    0, 0, ACTIVE, 0, "", NULL
 };
 
-static struct pt_stash stash;
+static struct context_stash stash;
 
 struct task *get_head_task(void)
 {
@@ -30,24 +30,24 @@ struct task *get_head_task(void)
 void init_stash(void)
 {
     stash.size = 0;
-    stash.tables = kmalloc(STASH_SIZE * sizeof(uint64_t *));
+    stash.contexts = kmalloc(STASH_SIZE * sizeof(uint64_t *));
 }
 
-uint64_t *get_stashed_pt(void)
+context_t *get_stashed_context(void)
 {
     static size_t idx = 0;
     if (idx >= stash.size) {
         idx = 0;
     }
-    return (uint64_t *) stash.tables[idx++];
+    return (context_t *) stash.contexts[idx++];
 }
 
-void stash_page_table(uint64_t *pt)
+void stash_context(context_t *context)
 {
     if (stash.size >= STASH_SIZE) {
         stash.size = 0;
     }
-    stash.tables[stash.size++] = pt;
+    stash.contexts[stash.size++] = context;
 }
 
 pid_t ktask_run(char *name)
@@ -58,16 +58,14 @@ pid_t ktask_run(char *name)
     }
 
     current->next = kmalloc(sizeof(struct task));
-    current->next->cpu_state.regs = kmalloc(sizeof(regs_t));
     current->next->name = name;
     current->next->pid = current->pid + 1;
     current->next->state = SLEEPING;
-    current->next->cpu_state.regs->rsp = PROC_STACK_LOW;
     if (!stash.size) {
-        current->next->cpu_state.page_table = Q_vmalloc(PROC_HEAP_SIZE);
+        current->next->context = Q_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
     } else {
         /* Grab a page table from the stash */
-        current->next->cpu_state.page_table = get_stashed_pt();
+        current->next->context = get_stashed_context();
     }
     current->next->next = NULL;
 

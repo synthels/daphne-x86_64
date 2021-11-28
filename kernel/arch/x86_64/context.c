@@ -10,22 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Task contexts (x64)
  */
 
-#pragma once
+#include <memory/context.h>
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/vmm.h>
-#endif
-
-/**
- * Q_vmalloc
- *   brief: Create new virtual address space of size n
- */
-uint64_t *Q_vmalloc(size_t n);
-
-/**
- * Q_vswitch
- *   brief: Switch to pml
- */
-void Q_vswitch(uint64_t *pml);
+struct _Context *init_context(size_t heap, uint64_t stack)
+{
+    struct _Context *c = kmalloc(sizeof(struct _Context));
+    c->page_table = vmalloc(heap);
+    c->regs = kmalloc(sizeof(regs_t));
+    c->regs->rsp = stack;
+    return c;
+}

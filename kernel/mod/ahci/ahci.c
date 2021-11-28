@@ -25,6 +25,4 @@ void ahci_init(void)
         warn("ahci: No AHCI controller found!");
         return;
     }
-    struct pci_bar_data bar = pci_get_bar(5, dev);
-    info("ahci: bar base: 0x%x", bar.base);
 }

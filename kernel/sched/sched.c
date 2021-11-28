@@ -33,8 +33,8 @@ void task_run(struct task *task)
     task->state = ACTIVE;
 
     /* Context switch */
-    Q_vswitch(task->cpu_state.page_table);
-    Q_swapregs(task->cpu_state.regs);
+    Q_vswitch(task->context->page_table);
+    Q_swapregs(task->context->regs);
 }
 
 void task_yield(struct task *task)
@@ -46,7 +46,7 @@ void task_yield(struct task *task)
 void task_kill(struct task *task)
 {
     if (task == NULL) return;
-    stash_page_table(task->cpu_state.page_table);
+    stash_context(task->context);
     task->state = DEAD;
 }
 
@@ -67,6 +67,7 @@ void switch_task(struct task *tasks)
     /* Yield from current task */
     task_yield(current);
     if (current->next != NULL) {
+        /* TODO: Remove dead tasks */
         if (current->state != DEAD) {
             task_run(current->next);
             current = current->next;

@@ -148,7 +148,7 @@ this command
 # UEFI
 $ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso -vga virtio
 # Legacy BIOS
-$ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -vga virtio -soundhw pcspk
+$ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -vga virtio
 ```
 
 ## Contributing to daphne

@@ -9,6 +9,8 @@ set(SRC
     ${SRCROOT}/pmm.h
     ${SRCROOT}/cpu.c
     ${SRCROOT}/cpu.h
+    ${SRCROOT}/context.c
+    ${SRCROOT}/context.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

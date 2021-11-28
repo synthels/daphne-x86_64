@@ -27,6 +27,8 @@
 
 #include <memory/space.h>
 
+#include <memory/context.h>
+
 #define STASH_SIZE 64
 
 typedef int16_t pid_t;
@@ -37,21 +39,16 @@ enum task_state {
     DEAD = 2
 };
 
-struct pt_stash {
-    uint64_t **tables;
-    size_t size;
-};
-
-struct task_cpu_state {
-    uint64_t *page_table;
-    regs_t *regs;
+struct context_stash {
+    context_t **contexts;
+    uint64_t size;
 };
 
 struct task {
     pid_t pid;
     pid_t parent_pid;
     int state;
-    struct task_cpu_state cpu_state;
+    context_t *context;
     char *name;
     struct task *next;
 };
@@ -69,16 +66,16 @@ struct task *get_head_task(void);
 void init_stash(void);
 
 /**
- * get_stashed_pt
- *   brief: get pt from stash
+ * get_stashed_context
+ *   brief: get context from stash
  */
-uint64_t *get_stashed_pt(void);
+context_t *get_stashed_context(void);
 
 /**
  * stash_page_table
- *   brief: add pt to stash
+ *   brief: add context to stash
  */
-void stash_page_table(uint64_t *pt);
+void stash_context(context_t *context);
 
 /**
  * ktask_run

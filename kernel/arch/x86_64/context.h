@@ -14,18 +14,14 @@
 
 #pragma once
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/vmm.h>
-#endif
+#include "context.h"
+#include "x64.h"
 
-/**
- * Q_vmalloc
- *   brief: Create new virtual address space of size n
- */
-uint64_t *Q_vmalloc(size_t n);
+#include <malloc/malloc.h>
 
-/**
- * Q_vswitch
- *   brief: Switch to pml
- */
-void Q_vswitch(uint64_t *pml);
+struct _Context {
+    uint64_t *page_table;
+    regs_t *regs;
+};
+
+struct _Context *init_context(size_t heap, uint64_t stack);
