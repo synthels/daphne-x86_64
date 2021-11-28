@@ -61,7 +61,7 @@ struct task *get_head_task(void);
 
 /**
  * init_stash
- *   brief: init pt stash
+ *   brief: init context stash
  */
 void init_stash(void);
 

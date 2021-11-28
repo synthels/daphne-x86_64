@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "context.h"
 #include "x64.h"
+#include "vmm.h"
 
 #include <malloc/malloc.h>
 
