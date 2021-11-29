@@ -23,6 +23,8 @@
 
 #include <memory/mem.h>
 
+#include <lib/string.h>
+
 #define MAX_PAGES 12 /* Max pages in bin */
 
 #define fast_ceil(x, y) ((long long) x + y - 1) / y
@@ -55,11 +57,20 @@ struct malloc_ptr {
 
 typedef struct malloc_ptr malloc_ptr_t;
 
+#define malloc_get_info(ptr) (malloc_ptr_t *) (((uint32_t *) ptr) - 1)
+
 /**
  * kmalloc
  *   brief: attempt to allocate memory of size n
  */
 void *kmalloc(size_t n);
+
+/**
+ * krealloc
+ *   brief: reallocate pointer 
+ *          (UNSAFE: does not check if ptr.size - size < 0)
+ */
+void *krealloc(void *ptr, size_t size);
 
 /**
  * kfree

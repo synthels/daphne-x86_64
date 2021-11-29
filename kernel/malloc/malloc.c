@@ -198,11 +198,19 @@ void *kmalloc(size_t n)
     return (page->base + 1);
 }
 
+void *krealloc(void *ptr, size_t size)
+{
+    void *new = kmalloc(size);
+    memcpy(new, ptr, size);
+    kfree(ptr);
+    return new;
+}
+
 void *kfree(void *ptr)
 {
     lock(&free_lock);
     /* Get size of allocated object */
-    malloc_ptr_t *malloc_ptr = (malloc_ptr_t *) (((uint32_t *) ptr) - 1);
+    malloc_ptr_t *malloc_ptr = malloc_get_info(ptr);
     uint32_t malloc_size = malloc_ptr->size;
     malloc_bin_t *b = head_bin;
     void *page_base;

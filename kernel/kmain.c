@@ -18,21 +18,21 @@
 #include <stddef.h>
 #include <stivale2.h>
 
-#include <stdint.h>
 #include <forbia/kernel.h>
 #include <io/io.h>
 #include <memory/mem.h>
 #include <malloc/malloc.h>
-#include <mod/fb/lfb.h>
 #include <shrimp/shrimp.h>
-#include <lib/printk.h>
 
+#include <mod/fb/lfb.h>
 #include <mod/pci/pci.h>
 #include <mod/ahci/ahci.h>
 #include <mod/tm/tm.h>
 
 #include <sched/task.h>
 #include <sched/sched.h>
+
+#include <lib/printk.h>
 
 #include "kmain.h"
 
