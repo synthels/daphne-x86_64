@@ -113,3 +113,8 @@ int get_log_level(void)
 {
     return log_level;
 }
+
+void set_log_level(int level)
+{
+    log_level = level;
+}

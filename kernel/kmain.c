@@ -34,6 +34,8 @@
 
 #include <lib/printk.h>
 
+#include <tests/test.h>
+
 #include "kmain.h"
 
 /* Kernel stack */
@@ -107,6 +109,13 @@ void kmain(struct stivale2_struct *stv)
 
     /* Initialize fbterm with kernel handle */
     shrimp_init(kern_ctx.handle);
+
+    #ifdef BUILD_TESTS
+        /* Only give test output if tests are built
+           with he kernel */
+        set_log_level(TEST);
+    #endif
+
     info("daphne (forbia %s, running on %s)", KERNEL_VERSION, KERNEL_ARCH);
     info("display info - width: %i, height: %i, pitch: %i", 
         info.screen_width,
@@ -124,6 +133,12 @@ void kmain(struct stivale2_struct *stv)
     enable_interrupts(); /* Houston, we've got interrupts */
     pci_scan();          /* pci */
     ahci_init();         /* achi */
+
+    #ifdef BUILD_TESTS
+        /* Run unit tests */
+        run_unit_tests();
+        log_test("All tests complete!");
+    #endif
 
     for (;;) {
         asm("hlt");

@@ -29,10 +29,11 @@
 #define __PRINTK_BUFFER_SIZE 256
 
 enum printk_log_level {
-    NORMAL  = 0,
-    WARNING = 1,
-    ERROR   = 2,
-    PANIC   = 3
+    NORMAL   = 0,
+    WARNING  = 1,
+    ERROR    = 2,
+    TEST     = 3,
+    PANIC    = 4,
 };
 
 /**
@@ -50,6 +51,12 @@ int printk(int level, const char *fmt, ...);
 int get_log_level(void);
 
 /**
+ * set_log_level
+ *   brief: set printk log level
+ */
+void set_log_level(int level);
+
+/**
  * vsprintf
  *   brief: print formatted string to buffer
  */
@@ -61,8 +68,10 @@ int vsprintf(char *buf, const char *fmt, va_list args);
 #define KERN_COLOR_WARN "\xff[1vu0210"
 #define KERN_COLOR_ERR "\xff[1v00200"
 #define KERN_COLOR_RESET "\xff[1ffffff"
+#define KERN_COLOR_TEST "\xff[10 725\13"
 
-#define ok(fmt, ...)    printk(NORMAL,  "%s  ok  %s " fmt "\n", KERN_COLOR_SUCCESS, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define info(fmt, ...)  printk(NORMAL,  "%s info %s " fmt "\n", KERN_COLOR_INFO, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define warn(fmt, ...)  printk(WARNING, "%s warn %s " fmt "\n", KERN_COLOR_WARN, KERN_COLOR_RESET, ##__VA_ARGS__)
-#define err(fmt, ...)   printk(ERROR,   "%s  :(  %s " fmt "\n", KERN_COLOR_ERR, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define ok(fmt, ...)         printk(NORMAL,  "%s  ok  %s " fmt "\n", KERN_COLOR_SUCCESS, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define info(fmt, ...)       printk(NORMAL,  "%s info %s " fmt "\n", KERN_COLOR_INFO, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define warn(fmt, ...)       printk(WARNING, "%s warn %s " fmt "\n", KERN_COLOR_WARN, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define err(fmt, ...)        printk(ERROR,   "%s  :(  %s " fmt "\n", KERN_COLOR_ERR, KERN_COLOR_RESET, ##__VA_ARGS__)
+#define log_test(fmt, ...)   printk(TEST,   "%s test %s " fmt "\n", KERN_COLOR_TEST, KERN_COLOR_RESET, ##__VA_ARGS__)
