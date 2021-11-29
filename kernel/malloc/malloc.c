@@ -50,6 +50,7 @@
 #include "malloc.h"
 
 declare_lock(malloc_lock);
+declare_lock(realloc_lock);
 declare_lock(free_lock);
 
 /* Allocate n bytes on the kernel heap */
@@ -200,9 +201,11 @@ void *kmalloc(size_t n)
 
 void *krealloc(void *ptr, size_t size)
 {
+    lock(&realloc_lock);
     void *new = kmalloc(size);
     memcpy(new, ptr, size);
     kfree(ptr);
+    unlock(&realloc_lock);
     return new;
 }
 
