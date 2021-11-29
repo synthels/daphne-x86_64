@@ -30,7 +30,7 @@
  * where every Y is a multiplier value between 0-9
  * and every X is a number between 0-9. (can also be any ASCII character,
  * in that case it will be interpreted as c - 48). The special value
- * \xff[1ffffff] resets to FG_COLOR
+ * \xff[1ffffff resets to FG_COLOR
  *
  * The final (R,G,B) color is calculated by multiplying
  * the first Y with the first X (R), the 2nd Y with the second X (G)
