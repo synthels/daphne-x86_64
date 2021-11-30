@@ -12,15 +12,21 @@
  * GNU General Public License for more details.
  */
 
-#include "malloc_test.h"
+#include "vec_test.h"
 
-test_result_t *malloc_test(void)
+test_result_t *vec_test(void)
 {
-    for (int i = 0; i < MALLOC_TEST_RUNS; i++) {
-        int *ptr = kmalloc(sizeof(int) * (i + 1));
-        TEST_ASSERT(ptr, "allocated memory is null");
-        TEST_ASSERT(kfree(ptr), "kfree couldn't free memory");
-    }
+    vec_t *v = vector();
+    int a = 1;
+    int b = 2;
+    int c = 3;
+    int d = 4;
+    vec_push_ptr(v, &a);
+    vec_push_ptr(v, &b);
+    vec_push_ptr(v, &c);
+    vec_push_ptr(v, &d);
+
+    TEST_ASSERT(vec_get_as(v, 1, int) == 2, "vector item incorrect");
 
     return test_result(TEST_SUCCESS, "");
 }

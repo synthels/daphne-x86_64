@@ -40,6 +40,12 @@ typedef struct Vector {
 #define vec_get_as_ptr(v, i, T) (T) vec_get(v, i)
 
 /**
+ * vec_push_ptr
+ *   brief: push element
+ */
+#define vec_push_ptr(v, e) vec_push(v, (void *) e);
+
+/**
  * vector
  *   brief: allocate new vector
  */

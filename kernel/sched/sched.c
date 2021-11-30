@@ -32,7 +32,7 @@ void task_run(struct task *task)
     if (task == NULL) return;
     task->state = ACTIVE;
 
-    /* Context switch */
+    /* Context switch (TODO: specific to x64...) */
     Q_vswitch(task->context->page_table);
     Q_swapregs(task->context->regs);
 }

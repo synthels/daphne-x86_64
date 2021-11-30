@@ -12,15 +12,11 @@
  * GNU General Public License for more details.
  */
 
-#include "malloc_test.h"
+#pragma once
 
-test_result_t *malloc_test(void)
-{
-    for (int i = 0; i < MALLOC_TEST_RUNS; i++) {
-        int *ptr = kmalloc(sizeof(int) * (i + 1));
-        TEST_ASSERT(ptr, "allocated memory is null");
-        TEST_ASSERT(kfree(ptr), "kfree couldn't free memory");
-    }
+#include <tests/test.h>
 
-    return test_result(TEST_SUCCESS, "");
-}
+#include <lib/vec.h>
+
+/* Test vector */
+test_result_t *vec_test(void);

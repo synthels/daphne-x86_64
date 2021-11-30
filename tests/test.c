@@ -18,11 +18,13 @@
 
 /* tests... (can't put these in the header file) */
 #include "cases/malloc/malloc_test.h"
+#include "cases/vec/vec_test.h"
 /* ... */
 
 void run_unit_tests(void)
 {
     unit_test("malloc test", malloc_test);
+    unit_test("vector test", vec_test);
 }
 
 void unit_test(const char *name, test_t test)

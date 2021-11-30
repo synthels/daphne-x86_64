@@ -28,6 +28,8 @@ typedef test_result_t *(*test_t)(void);
 #define TEST_SUCCESS true
 #define TEST_FAILED  false
 
+#define TEST_ASSERT(P, msg) if (!(P)) return test_result(TEST_FAILED, msg)
+
 /**
  * run_unit_tests
  *   brief: run all tests
