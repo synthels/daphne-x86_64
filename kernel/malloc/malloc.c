@@ -37,7 +37,7 @@
  * The way kmalloc allocates pages can be seen here:
  *
  * +------------------------------+
- * | page size (uint32_t)  | page |
+ * | page size (uint64_t)  | page |
  * +------------------------------+
  *                         ^~~~ ptr returned
  *
@@ -137,8 +137,7 @@ malloc_page_t *find_free_page_and_alloc(malloc_bin_t *bin, size_t n)
    populate it */
 malloc_page_t *find_best_bin_and_alloc(size_t n)
 {
-    /* Add 4 bytes to n */
-    n = kmem_align(n) + 4;
+    n = kmem_align(n);
     malloc_bin_t *b = head_bin;
     malloc_page_t *page;
     for (size_t i = 0; i < hbin_size; i++) {

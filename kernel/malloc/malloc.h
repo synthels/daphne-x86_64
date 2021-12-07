@@ -36,7 +36,7 @@
 struct malloc_page {
     struct malloc_page *next_page; /* NULL if last page */
     uint8_t free;
-    uint32_t *base;
+    uint64_t *base;
 };
 
 typedef struct malloc_page malloc_page_t;
@@ -51,13 +51,13 @@ struct malloc_bin {
 typedef struct malloc_bin malloc_bin_t;
 
 struct malloc_ptr {
-    uint32_t size;
-    uint32_t *base;
+    uint64_t size;
+    uint64_t *base;
 } __attribute__((packed));
 
 typedef struct malloc_ptr malloc_ptr_t;
 
-#define malloc_get_info(ptr) (malloc_ptr_t *) (((uint32_t *) ptr) - 1)
+#define malloc_get_info(ptr) (malloc_ptr_t *) (((uint64_t *) ptr) - 1)
 
 /**
  * kmalloc
