@@ -16,7 +16,7 @@
 
 #include <tests/test.h>
 
-#include <malloc/malloc.h>
+#include <generic/malloc/malloc.h>
 
 #define MALLOC_TEST_RUNS 1000
 

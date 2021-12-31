@@ -11,7 +11,7 @@ enable_language(ASM_NASM)
 add_executable(${KERNEL_BIN})
 
 set(SRCROOT ${PROJECT_SOURCE_DIR})
-set(CMAKE_C_FLAGS "-ffreestanding -O2 -Wall -Wextra -fPIE -Ilib/include -Ikernel -Wno-maybe-uninitialized")
+set(CMAKE_C_FLAGS "-ffreestanding -O2 -Wall -Wextra -fPIE -Ilib -Ikernel -Wno-maybe-uninitialized")
 set(CMAKE_C_STANDARD 99)
 
 # Build tests if needed
@@ -25,5 +25,5 @@ if (ARCH STREQUAL "x86_64")
 endif()
 
 # Build kernel
-target_include_directories(${KERNEL_BIN} PRIVATE ${SRCROOT} ${SRCROOT}/kernel)
-add_subdirectory(${SRCROOT}/kernel)
+target_include_directories(${KERNEL_BIN} PRIVATE ${SRCROOT} ${SRCROOT}/src/kernel)
+add_subdirectory(${SRCROOT}/src/kernel)

@@ -1,0 +1,172 @@
+org 0
+
+bits 16
+smp_trampoline:
+    cli
+    cld
+
+    mov ebx, cs
+    shl ebx, 4
+
+    o32 lidt [cs:invalid_idt]
+    o32 lgdt [cs:passed_info.gdtr]
+
+    lea eax, [ebx + .mode32]
+    mov [cs:.farjmp_off], eax
+
+    mov eax, 0x00000011
+    mov cr0, eax
+    o32 jmp far [cs:.farjmp]
+
+  .farjmp:
+    .farjmp_off: dd 0
+    .farjmp_seg: dd 0x18
+
+    bits 32
+  .mode32:
+    mov ax, 0x20
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    xor eax, eax
+    mov cr4, eax
+
+    test dword [ebx + passed_info.target_mode], (1 << 2)
+    jz .nox2apic
+
+    mov ecx, 0x1b
+    rdmsr
+    bts eax, 10
+    bts eax, 11
+    wrmsr
+
+  .nox2apic:
+    lea esp, [ebx + temp_stack.top]
+
+    test dword [ebx + passed_info.target_mode], (1 << 0)
+    jz parking32
+
+    mov eax, cr4
+    bts eax, 5
+    mov cr4, eax
+
+    test dword [ebx + passed_info.target_mode], (1 << 1)
+    jz .no5lv
+
+    mov eax, cr4
+    bts eax, 12
+    mov cr4, eax
+
+  .no5lv:
+    mov eax, dword [ebx + passed_info.pagemap]
+    mov cr3, eax
+
+    mov ecx, 0xc0000080
+    mov eax, 0x100
+    xor edx, edx
+    wrmsr
+
+    mov eax, cr0
+    bts eax, 31
+    mov cr0, eax
+
+    mov eax, .mode64
+    add eax, ebx
+    push 0x28
+    push eax
+    retf
+
+    bits 64
+  .mode64:
+    mov ax, 0x30
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    jmp parking64
+
+bits 32
+parking32:
+    mov edi, dword [ebx + passed_info.smp_info_struct]
+    mov eax, 1
+    lock xchg dword [ebx + passed_info.booted_flag], eax
+
+    xor eax, eax
+  .loop:
+    lock xadd dword [edi + 16], eax
+    test eax, eax
+    jnz .out
+    pause
+    jmp .loop
+
+  .out:
+    mov esp, dword [edi + 8]
+    push 0
+    push edi
+    push eax
+    xor eax, eax
+    xor ebx, ebx
+    xor ecx, ecx
+    xor edx, edx
+    xor esi, esi
+    xor edi, edi
+    xor ebp, ebp
+    ret
+
+bits 64
+parking64:
+    mov ebx, ebx
+    mov edi, dword [rbx + passed_info.smp_info_struct]
+    mov eax, 1
+    lock xchg dword [rbx + passed_info.booted_flag], eax
+
+    xor eax, eax
+  .loop:
+    lock xadd qword [rdi + 16], rax
+    test rax, rax
+    jnz .out
+    pause
+    jmp .loop
+
+  .out:
+    mov rsp, qword [rdi + 8]
+    push 0
+    push rax
+    xor rax, rax
+    xor rbx, rbx
+    xor rcx, rcx
+    xor rdx, rdx
+    xor rsi, rsi
+    xor rbp, rbp
+    xor r8,  r8
+    xor r9,  r9
+    xor r10, r10
+    xor r11, r11
+    xor r12, r12
+    xor r13, r13
+    xor r14, r14
+    xor r15, r15
+    ret
+
+align 16
+temp_stack:
+    times 128 db 0
+  .top:
+
+invalid_idt:
+    times 2 dq 0
+
+align 16
+passed_info:
+    .booted_flag db 0
+    .target_mode db 0
+    .pagemap dd 0
+    .smp_info_struct dd 0
+    .gdtr:
+        dw 0
+        dq 0

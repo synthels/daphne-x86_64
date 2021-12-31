@@ -15,8 +15,8 @@
 #pragma once
 
 #include <lib/printk.h>
-#include <forbia/types.h>
-#include <malloc/malloc.h>
+#include <generic/forbia/types.h>
+#include <generic/malloc/malloc.h>
 
 typedef struct {
     bool result;

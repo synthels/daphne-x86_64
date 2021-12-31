@@ -18,9 +18,9 @@ The `type` field can take the following values
 The event structure pointed at by `io_poll` can then be consumed like so
 
 ```c
-#include <forbia/async.h>
-#include <forbia/io.h>
-#include <forbia/types.h>
+#include <generic/forbia/async.h>
+#include <generic/forbia/io.h>
+#include <generic/forbia/types.h>
 
 int main(void)
 {
