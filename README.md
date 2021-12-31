@@ -116,7 +116,7 @@ $ xorriso -as mkisofs -b limine-cd.bin \
 if you also want BIOS, you might want to run these commands
 
 ```bash
-$ cd ../kernel/arch/x86_64/limine/bin
+$ cd ../src/kernel/arch/x86_64/limine/bin
 $ ./limine-install ../../../../../build/daphne_img_x64.iso
 ```
 
