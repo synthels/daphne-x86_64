@@ -17,7 +17,7 @@
 test_result_t *malloc_test(void)
 {
     for (int i = 0; i < MALLOC_TEST_RUNS; i++) {
-        int *ptr = kmalloc(sizeof(int) * (i + 1));
+        int *ptr = kmalloc(sizeof(int));
         TEST_ASSERT(ptr, "allocated memory is null");
         TEST_ASSERT(kfree(ptr), "kfree couldn't free memory");
     }

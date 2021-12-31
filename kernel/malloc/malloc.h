@@ -25,6 +25,8 @@
 
 #include <lib/string.h>
 
+#include "mmu.h"
+
 #define MAX_PAGES 12 /* Max pages in bin */
 
 #define fast_ceil(x, y) ((long long) x + y - 1) / y
@@ -78,12 +80,6 @@ void *krealloc(void *ptr, size_t size);
  *          allocated by kmalloc
  */
 void *kfree(void *ptr);
-
-/**
- * kalloc
- *   brief: watermark allocator
- */
-uintptr_t *kalloc(size_t n);
 
 /**
  * kalloc_mem_aligned

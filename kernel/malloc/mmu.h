@@ -15,33 +15,26 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdint.h>
+#include <arch/x86_64/vmm.h>
 
-#include <forbia/kernel.h>
-#include <forbia/panic.h>
-#include <forbia/lock.h>
+#include "malloc.h"
 
-#include <lib/string.h>
-#include <memory/mem.h>
-#include <memory/bitmap.h>
-#include <malloc/malloc.h>
-
-#define BASE_OFFS 1
+#define ROUND(n, m) (n + m - 1) & -m
 
 /**
- * pmm_init
- *   brief: init pmm
+ * init_mmu
+ *   brief: init mmu
  */
-void pmm_init(void);
+void init_mmu(void);
 
 /**
- * pmm_alloc
- *   brief: allocate n bytes in physical memory
+ * mmu_alloc
+ *   brief: allocate n bytes on the heap
  */
-void *pmm_alloc(size_t n);
+void *mmu_alloc(size_t n);
 
 /**
- * pmm_alloc_page
- *   brief: allocate single page
+ * mmu_free
+ *   brief: free 64 byte region after ptr
  */
-void *pmm_alloc_page(void);
+void mmu_free(void *ptr);

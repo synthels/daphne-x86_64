@@ -125,6 +125,11 @@ uint64_t *vmalloc(size_t n)
     return pml4;
 }
 
+// uint64_t *vfree(uint64_t *pml)
+// {
+//     pmm_free(pml);
+// }
+
 void vswitch(uint64_t *pml)
 {
     pml4 = pml;

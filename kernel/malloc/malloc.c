@@ -53,23 +53,15 @@ declare_lock(malloc_lock);
 declare_lock(realloc_lock);
 declare_lock(free_lock);
 
-/* Allocate n bytes on the kernel heap */
-uintptr_t *kalloc(size_t n)
-{
-    static uint64_t ap = KERNEL_HEAP_LOW;
-    ap += n;
-    return (uintptr_t *) (ap - n);
-}
-
 void *kalloc_mem_aligned(size_t n)
 {   
-    return (void *) kalloc(kmem_align(n));
+    return (void *) mmu_alloc(kmem_align(n));
 }
 
 void *kalloc_mem_page_aligned(size_t n)
 {
     const size_t mask = PAGE_SIZE - 1;
-    const uintptr_t mem = (uintptr_t) kalloc(n + PAGE_SIZE);
+    const uintptr_t mem = (uintptr_t) mmu_alloc(n + PAGE_SIZE);
     return (void *) ((mem + mask) & ~mask);
 }
 
@@ -170,6 +162,7 @@ void *kmalloc(size_t n)
     lock(&malloc_lock);
     /* First call, init bin */
     if (head_bin == NULL) {
+        init_mmu();
         head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
         init_bin(head_bin, n);
     }
@@ -195,7 +188,7 @@ void *kmalloc(size_t n)
     malloc_ptr = (malloc_ptr_t *) page->base;
     malloc_ptr->size = kmem_align(n);
     unlock(&malloc_lock);
-    return (page->base + 1);
+    return page->base;
 }
 
 void *krealloc(void *ptr, size_t size)
@@ -208,6 +201,7 @@ void *krealloc(void *ptr, size_t size)
     return new;
 }
 
+/* TODO: kfree is borked, fix pls */
 void *kfree(void *ptr)
 {
     lock(&free_lock);

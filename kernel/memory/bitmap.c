@@ -18,7 +18,7 @@
 
 void new_bitmap(struct bitmap *bmp, size_t size)
 {
-    bmp->buf = kmalloc(size * sizeof(char));
+    bmp->buf = kmalloc(size);
     memset(bmp->buf, 0xff, size / 8);
     bmp->size = size;
 }
