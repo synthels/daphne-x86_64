@@ -117,7 +117,7 @@ if you also want BIOS, you might want to run these commands
 
 ```bash
 $ cd ../src/kernel/arch/x86_64/limine/bin
-$ ./limine-install ../../../../../build/daphne_img_x64.iso
+$ ./limine-install ../../../../../../build/daphne_img_x64.iso
 ```
 
 #### Testing x64 images in Virtualbox
