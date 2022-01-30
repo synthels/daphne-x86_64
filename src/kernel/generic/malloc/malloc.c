@@ -174,7 +174,7 @@ void *kmalloc(size_t n)
         add_bin(bin);
         bin->first_page->free = 0;
         unlock(&malloc_lock);
-        *(bin->first_page->base) = (uint64_t) bin->first_page;
+        *(bin->first_page->base) = (uint64_t) kmem_align(n);
         return bin->first_page->base + 1;
     }
 
