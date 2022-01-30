@@ -18,7 +18,7 @@
 
 #include <generic/malloc/malloc.h>
 
-#define MALLOC_TEST_RUNS 1000
+#define MALLOC_TEST_RUNS 1000000
 
 /* Test kmalloc */
 test_result_t *malloc_test(void);

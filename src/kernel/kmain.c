@@ -26,7 +26,6 @@
 
 #include <mod/fb/lfb.h>
 #include <mod/pci/pci.h>
-#include <mod/ahci/ahci.h>
 #include <mod/tm/tm.h>
 
 #include <generic/sched/task.h>
@@ -132,7 +131,6 @@ void kmain(struct stivale2_struct *stv)
     sched_init();        /* sched */
     enable_interrupts(); /* Houston, we've got interrupts */
     pci_scan();          /* pci */
-    ahci_init();         /* achi */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

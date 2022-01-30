@@ -41,10 +41,7 @@
  * +------------------------------+
  *                         ^~~~ ptr returned
  *
- * TOmaybeDO: kmalloc() might be failing after ~500000 allocations
- * check if that's the case and if so fix urgently (possibly resolved)
- *
- * TODO: Optimize kfree (maybe store bin pointer in each page?)
+ * TODO: Merge blocks, align pages, ...
  */
 
 #include "malloc.h"
@@ -167,7 +164,6 @@ void *kmalloc(size_t n)
         init_bin(head_bin, n);
     }
 
-    malloc_ptr_t *malloc_ptr;
     malloc_bin_t *bin;
     malloc_page_t *page;
     if ((page = find_best_bin_and_alloc(n)) == NULL) {
@@ -177,18 +173,15 @@ void *kmalloc(size_t n)
         init_bin(bin, n);
         add_bin(bin);
         bin->first_page->free = 0;
-        /* Set malloc size right behind pointer returned */
-        malloc_ptr = (malloc_ptr_t *) (bin->first_page->base);
-        malloc_ptr->size = kmem_align(n);
         unlock(&malloc_lock);
-        return (bin->first_page->base + 1);
+        *(bin->first_page->base) = (uint64_t) bin->first_page;
+        return bin->first_page->base + 1;
     }
 
     page->free = 0;
-    malloc_ptr = (malloc_ptr_t *) page->base;
-    malloc_ptr->size = kmem_align(n);
+    *(page->base) = (uint64_t) kmem_align(n);
     unlock(&malloc_lock);
-    return page->base;
+    return page->base + 1;
 }
 
 void *krealloc(void *ptr, size_t size)
@@ -201,13 +194,15 @@ void *krealloc(void *ptr, size_t size)
     return new;
 }
 
-/* TODO: kfree is borked, fix pls */
+/* whether this returns NULL or not 
+   should not be trusted.
+   I don't know what I did but it works and I
+   really don't want to touch it */
 void *kfree(void *ptr)
 {
     lock(&free_lock);
     /* Get size of allocated object */
-    malloc_ptr_t *malloc_ptr = malloc_get_info(ptr);
-    uint32_t malloc_size = malloc_ptr->size;
+    uint64_t malloc_size = (uint64_t) *((uint64_t *)(ptr) - 1);
     malloc_bin_t *b = head_bin;
     void *page_base;
     for (size_t i = 0; i < hbin_size; i++) {
@@ -215,15 +210,15 @@ void *kfree(void *ptr)
            same size as the object */
         if (b->page_size == malloc_size) {
             /* Correct bin is found */
-            if ((page_base = free_page(b, ptr)) != NULL) {
+            if ((page_base = free_page(b, ptr))) {
                 unlock(&free_lock);
-                return page_base;
+                return NULL;
             }
         }
         b = b->next_bin;
     }
     unlock(&free_lock);
 
-    /* Pointer was not allocated by kmalloc() */
+    /* Pointer was not allocated by kmalloc */
     return NULL;
 }

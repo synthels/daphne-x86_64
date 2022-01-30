@@ -91,7 +91,7 @@ In order to build an ISO image under x86_64, follow these instructions.
 First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
 ```bash
-$ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../build/iso/
+$ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../../build/iso/
 ```
 
 Now, `cd` to `build` (not `limine/build`)

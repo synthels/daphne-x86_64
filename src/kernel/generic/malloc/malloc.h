@@ -39,7 +39,7 @@ struct malloc_page {
     struct malloc_page *next_page; /* NULL if last page */
     uint8_t free;
     uint64_t *base;
-};
+} __attribute__((packed));
 
 typedef struct malloc_page malloc_page_t;
 
@@ -48,7 +48,7 @@ struct malloc_bin {
     struct malloc_page *first_page;
     size_t page_size; /* This bin's page size */
     size_t pages; /* Number of pages in bin */
-};
+} __attribute__((packed));
 
 typedef struct malloc_bin malloc_bin_t;
 
