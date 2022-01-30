@@ -22,7 +22,7 @@ void ahci_init(void)
     if ((dev = pci_fetch(0x01, 0x06)) != NULL) {
         info("ahci: AHCI controller found (%ui:%ui:%ui)", dev->bus, dev->slot, dev->func);
     } else {
-        warn("ahci: No AHCI controller found!");
+        warn("ahci: no AHCI controller found!");
         return;
     }
 }

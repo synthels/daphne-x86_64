@@ -1,14 +1,6 @@
 # daphne
 
-Daphne aims to be a modern and elegant 64-bit operating currently targetted at the x86 family of processors.
-
-## Acknowledgments
-
-- [Limine](https://github.com/limine-bootloader/limine) - An x86/x64 bootloader
-
-## License
-
-daphne is licensed under the GPLv3 license. See [license](https://github.com/synthels/daphne/blob/master/license) for more details.
+Free UNIX-like operating system
 
 ## Build guide
 
