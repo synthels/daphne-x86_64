@@ -211,7 +211,7 @@ Header files must begin with a copyright header, like this
 
 ```c
 /*
- * Copyright (C) 2020 (name) (email)
+ * Copyright (C) 2022 (name) (email)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -229,7 +229,7 @@ You also need the same header on source files, like this:
 
 ```c
 /*
- * Copyright (C) 2020 (name) (email)
+ * Copyright (C) 2022 (name) (email)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -249,7 +249,7 @@ All header files must follow C convention, leaving us with a format like this:
 
 ```c
 /*
- * Copyright (C) 2020 (name) (email)
+ * Copyright (C) 2022 (name) (email)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

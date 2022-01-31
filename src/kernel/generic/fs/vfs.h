@@ -13,13 +13,3 @@
  */
 
 #pragma once
-
-#include <generic/memory/space.h>
-#include <stdint.h>
-
-#include <arch/x86_64/context.h>
-#include <arch/x86_64/vmm.h>
-
-typedef struct _Context context_t;
-
-context_t *Q_init_context(size_t heap, uint64_t stack);

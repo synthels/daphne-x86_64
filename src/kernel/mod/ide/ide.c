@@ -10,16 +10,23 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * (dumb) ATA PIO driver
  */
 
-#pragma once
+#include "ide.h"
 
-#include <generic/memory/space.h>
-#include <stdint.h>
+void ide_init(void)
+{
+    /* Check for disk 1 */
+    outb(0x1f6, 0xe0 | (1<<4));
+    for(int i = 0; i < 1000; i++){
+        if(inb(0x1f7) != 0){
+            info("ide: disk 1 present");
+            break;
+        }
+    }
 
-#include <arch/x86_64/context.h>
-#include <arch/x86_64/vmm.h>
-
-typedef struct _Context context_t;
-
-context_t *Q_init_context(size_t heap, uint64_t stack);
+    // Switch back to disk 0.
+    outb(0x1f6, 0xe0 | (0<<4));
+}

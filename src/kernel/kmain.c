@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 synthels <synthels.me@gmail.com>
+ * Copyright (C) 2022 synthels <synthels.me@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel main function
+ * main function
  */
 
 #include <stdint.h>

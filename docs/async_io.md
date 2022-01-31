@@ -4,7 +4,7 @@ Daphne offers a non POSIX compliant async based IO layer, intended to be used by
 
 ## Polling the kernel for IO events
 
-The kernel exposes the function `bool io_poll(int io_device, struct io_event *event)` for this very purpose. `io_poll` accepts 2 arguments. `io_handle`, which defines the particular IO handle (see [io.md](https://github.com/synthels/daphne/blob/master/docs/io.md)) that should be polled, and `event` which is a pointer to an `io_event` structure, that describes an IO event. Its structure is as follows
+The kernel exposes the function `bool io_poll(int io_device, struct io_event *event)` for this very purpose. `io_poll` accepts 2 arguments. `io_handle`, which defines the particular IO handle (see [vfs.md](https://github.com/synthels/daphne/blob/master/docs/vfs.md)) that should be polled, and `event` which is a pointer to an `io_event` structure, that describes an IO event. Its structure is as follows
 
 ```c
 struct io_event {

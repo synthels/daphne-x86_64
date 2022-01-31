@@ -5,5 +5,6 @@ add_subdirectory(${SRCROOT}/pcspk)
 add_subdirectory(${SRCROOT}/tm)
 add_subdirectory(${SRCROOT}/pci)
 add_subdirectory(${SRCROOT}/fb)
+add_subdirectory(${SRCROOT}/ide)
 
 target_sources(kernel.bin PRIVATE ${SRC})

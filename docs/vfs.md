@@ -1,5 +1,5 @@
-# Daphne's low level IO library
-Daphne, like any operating system should, provides a low level file system agnostic IO layer. It can be found under `forbia/io.h`.
+# Daphne's low level IO
+Daphne, like any operating system should, provides a low level file system agnostic IO layer. It can be found under `forbia/fs.h`.
 
 ## Accessing files
 A file is described using the `file` structure. It is defined as follows
