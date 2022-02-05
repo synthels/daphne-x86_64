@@ -111,7 +111,7 @@ void kmain(struct stivale2_struct *stv)
 
     #ifdef BUILD_TESTS
         /* Only give test output if tests are built
-           with he kernel */
+           with the kernel */
         set_log_level(TEST);
     #endif
 

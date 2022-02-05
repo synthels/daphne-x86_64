@@ -28,6 +28,12 @@ void pit_init(struct tm_func_node *head)
     outb(0x40, div >> 8);
 }
 
+/* PIT IRQ */
+void pit_irq_handler(regs_t *r)
+{
+    pit_tick(r);
+}
+
 void pit_tick(regs_t *r)
 {
     ++ticks;

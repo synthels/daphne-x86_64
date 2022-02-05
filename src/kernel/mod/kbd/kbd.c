@@ -43,6 +43,12 @@ void kbd_read(void)
     inb(0x60);
 }
 
+void kbd_irq_handler(regs_t *r)
+{
+    UNUSED(r);
+    kbd_read();
+}
+
 /* Check if keyboard is enabled */
 int kbd_is_enabled(void)
 {

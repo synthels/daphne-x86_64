@@ -19,6 +19,7 @@
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/idt/idt.h>
 #endif
 
 #include "tm.h"
@@ -36,6 +37,12 @@ void pit_init(struct tm_func_node *head);
  *   brief: do one tick
  */
 void pit_tick(regs_t *r);
+
+/**
+ * pit_irq_handler
+ *   brief: PIT IRQ handler
+ */
+void pit_irq_handler(regs_t *r);
 
 /**
  * pit_get_ticks

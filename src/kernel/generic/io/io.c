@@ -36,6 +36,23 @@ void outd(uint16_t port, uint16_t val)
 	asm volatile ("out %1, %0" : : "dN" (port), "a" (val));
 }
 
+void outsl(int port, const void *addr, int cnt)
+{
+    asm volatile("cld; rep outsl" :
+                "=S" (addr), "=c" (cnt) :
+                "d" (port), "0" (addr), "1" (cnt) :
+                "cc");
+}
+
+uint16_t inw(uint16_t port)
+{
+    uint16_t ret;
+    __asm ("inw %%dx, %%ax" 
+        : "=a" (ret) 
+        : "d" (port) );
+    return ret;
+};
+
 uint8_t inb(uint16_t port)
 {
     uint8_t ret;

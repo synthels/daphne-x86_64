@@ -37,7 +37,7 @@ $ export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
 $ export PATH="$PATH:$BREW_HOME"
 ```
 
-If there are no errors and everything went well, you should now have a multiboot compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
+If there are no errors and everything went well, you should now have a stivale2 compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
 
 ### Building for x64
 
@@ -88,7 +88,7 @@ If there are no errors and everything went well, you should now have a binary ca
 #### x86_64 UEFI/BIOS
 
 In order to build an ISO image under x86_64, follow these instructions.
-First, `cd` to `kernel/arch/x86_64/limine/bin`. Then, run the following commands
+First, `cd` to `src/kernel/arch/x86_64/limine/bin`. Then, run the following commands
 
 ```bash
 $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../../build/iso/

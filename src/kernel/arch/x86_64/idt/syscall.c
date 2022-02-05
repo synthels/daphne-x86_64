@@ -18,26 +18,11 @@
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 
-#include <mod/kbd/kbd.h>
-#include <mod/tm/pit.h>
-
 #include <lib/printk.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
 #endif
-
-/* PIT IRQ */
-void pit_irq_handler(regs_t *r)
-{
-    pit_tick(r);
-}
-
-/* Keyboard IRQ */
-void kbd_irq_handler()
-{
-    kbd_read();
-}
 
 /* syscall handler */
 void syscall_handler(regs_t *r)

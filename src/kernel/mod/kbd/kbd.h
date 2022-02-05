@@ -17,6 +17,11 @@
 #include <generic/io/io.h>
 #include <stdint.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/idt/idt.h>
+#endif
+
 /**
  * kbd_init
  *   brief: init keyboard driver
