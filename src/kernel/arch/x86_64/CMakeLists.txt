@@ -17,6 +17,8 @@ set(SRC
     ${SRCROOT}/apic.h
     ${SRCROOT}/acpi.c
     ${SRCROOT}/acpi.h
+    ${SRCROOT}/madt.c
+    ${SRCROOT}/madt.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

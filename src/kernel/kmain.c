@@ -36,6 +36,7 @@
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/acpi.h>
+    #include <arch/x86_64/madt.h>
 #endif
 
 #include "kmain.h"
@@ -133,6 +134,7 @@ void kmain(struct stivale2_struct *stv)
     pci_scan();                     /* pci */
     #ifdef ARCH_x86_64
         acpi_init(rsdp_info->rsdp); /* acpi */
+        madt_init();                /* madt */
     #endif
 
     #ifdef BUILD_TESTS

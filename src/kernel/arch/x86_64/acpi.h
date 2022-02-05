@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <arch/x86_64/vmm.h>
-
 #include <lib/string.h>
+#include <generic/forbia/types.h>
+#include <lib/printk.h>
 
 struct rsdp_desc {
     char signature[8];
