@@ -73,7 +73,6 @@ void idt_install_handlers()
     IRQ(irq0, pit_irq_handler, 0);
     /* Keyboard */
     IRQ(irq1, kbd_irq_handler, 1);
-    IRQ(irq14, kbd_irq_handler, 15);
 }
 
 /* Generate & load an IDT */

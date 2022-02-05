@@ -82,3 +82,24 @@ void mmu_free(void *ptr)
     }
     bitmap_set(bmp, (uint64_t) (ptr - heap_low) / 64, 1);
 }
+
+context_t *mmu_init_context(size_t heap, uint64_t stack)
+{
+    return (context_t *) init_context(heap, stack);
+}
+
+uint64_t *mmu_vmalloc(size_t n)
+{
+    return vmalloc(n);
+}
+
+void mmu_vswitch(uint64_t *pml)
+{
+    vswitch(pml);
+}
+
+void mmu_switch(context_t *context)
+{
+    mmu_vswitch(context->page_table);
+    arch_swapregs(context->regs);
+}

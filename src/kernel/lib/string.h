@@ -83,3 +83,13 @@ void *memmove(void *dest, const void *src, size_t n);
  *     - n:     length
  */
 int memcmp(const void *str1, const void *str2, size_t n);
+
+/**
+ * strncmp
+ *   brief: compare first n bytes of s1 and s2
+ *   parameters:
+ *     - str1:  first string
+ *     - str2:  second string
+ *     - n:     length
+ */
+int strncmp(const char *s1, const char *s2, size_t n);

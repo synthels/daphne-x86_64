@@ -16,10 +16,15 @@
 
 #include <stddef.h>
 #include <arch/x86_64/vmm.h>
+#include <arch/x86_64/context.h>
+#include <arch/x86_64/cpu.h>
+
+#include <stdint.h>
 
 #include "malloc.h"
 
 #define ROUND(n, m) (n + m - 1) & -m
+typedef struct _Context context_t;
 
 /**
  * init_mmu
@@ -38,3 +43,27 @@ void *mmu_alloc(size_t n);
  *   brief: free 64 byte region after ptr
  */
 void mmu_free(void *ptr);
+
+/**
+ * mmu_vmalloc
+ *   brief: allocate page directory
+ */
+uint64_t *mmu_vmalloc(size_t n);
+
+/**
+ * mmu_vswitch
+ *   brief: switch page directory
+ */
+void mmu_vswitch(uint64_t *pml);
+
+/**
+ * mmu_init_context
+ *   brief: init virtual context
+ */
+context_t *mmu_init_context(size_t heap, uint64_t stack);
+
+/**
+ * mmu_switch
+ *   brief: switch context
+ */
+void mmu_switch(context_t *context);

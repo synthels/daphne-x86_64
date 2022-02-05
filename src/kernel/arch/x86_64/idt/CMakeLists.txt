@@ -5,8 +5,6 @@ set(SRC
     ${SRCROOT}/syscall.c
     ${SRCROOT}/idt.c
     ${SRCROOT}/idt.h
-    ${SRCROOT}/PIC.c
-    ${SRCROOT}/PIC.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

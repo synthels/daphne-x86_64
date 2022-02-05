@@ -90,6 +90,11 @@ void vmm_init_pml(uint64_t *pml)
     map_kernel(pml, false);
 }
 
+void pml4_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
+{
+    map_page(pml4, virt_addr, phys_addr, flags);
+}
+
 void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
 {
     /* Calculate every index */

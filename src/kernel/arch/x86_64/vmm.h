@@ -42,6 +42,12 @@
 void vmm_init(void);
 
 /**
+ * pml4_map_page
+ *   brief: Map single page without access to the PML
+ */
+void pml4_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags);
+
+/**
  * map_page
  *   brief: Map single page
  */

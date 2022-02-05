@@ -11,6 +11,12 @@ set(SRC
     ${SRCROOT}/cpu.h
     ${SRCROOT}/context.c
     ${SRCROOT}/context.h
+    ${SRCROOT}/pic.c
+    ${SRCROOT}/pic.h
+    ${SRCROOT}/apic.c
+    ${SRCROOT}/apic.h
+    ${SRCROOT}/acpi.c
+    ${SRCROOT}/acpi.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

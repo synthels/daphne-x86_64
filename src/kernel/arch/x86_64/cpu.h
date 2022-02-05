@@ -17,7 +17,7 @@
 #include "x64.h"
 
 /**
- * Q_swapregs
+ * arch_swapregs
  *   brief: Swap x64 registers
  */
-void Q_swapregs(regs_t *regs);
+void arch_swapregs(regs_t *regs);

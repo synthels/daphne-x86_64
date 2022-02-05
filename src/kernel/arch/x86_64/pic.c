@@ -11,17 +11,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Memory space
+ * PIC
  */
 
-#include "space.h"
+#include "pic.h"
 
-uint64_t *Q_vmalloc(size_t n)
+/* Remap the PIC */
+void remap_pic(void)
 {
-    return vmalloc(n);
-}
-
-void Q_vswitch(uint64_t *pml)
-{
-    vswitch(pml);
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+    outb(0x21, 0x20);
+    outb(0xA1, 0x28);
+    outb(0x21, 0x04);
+    outb(0xA1, 0x02);
+    outb(0x21, 0x01);
+    outb(0xA1, 0x01);
+    outb(0x21, 0x0);
+    outb(0xA1, 0x0);
 }

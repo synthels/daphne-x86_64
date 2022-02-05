@@ -11,65 +11,51 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * General process management
+ * Tasks & threads
  */
 
-#include <generic/sched/task.h>
+#include "task.h"
 
-static struct task head_task = {
-    0, 0, ACTIVE, 0, "", NULL
-};
+static vec_t *tasks;
+static pid_t pid;
 
-static struct context_stash stash;
-
-struct task *get_head_task(void)
+void init_task(struct task *t)
 {
-    return &head_task;
+    t->pid = pid++;
+    t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
+    t->state = ASLEEP;
+    t->children = vector();
 }
 
-void init_stash(void)
+void init_task_queue(void)
 {
-    stash.size = 0;
-    stash.contexts = kmalloc(STASH_SIZE * sizeof(uint64_t *));
+    struct task *head_task = kmalloc(sizeof(struct task));
+    init_task(head_task);
+    tasks = vector();
+    vec_push_ptr(tasks, head_task);
 }
 
-context_t *get_stashed_context(void)
+void init_sched(void)
 {
-    static size_t idx = 0;
-    if (idx >= stash.size) {
-        idx = 0;
-    }
-    return (context_t *) stash.contexts[idx++];
+    init_task_queue();
 }
 
-void stash_context(context_t *context)
+void switch_task(void)
 {
-    if (stash.size >= STASH_SIZE) {
-        stash.size = 0;
+    static struct task *running_task = NULL;
+    static size_t tasks_index = 0;
+    
+    if (!running_task) {
+        running_task = vec_get_as(tasks, tasks_index, struct task *);
     }
-    stash.contexts[stash.size++] = context;
-}
-
-pid_t ktask_run(char *name)
-{
-    struct task *current = &head_task;
-    while (current->next != NULL) {
-        current = current->next;
+    running_task->state = ASLEEP;
+    /* Also suspend children here */
+    /* Warpback size if necessary */
+    if (tasks_index >= tasks->size) {
+        tasks_index = 0;
     }
-
-    current->next = kmalloc(sizeof(struct task));
-    current->next->name = name;
-    current->next->pid = current->pid + 1;
-    current->next->state = SLEEPING;
-    if (!stash.size) {
-        current->next->context = Q_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
-    } else {
-        /* Grab a page table from the stash */
-        current->next->context = get_stashed_context();
-    }
-    current->next->next = NULL;
-
-    ok("ktask_run: created task %s", name);
-
-    return current->next->pid;
+    /* Switch to next task */
+    running_task = vec_get_as(tasks, tasks_index, struct task *);
+    running_task->state = RUNNING;
+    mmu_switch(running_task->context);
 }

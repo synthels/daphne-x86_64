@@ -5,10 +5,6 @@ set(SRC
     ${SRCROOT}/bitmap.h
     ${SRCROOT}/mem.c
     ${SRCROOT}/mem.h
-    ${SRCROOT}/space.c
-    ${SRCROOT}/space.h
-    ${SRCROOT}/context.c
-    ${SRCROOT}/context.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

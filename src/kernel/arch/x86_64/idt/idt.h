@@ -19,7 +19,7 @@
 #include <generic/forbia/kernel.h>
 #include <arch/x86_64/x64.h>
 
-#include "PIC.h"
+#include <arch/x86_64/pic.h>
 
 #define ISR(isr, n) extern void isr(void); \
     idt_install_handler(isr, n)

@@ -29,11 +29,14 @@
 #include <mod/tm/tm.h>
 
 #include <generic/sched/task.h>
-#include <generic/sched/sched.h>
 
 #include <lib/printk.h>
 
 #include <tests/test.h>
+
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/acpi.h>
+#endif
 
 #include "kmain.h"
 
@@ -86,6 +89,8 @@ void kmain(struct stivale2_struct *stv)
     struct stivale2_struct_tag_memmap *mmap = get_tag(stv, STIVALE2_STRUCT_TAG_MEMMAP_ID); /* TODO: Handle NULL */
     /* Get framebuffer info */
     struct stivale2_struct_tag_framebuffer *fb_info = get_tag(stv, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
+    /* Get RSDP */
+    struct stivale2_struct_tag_rsdp *rsdp_info = get_tag(stv, STIVALE2_STRUCT_TAG_RSDP_ID);
 
     init_gdt(); /* gdt & tss */
     init_idt(); /* idt */
@@ -123,14 +128,12 @@ void kmain(struct stivale2_struct *stv)
     );
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
-    if (ktask_run("init") < 0) {
-        panic("couldn't create init!");
-    }
-
-    tm_init();           /* time */
-    sched_init();        /* sched */
-    enable_interrupts(); /* Houston, we've got interrupts */
-    pci_scan();          /* pci */
+    tm_init();                      /* time */
+    enable_interrupts();            /* houston, we've got interrupts */
+    pci_scan();                     /* pci */
+    #ifdef ARCH_x86_64
+        acpi_init(rsdp_info->rsdp); /* acpi */
+    #endif
 
     #ifdef BUILD_TESTS
         /* Run unit tests */
