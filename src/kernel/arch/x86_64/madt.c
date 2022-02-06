@@ -18,7 +18,7 @@
 
 struct madt_head *madt;
 
-static uint64_t madt_length()
+uint64_t madt_length(void)
 {
     return ((uintptr_t) &(madt->head)) + madt->head.len;
 }
@@ -37,7 +37,7 @@ void madt_init(void)
     pml4_map_page(lbase_addr + PAGE_SIZE, lbase_addr + PAGE_SIZE, FLAGS_READ_WRITE);
 }
 
-void **madt_get_table(enum madt_type type)
+void **madt_get_tables(enum madt_type type)
 {
     struct madt_record_table_entry *table = madt->madt_table;
     void **mtio = kmalloc(255);
@@ -50,6 +50,11 @@ void **madt_get_table(enum madt_type type)
         }
         table = (struct madt_record_table_entry *) (((uint64_t) table) + table->length);
     }
-    mtio[count] = 0;
+    mtio[count] = NULL;
     return mtio;
+}
+
+struct madt_head *madt_get_header(void)
+{
+    return madt;
 }

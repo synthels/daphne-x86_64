@@ -51,3 +51,10 @@ void arch_swapregs(regs_t *regs)
             "rm"(regs->r15)
     );
 }
+
+bool cpu_has_apic(void)
+{
+    uint32_t u, eax, edx;
+    __get_cpuid(1, &eax, &u, &u, &edx);
+    return edx & CPUID_FEAT_EDX_APIC;
+}

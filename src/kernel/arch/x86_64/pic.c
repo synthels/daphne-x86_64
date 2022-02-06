@@ -30,3 +30,10 @@ void remap_pic(void)
     outb(0x21, 0x0);
     outb(0xA1, 0x0);
 }
+
+void pic_disable(void)
+{
+    outb(0x21, 0xff);
+    pic_wait();
+    outb(0xA1, 0xff);
+}

@@ -42,6 +42,22 @@ struct task {
     vec_t *children;
 };
 
+struct processor {
+    /*
+     * Currently running task. If the task
+     * is asleep, the processor sits idle
+     * waiting for an interrupt.
+     */
+	volatile struct task *task;
+	int cpu_id;
+
+    /* TODO: not used */
+	int  cpu_model;
+	int  cpu_family;
+	char cpu_model_name[48];
+	const char * cpu_manufacturer;
+};
+
 /**
  * init_sched
  *   brief: init sched

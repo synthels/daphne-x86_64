@@ -13,12 +13,12 @@ set(SRC
     ${SRCROOT}/context.h
     ${SRCROOT}/pic.c
     ${SRCROOT}/pic.h
-    ${SRCROOT}/apic.c
-    ${SRCROOT}/apic.h
     ${SRCROOT}/acpi.c
     ${SRCROOT}/acpi.h
     ${SRCROOT}/madt.c
     ${SRCROOT}/madt.h
+    ${SRCROOT}/smp.c
+    ${SRCROOT}/smp.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

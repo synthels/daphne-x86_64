@@ -17,5 +17,16 @@
 #include <generic/io/io.h>
 #include <stdint.h>
 
+#define pic_wait()                    \
+    do {                              \
+        asm volatile("jmp 1f\n\t"     \
+                     "1:\n\t"         \
+                     "    jmp 2f\n\t" \
+                     "2:");           \
+    } while (0)
+
 /* Remap the PIC */
 void remap_pic(void);
+
+/* Disable the PIC */
+void pic_disable(void);

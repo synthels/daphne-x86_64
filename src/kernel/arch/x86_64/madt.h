@@ -22,7 +22,7 @@
 enum madt_type {
     MADT_LAPIC = 0,
     MADT_IOAPIC = 1,
-    MADT_INT = 2,
+    MADT_ISO = 2,
     MADT_NMI = 4,
 };
 
@@ -46,7 +46,7 @@ struct madt_table_ioapic {
     uint32_t gsib;
 } __attribute__((packed));
 
-struct madt_table_int {
+struct madt_table_iso {
     struct madt_record_table_entry std;
     uint8_t bus;
     uint8_t irq;
@@ -75,7 +75,19 @@ struct madt_head {
 void madt_init(void);
 
 /**
- * madt_get_table
- *   brief: get table of certain madt_type
+ * madt_length
+ *   brief: get madt length
  */
-void **madt_get_table(enum madt_type type);
+uint64_t madt_length(void);
+
+/**
+ * madt_get_tables
+ *   brief: get tables of certain madt_type
+ */
+void **madt_get_tables(enum madt_type type);
+
+/**
+ * madt_get_header
+ *   brief: get madt header
+ */
+struct madt_head *madt_get_header(void);

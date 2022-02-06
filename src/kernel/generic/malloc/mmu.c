@@ -83,6 +83,13 @@ void mmu_free(void *ptr)
     bitmap_set(bmp, (uint64_t) (ptr - heap_low) / 64, 1);
 }
 
+void mmu_map_mmio(uintptr_t base, size_t pages)
+{
+    for (int i = 0; i < pages; i++) {
+        pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
+    }
+}
+
 context_t *mmu_init_context(size_t heap, uint64_t stack)
 {
     return (context_t *) init_context(heap, stack);

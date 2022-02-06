@@ -45,6 +45,12 @@ void *mmu_alloc(size_t n);
 void mmu_free(void *ptr);
 
 /**
+ * mmu_map_mmio
+ *   brief: map region for mmio
+ */
+void mmu_map_mmio(uintptr_t base, size_t pages);
+
+/**
  * mmu_vmalloc
  *   brief: allocate page directory
  */
