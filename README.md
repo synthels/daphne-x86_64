@@ -49,7 +49,7 @@ $ git clone https://github.com/synthels/daphne.git --recursive
 
 #### Building limine
 
-building limine is really simple. All you have to do is run `make` from inside the `kernel/arch/x86_64/limine` directory.
+building limine is really simple. All you have to do is run `./autogen.sh` and then `make` from inside the `src/kernel/arch/x86_64/limine` directory.
 
 #### Building the kernel
 
