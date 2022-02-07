@@ -1,3 +1,0 @@
-[submodule "kernel/arch/x86_64/limine"]
-	path = kernel/arch/x86_64/limine
-	url = https://github.com/synthels/limine
