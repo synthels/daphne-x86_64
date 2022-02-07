@@ -58,3 +58,10 @@ bool cpu_has_apic(void)
     __get_cpuid(1, &eax, &u, &u, &edx);
     return edx & CPUID_FEAT_EDX_APIC;
 }
+
+uint64_t cpu_get_cr3(void)
+{
+    uint64_t cr3;
+    asm("\t mov %%cr3,%0" : "=r"(cr3));
+    return cr3;
+}

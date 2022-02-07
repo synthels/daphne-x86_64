@@ -85,7 +85,7 @@ void mmu_free(void *ptr)
 
 void mmu_map_mmio(uintptr_t base, size_t pages)
 {
-    for (int i = 0; i < pages; i++) {
+    for (size_t i = 0; i < pages; i++) {
         pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
     }
 }

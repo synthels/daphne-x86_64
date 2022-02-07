@@ -56,6 +56,8 @@
  */
 #define kern_queue_calls(f1, f2, cond) if (cond) { f1; f2; } else { f2; f1; }
 
+#define KERNEL_STACK_SIZE 65536 /* 64KiB */
+
 /**
  * set_kernel_mode
  *   brief: Set current kernel mode

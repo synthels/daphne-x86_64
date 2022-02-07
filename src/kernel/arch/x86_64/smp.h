@@ -22,9 +22,14 @@
 
 #include <generic/sched/task.h>
 #include <generic/malloc/malloc.h>
+#include <generic/forbia/types.h>
 
 #define LAPIC_ENABLE (1 << 10)
-#define SMP_MAX_CPUS 32
+#define SMP_MAX_CPUS 12
+
+#define AP_BOOTSTRAP_VIRT_START 0x1000
+#define SMP_PAGE_TABLE 0x700
+#define SMP_STACK 0x750
 
 enum SMP_MSR {
     APIC = 0x1b,
@@ -44,7 +49,7 @@ enum SMP_APIC_REGS {
     SIVR = 0xf0,
     ICR1 = 0x300,
     ICR2 = 0x310,
-    LVT = 0x320,
+    LVT_TIMER = 0x320,
     LINT1 = 0x350,
     LINT2 = 0x360,
     TIMER_DIV = 0x3E0,

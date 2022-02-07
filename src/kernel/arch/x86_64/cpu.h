@@ -96,3 +96,9 @@ void arch_swapregs(regs_t *regs);
  *   brief: check if CPU suppoerts APIC
  */
 bool cpu_has_apic(void);
+
+/**
+ * cpu_get_cr3
+ *   brief: get cr3's value
+ */
+uint64_t cpu_get_cr3(void);

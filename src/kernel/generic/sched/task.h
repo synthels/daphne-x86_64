@@ -50,6 +50,7 @@ struct processor {
      */
 	volatile struct task *task;
 	int cpu_id;
+    int lapic_id;
 
     /* TODO: not used */
 	int  cpu_model;

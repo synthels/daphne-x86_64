@@ -19,6 +19,7 @@ set(SRC
     ${SRCROOT}/madt.h
     ${SRCROOT}/smp.c
     ${SRCROOT}/smp.h
+    ${SRCROOT}/smp.asm
 )
 
 add_subdirectory(${SRCROOT}/idt)
