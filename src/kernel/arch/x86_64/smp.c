@@ -20,7 +20,7 @@ static uint64_t apic;
 static struct processor *cpus;
 static uint64_t lapic_base;
 
-static bool _ap_startup_flag = false;
+static bool _ap_is_ok = false;
 
 extern uint32_t ap_bootstrap16;
 extern uint32_t ap_bootstrap_end;
@@ -86,9 +86,9 @@ static void apic_init(void)
  */
 static void apic_send_ipi(int intr, uint32_t flags)
 {
-	apic_write(0x310, intr << 24);
-	apic_write(0x300, flags);
-	do { asm volatile ("pause" : : : "memory"); } while (apic_read(0x300) & (1 << 12));
+    apic_write(0x310, intr << 24);
+    apic_write(0x300, flags);
+    do { asm volatile ("pause" : : : "memory"); } while (apic_read(0x300) & (1 << 12));
 }
 
 /**
@@ -101,7 +101,7 @@ static void apic_send_ipi(int intr, uint32_t flags)
  */
 void ap_startup(void)
 {
-    _ap_startup_flag = true;
+    _ap_is_ok = true;
     for (;;) {
         asm("hlt");
     }
@@ -156,7 +156,7 @@ void smp_init(void)
         if ((uint32_t) cpus[i].cpu_id == (apic_read(LAPIC_ID) >> 24)) continue;
         uint64_t ap_bootstrap_len = (uintptr_t) &ap_bootstrap_end - (uintptr_t) &ap_bootstrap16;
 
-        _ap_startup_flag = false;
+        _ap_is_ok = false;
 
         /**
          * We drop cr3 at the address SMP_PAGE_TABLE, from
@@ -185,6 +185,6 @@ void smp_init(void)
         /* Wait for AP to do its thing before continuing */
         do { 
             asm volatile ("pause" : : : "memory");
-        } while (!_ap_startup_flag);
+        } while (!_ap_is_ok);
     }
 }
