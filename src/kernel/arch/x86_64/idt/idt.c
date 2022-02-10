@@ -76,7 +76,7 @@ void idt_install_handlers()
 }
 
 /* Generate & load an IDT */
-void init_idt(void)
+void idt_init(void)
 {
     extern int load_idt();
     idtp idt_ptr;

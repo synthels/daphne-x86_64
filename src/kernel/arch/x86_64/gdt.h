@@ -64,7 +64,7 @@ struct gdt_ptr {
 } __attribute__((packed));
 
 /**
- * init_gdt
+ * gdt_init
  *   brief: Load the kernel GDT
  */
-void init_gdt(void);
+void gdt_init(void);

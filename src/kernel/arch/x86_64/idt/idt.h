@@ -57,7 +57,7 @@ typedef struct {
 void idt_install_irq_handler(void (*handler)(void), int i);
 
 /**
- * init_idt
+ * idt_init
  *   brief: Load the kernel IDT
  */
-void init_idt(void);
+void idt_init(void);

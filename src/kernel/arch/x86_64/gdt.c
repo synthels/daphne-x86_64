@@ -51,7 +51,7 @@ struct gdt_tss_entry gdt_entry_tss(uintptr_t tss)
     };
 }
 
-void init_gdt(void)
+void gdt_init(void)
 {
     gdt.tss = gdt_entry_tss((uintptr_t) &tss);
     gp.limit = (sizeof(gdt) - 1);

@@ -94,8 +94,8 @@ void kmain(struct stivale2_struct *stv)
     /* Get RSDP */
     struct stivale2_struct_tag_rsdp *rsdp_info = get_tag(stv, STIVALE2_STRUCT_TAG_RSDP_ID);
 
-    init_gdt(); /* gdt & tss */
-    init_idt(); /* idt */
+    gdt_init(); /* gdt & tss */
+    idt_init(); /* idt */
     mem_init(mmap->memmap, mmap->entries); /* mm */
     pmm_init(); /* pmm */
     vmm_init(); /* vmm */

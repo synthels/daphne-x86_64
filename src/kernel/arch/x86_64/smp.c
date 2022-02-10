@@ -102,8 +102,8 @@ static void apic_send_sipi(uint32_t cpu_id, uintptr_t entry)
  */
 static void tsc_delay(unsigned long amount)
 {
-	uint64_t clock = rdtsc();
-	while (rdtsc() < clock + amount);
+    uint64_t clock = rdtsc();
+    while (rdtsc() < clock + amount);
 }
 
 /**
