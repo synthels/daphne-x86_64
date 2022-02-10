@@ -79,16 +79,31 @@ static void apic_init(void)
 }
 
 /**
- * @brief Send an IPI
+ * @brief Send INIT & SIPI
  *
- * @param int Interrupt
- * @param flags Flags
+ * Sends IPIs to a CPU
  */
-static void apic_send_ipi(int intr, uint32_t flags)
+static void apic_send_init(uint32_t cpu_id)
 {
-    apic_write(0x310, intr << 24);
-    apic_write(0x300, flags);
-    do { asm volatile ("pause" : : : "memory"); } while (apic_read(0x300) & (1 << 12));
+    apic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
+    apic_write(ICR1, LAPIC_ICR_DEST_INIT);
+}
+
+static void apic_send_sipi(uint32_t cpu_id, uintptr_t entry)
+{
+    apic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
+    apic_write(ICR1, LAPIC_ICR_DEST_SEND_IPI | (entry / 4096));
+}
+
+/**
+ * @brief Delay with TSC
+ *
+ * I need to put this elsewhere...
+ */
+static void tsc_delay(unsigned long amount)
+{
+	uint64_t clock = rdtsc();
+	while (rdtsc() < clock + amount);
 }
 
 /**
@@ -107,13 +122,11 @@ void ap_startup(void)
     }
 }
 
-/* TODO: delay */
 void smp_signal_ap(uint32_t lapic)
 {
-    /* INIT */
-    apic_send_ipi(lapic, 0x4500);
-    /* SIPI */
-    apic_send_ipi(lapic, 0x4601);
+    apic_send_init(lapic);
+    tsc_delay(5000UL);
+    apic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
 }
 
 void smp_init(void)
@@ -127,7 +140,7 @@ void smp_init(void)
     /* Enumerate all cores */
     for (; m[cores]; cores++) {
         /* Too many? Only use SMP_MAX_CPUS */
-        if (cores >= SMP_MAX_CPUS) {
+        if (cores > SMP_MAX_CPUS) {
             warn("smp: too many cpus, defaulting to %ui", SMP_MAX_CPUS);
             break;
         }
@@ -159,14 +172,15 @@ void smp_init(void)
         _ap_is_ok = false;
 
         /**
-         * We drop cr3 at the address SMP_PAGE_TABLE, from
-         * where every AP can retrieve it. We also drop
-         * a new stack at SMP_STACK for the AP. (see smp.asm)
+         * Map the kernel's page table, a new stack
+         * and the entry point for the AP just below the
+         * bootstrap code where the AP can retrieve them
          */
-        mmu_map_mmio(SMP_PAGE_TABLE, 1);
+        mmu_map_mmio(0x0, 1);
         uint8_t *cpu_stack = kmalloc(KERNEL_STACK_SIZE * sizeof(uint8_t));
-        *((volatile uint64_t *)(SMP_PAGE_TABLE)) = cpu_get_cr3();
+        *((volatile uint64_t *)(SMP_PAGE_TABLE)) = (uint64_t) vmm_get_pml4();
         *((volatile uint64_t *)(SMP_STACK)) = ((uint64_t) cpu_stack + KERNEL_STACK_SIZE);
+        *((volatile uint64_t *)(AP_ENTRY)) = ((uintptr_t) ap_startup);
 
         /* Store GDT & IDT for AP */
         asm volatile(
@@ -174,17 +188,18 @@ void smp_init(void)
             "sidt 0x790\n"
         );
 
-        /* Map & load trampoline */
+        /* Map & load bootstrap code */
         mmu_map_mmio(AP_BOOTSTRAP_VIRT_START, (ap_bootstrap_len / PAGE_SIZE) + 2);
         memcpy((void *) AP_BOOTSTRAP_VIRT_START, (void *) &ap_bootstrap16, ap_bootstrap_len);
 
         /* Startup CPU */
         smp_signal_ap(cpus[i].lapic_id);
-        ok("smp: loaded cpu 0x%x", cpus[i].cpu_id);
 
         /* Wait for AP to do its thing before continuing */
         do { 
             asm volatile ("pause" : : : "memory");
         } while (!_ap_is_ok);
     }
+
+    ok("smp: initialised SMP with %ui cores", cores);
 }

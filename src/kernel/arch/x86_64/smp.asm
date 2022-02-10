@@ -3,6 +3,7 @@
 %define SMP_STACK 0x750
 %define SMP_GDT 0x770
 %define SMP_IDT 0x790
+%define AP_ENTRY 0x800
 
 [bits 16]
 global ap_bootstrap16
@@ -15,7 +16,7 @@ ap_bootstrap16:
     mov gs, ax
     mov ss, ax
 
-    o32 lgdt [pm_gdtr - ap_bootstrap16 + TRAMPOLINE_BASE]
+    o32 lgdt [gdtr32 - ap_bootstrap16 + TRAMPOLINE_BASE]
 
     ; enable protected mode
     mov eax, cr0
@@ -55,7 +56,7 @@ ap_bootstrap32:
     or eax, 1 << 31
     mov cr0, eax
 
-    lgdt [lm_gdtr - ap_bootstrap16 + TRAMPOLINE_BASE]
+    lgdt [gdtr64 - ap_bootstrap16 + TRAMPOLINE_BASE]
     jmp 8:(ap_bootstrap64 - ap_bootstrap16 + TRAMPOLINE_BASE)
 
 [bits 64]
@@ -79,38 +80,33 @@ ap_bootstrap64:
     push 0x0
     popf
 
-    call ap_startup
+    mov rax, [AP_ENTRY]
+    call rax
+
+; early gdt structures
+align 16
+  gdtr32:
+    dw gdt32_end - gdt32_start - 1
+    dd gdt32_start - ap_bootstrap16 + TRAMPOLINE_BASE
 
 align 16
-  pm_gdtr:
-    dw pm_gdt_end - pm_gdt_start - 1
-    dd pm_gdt_start - ap_bootstrap16 + TRAMPOLINE_BASE
+  gdt32_start:
+    dq 0
+    dq 0x00CF9A000000FFFF
+    dq 0x00CF92000000FFFF
+  gdt32_end:
 
 align 16
-  pm_gdt_start:
-    dq 0                  ; null selector
-    dq 0x00CF9A000000FFFF ; cs selector
-    dq 0x00CF92000000FFFF ; ds selector
-  pm_gdt_end:
+  gdtr64:
+    dw gdt64_end - gdt64_start - 1
+    dq gdt64_start - ap_bootstrap16 + TRAMPOLINE_BASE
 
 align 16
-  pm_idtr:
-    dw 0
-    dd 0
-    dd 0
-    align 16
-
-align 16
-  lm_gdtr:
-    dw lm_gdt_end - lm_gdt_start - 1
-    dq lm_gdt_start - ap_bootstrap16 + TRAMPOLINE_BASE
-
-align 16
-  lm_gdt_start:
+  gdt64_start:
     dq 0
     dq 0x00AF98000000FFFF
     dq 0x00CF92000000FFFF
-  lm_gdt_end:
+  gdt64_end:
 
 global ap_bootstrap_end
 ap_bootstrap_end:

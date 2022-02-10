@@ -93,7 +93,7 @@ void arch_swapregs(regs_t *regs);
 
 /**
  * cpu_has_apic
- *   brief: check if CPU suppoerts APIC
+ *   brief: check if CPU supports APIC
  */
 bool cpu_has_apic(void);
 

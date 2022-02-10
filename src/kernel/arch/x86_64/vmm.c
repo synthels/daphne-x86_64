@@ -90,6 +90,11 @@ void vmm_init_pml(uint64_t *pml)
     map_kernel(pml, false);
 }
 
+uint64_t *vmm_get_pml4(void)
+{
+    return pml4;
+}
+
 void pml4_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
 {
     map_page(pml4, virt_addr, phys_addr, flags);

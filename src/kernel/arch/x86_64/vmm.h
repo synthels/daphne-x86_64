@@ -42,6 +42,12 @@
 void vmm_init(void);
 
 /**
+ * init_vmm
+ *   brief: get PML4
+ */
+uint64_t *vmm_get_pml4(void);
+
+/**
  * pml4_map_page
  *   brief: Map single page without access to the PML
  */

@@ -17,6 +17,7 @@
 #include <arch/x86_64/madt.h>
 #include <arch/x86_64/vmm.h>
 #include <arch/x86_64/pic.h>
+#include <arch/x86_64/cmos.h>
 
 #include <lib/printk.h>
 
@@ -24,12 +25,18 @@
 #include <generic/malloc/malloc.h>
 #include <generic/forbia/types.h>
 
+#define SMP_MAX_CPUS 32
+
 #define LAPIC_ENABLE (1 << 10)
-#define SMP_MAX_CPUS 12
+#define LAPIC_ICR_CPUID_OFFSET 24
+#define LAPIC_ICR_DEST_INIT (5 << 8)
+#define LAPIC_ICR_DEST_SEND_IPI (6 << 8)
 
 #define AP_BOOTSTRAP_VIRT_START 0x1000
+
 #define SMP_PAGE_TABLE 0x700
 #define SMP_STACK 0x750
+#define AP_ENTRY 0x800
 
 enum SMP_MSR {
     APIC = 0x1b,
