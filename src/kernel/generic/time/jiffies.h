@@ -8,19 +8,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
 #pragma once
 
-#include <stdint.h>
-#include <generic/io/io.h>
-#include <generic/time/sleep.h>
+#ifdef ARCH_x86_64
+    #define HZ 100 /* TODO: this should be a kernel parameter */
+#endif
 
-/**
- * pcspk_beep
- *   brief: play freq through the pc speaker for
- *          a few ticks
- */
-void pcspk_beep(uint16_t freq, uint16_t ticks);
+int jiffies_to_sec(int jiff);
+int jiffies_to_msec(int jiff);
+int jiffies_to_usec(int jiff);

@@ -43,11 +43,9 @@ ap_bootstrap32:
     or eax, 1 << 7
     mov cr4, eax
 
-    ; efet
+    ; enable long mode
     mov ecx, 0xc0000080
     rdmsr
-
-    ; enable long mode
     or eax, 1 << 8
     wrmsr
 

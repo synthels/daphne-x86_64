@@ -26,6 +26,7 @@ static int kbd_keyev = 0;
 void kbd_init(void)
 {
     kbd_enabled = 1;
+    irq_enable(1);
 }
 
 void kbd_read(void)
@@ -36,8 +37,7 @@ void kbd_read(void)
         kbd_last_key_pressed = !(kbd_last_key & 0x80);
         return;
     }
-
-    /* Read once again from here, so the PIC doesn't think we're stupid
+    /* Read once again from here, so the (A)PIC doesn't think we're stupid
        if the keyboard is disabled */
     kbd_last_key = '\0';
     inb(0x60);

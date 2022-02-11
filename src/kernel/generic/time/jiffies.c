@@ -10,42 +10,26 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * jiffies
+ *
+ * A "jiffie" (as adapted from linux) is defined as 1s * 1/HZ &
+ * is the smallest time unit the kernel can perceive
  */
 
-#pragma once
+#include "jiffies.h"
 
-#include <generic/io/io.h>
-#include <generic/forbia/kernel.h>
+int jiffies_to_sec(int jiff)
+{
+    return jiff / HZ;
+}
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/x64.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
+int jiffies_to_msec(int jiff)
+{
+    return (jiff / HZ) * 1000;
+}
 
-#include "tm.h"
-
-#define TIMER_FREQ 100
-
-/**
- * pit_init
- *   brief: init pit
- */
-void pit_init(struct tm_func_node *head);
-
-/**
- * pit_tick
- *   brief: do one tick
- */
-void pit_tick(regs_t *r);
-
-/**
- * pit_irq_handler
- *   brief: PIT IRQ handler
- */
-void pit_irq_handler(regs_t *r);
-
-/**
- * pit_get_ticks
- *   brief: get current tick count
- */
-uint64_t pit_get_ticks(void);
+int jiffies_to_usec(int jiff)
+{
+    return (jiff / HZ) * 1000000;
+}

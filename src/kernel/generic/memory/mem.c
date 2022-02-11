@@ -14,13 +14,6 @@
  * Memory manager
  */
 
-/**
- * Virtual memory space:
- * | --------- | ------ | ----------- |
- * | Userspace | Kernel | Kernel heap |
- * | --------- | ------ | ----------- |
- */
-
 #include "mem.h"
 
 /* Limine memory map */

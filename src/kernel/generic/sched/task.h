@@ -24,6 +24,7 @@
     #include <arch/x86_64/x64.h>
     #include <arch/x86_64/pmm.h>
     #include <arch/x86_64/vmm.h>
+    #include <arch/x86_64/smp.h>
 #endif
 
 #include <generic/malloc/mmu.h>
@@ -38,8 +39,9 @@ enum task_state_t {
 struct task {
     pid_t pid;
     context_t *context;
-    enum task_state_t state;
-    vec_t *children;
+    enum task_state_t state;    /* DEAD/ASLEEP/RUNNING */
+    struct task *next;          /* Next task */
+    vec_t *children;            /* Task children */
 };
 
 struct processor {
@@ -56,7 +58,7 @@ struct processor {
 	int  cpu_model;
 	int  cpu_family;
 	char cpu_model_name[48];
-	const char * cpu_manufacturer;
+	const char *cpu_manufacturer;
 };
 
 /**

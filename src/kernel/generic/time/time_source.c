@@ -11,36 +11,30 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * PIC
+ * Time sources
  */
 
-#include "pic.h"
+#include "time_source.h"
 
-/* Remap the PIC */
-void remap_pic(void)
+static enum time_source best_time_source = TIME_SOURCE_NONE;
+
+void time_source_set(enum time_source t)
 {
-    outb(0x20, 0x11);
-    outb(0xA0, 0x11);
-    outb(0x21, 0x20);
-    outb(0xA1, 0x28);
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
-    outb(0x21, 0x01);
-    outb(0xA1, 0x01);
-    outb(0x21, 0x0);
-    outb(0xA1, 0x0);
+    best_time_source = t;
 }
 
-void pic_disable(void)
+int time_source_get_jiffies(void)
 {
-    outb(0x20, 0x11);
-    outb(0xA0, 0x11);
-    outb(0x21, 0xF0); /* Remap IRQs on both PICs to 0xF0-0xF8 */
-    outb(0xA1, 0xF0);
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
-    outb(0x21, 0x01);
-    outb(0xA1, 0x01);
-    outb(0x21, 0xff);
-    outb(0xA1, 0xff);
+    switch(best_time_source) {
+        case TIME_SOURCE_PIT:
+            return pit_get_jiffies();
+        case TIME_SOURCE_APIC:
+            /* TODO */
+            break;
+        case TIME_SOURCE_HPET:
+            return hpet_get_jiffies();
+        default:
+            panic("no time source available!");
+    }
+    __builtin_unreachable();
 }

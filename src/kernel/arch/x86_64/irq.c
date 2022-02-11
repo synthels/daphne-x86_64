@@ -8,17 +8,15 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
+ *
+ * IRQ related methods
  */
 
-#pragma once
+#include "irq.h"
 
-#include <mod/tm/pit.h>
-#include <stdint.h>
-
-/**
- * sleep
- *   brief: sleep kernel for n ticks 
- */
-void sleep(uint32_t ticks);
+void irq_enable(int vec_no)
+{
+    lapic_redirect(vec_no, vec_no + 0x20, 0);
+}

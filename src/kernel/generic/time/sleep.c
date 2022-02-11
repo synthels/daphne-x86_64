@@ -8,19 +8,20 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
+ *
+ * Sleep function
  */
 
-#pragma once
+#include "sleep.h"
 
-#include <stdint.h>
-#include <generic/io/io.h>
-#include <generic/time/sleep.h>
-
-/**
- * pcspk_beep
- *   brief: play freq through the pc speaker for
- *          a few ticks
- */
-void pcspk_beep(uint16_t freq, uint16_t ticks);
+void sleep(uint32_t ticks)
+{
+    uint32_t start;
+    uint32_t now;
+    start = time_source_get_jiffies();
+    now = time_source_get_jiffies();
+    while ((now - start) < ticks)
+        now = time_source_get_jiffies();
+}

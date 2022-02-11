@@ -38,6 +38,9 @@
 #define SMP_STACK 0x750
 #define AP_ENTRY 0x800
 
+#define IOAPICREDTBL(n) (0x10 + 2 * n)
+#define ICR_MESSAGE_TYPE_LOW_PRIORITY (1 << 8)
+
 enum SMP_MSR {
     APIC = 0x1b,
     EFER = 0xc0000080,
@@ -47,7 +50,7 @@ enum SMP_MSR {
     SYSCALL_FLAG_MASK = 0xc0000084,
     FS_BASE = 0xc0000100,
     GS_BASE = 0xc0000101,
-    KERN_GS_BASE = 0xc0000102,
+    KERN_GS_BASE = 0xc0000102
 };
 
 enum SMP_APIC_REGS {
@@ -64,8 +67,31 @@ enum SMP_APIC_REGS {
     TCURR = 0x390
 };
 
+struct smp_cpus {
+    struct processor *cpus;
+    size_t size;
+};
+
 /**
  * smp_init
  *   brief: init smp
  */
 void smp_init(void);
+
+/**
+ * smp_get_cores
+ *   brief: get processor struct
+ */
+struct smp_cpus *smp_get_cores(void);
+
+/**
+ * lapic_redirect
+ *   brief: Setup irq redirect
+ */
+void lapic_redirect(uint8_t irq, uint8_t vector, uint32_t delivery);
+
+/**
+ * lapic_eoi
+ *   brief: send an EOI to the lapic
+ */
+void lapic_eoi(void);

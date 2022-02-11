@@ -153,9 +153,5 @@ void isr_handler(regs_t *r)
         (*irq_handlers[r->irq - 32])();
     }
 
-    /* Slave EOI */
-    if (r->irq >= 40)
-       outb(0xA0, 0x20);
-    /* Master EOI */
-    outb(0x20, 0x20);
+    lapic_eoi();
 }

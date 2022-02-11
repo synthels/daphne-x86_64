@@ -20,6 +20,7 @@
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
     #include <arch/x86_64/idt/idt.h>
+    #include <arch/x86_64/irq.h>
 #endif
 
 /**

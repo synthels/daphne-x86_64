@@ -16,46 +16,46 @@
 
 #include "task.h"
 
-static vec_t *tasks;
+static struct task root = {0, NULL, ASLEEP, NULL, NULL};
+static struct task *task_ptr; /* Current task */
+static bool _multicore;
+static bool first_task = true;
 static pid_t pid;
 
+/**
+ * @brief Initialise task
+ *
+ * Allocate a context for this task
+ */
 void init_task(struct task *t)
 {
+    /* Init first task */
+    if (first_task) {
+        task_ptr = &root;
+        first_task = false;
+    }
+    /* Fill in all the fields */
     t->pid = pid++;
     t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
     t->state = ASLEEP;
     t->children = vector();
-}
-
-void init_task_queue(void)
-{
-    struct task *head_task = kmalloc(sizeof(struct task));
-    init_task(head_task);
-    tasks = vector();
-    vec_push_ptr(tasks, head_task);
+    /* Add task to the linked list */
+    task_ptr->next = t;
+    task_ptr = t;
 }
 
 void init_sched(void)
 {
-    init_task_queue();
+    /* Check if we run within a multicore system */
+    struct smp_cpus *cpus = smp_get_cores();
+    if (cpus->size < 2) {
+        _multicore = false;
+    } else {
+        _multicore = true;
+    }
 }
 
 void switch_task(void)
 {
-    static struct task *running_task = NULL;
-    static size_t tasks_index = 0;
-    
-    if (!running_task) {
-        running_task = vec_get_as(tasks, tasks_index, struct task *);
-    }
-    running_task->state = ASLEEP;
-    /* Also suspend children here */
-    /* Warpback size if necessary */
-    if (tasks_index >= tasks->size) {
-        tasks_index = 0;
-    }
-    /* Switch to next task */
-    running_task = vec_get_as(tasks, tasks_index, struct task *);
-    running_task->state = RUNNING;
-    mmu_switch(running_task->context);
+
 }

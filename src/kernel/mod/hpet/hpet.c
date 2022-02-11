@@ -11,30 +11,31 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * PIT module
+ * HPET (TODO)
  */
 
-#include "pit.h"
+#include "hpet.h"
 
 static uint64_t ticks = 0;
 static struct tm_func_node *head_fn;
 
-void pit_init(struct tm_func_node *head)
+void hpet_init(struct tm_func_node *head)
 {
+    /* Check if HPET is available */
     head_fn = head;
-    int div = 1193180 / TIMER_FREQ;
-    outb(0x43, 0x34);
-    outb(0x40, div & 0xFF);
-    outb(0x40, div >> 8);
+    if (acpi_get_entry("HPET")) {
+        info("time: switched default time source to hpet");
+        time_source_set(TIME_SOURCE_HPET);
+    }
 }
 
-/* PIT IRQ */
-void pit_irq_handler(regs_t *r)
+/* HPET IRQ */
+void hpet_irq_handler(regs_t *r)
 {
-    pit_tick(r);
+    hpet_tick(r);
 }
 
-void pit_tick(regs_t *r)
+void hpet_tick(regs_t *r)
 {
     ++ticks;
     struct tm_func_node *current = head_fn;
@@ -45,7 +46,7 @@ void pit_tick(regs_t *r)
     }
 }
 
-uint64_t pit_get_ticks(void)
+uint64_t hpet_get_jiffies(void)
 {
     return ticks;
 }

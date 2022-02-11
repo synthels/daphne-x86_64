@@ -8,20 +8,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
  * GNU General Public License for more details.
- *
- * Sleep function
  */
 
-#include "sleep.h"
+#pragma once
 
-void sleep(uint32_t ticks)
-{
-    uint32_t start;
-    uint32_t now;
-    start = pit_get_ticks();
-    now = pit_get_ticks();
-    while ((now - start) < ticks)
-        now = pit_get_ticks();
-}
+#include <arch/x86_64/smp.h>
+
+/**
+ * irq_enable
+ *   brief: Unmask a LAPIC interrupt
+ */
+void irq_enable(int vec_no);

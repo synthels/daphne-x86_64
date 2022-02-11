@@ -22,6 +22,8 @@ set(SRC
     ${SRCROOT}/cmos.c
     ${SRCROOT}/cmos.h
     ${SRCROOT}/smp.asm
+    ${SRCROOT}/irq.c
+    ${SRCROOT}/irq.h
 )
 
 add_subdirectory(${SRCROOT}/idt)

@@ -7,8 +7,6 @@ set(SRC
     ${SRCROOT}/stdlib.h
     ${SRCROOT}/printk.c
     ${SRCROOT}/printk.h
-    ${SRCROOT}/sleep.c
-    ${SRCROOT}/sleep.h
     ${SRCROOT}/vec.c
     ${SRCROOT}/vec.h
 )

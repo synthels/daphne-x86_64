@@ -17,9 +17,10 @@
 #include <stdint.h>
 #include <generic/forbia/panic.h>
 #include <generic/forbia/kernel.h>
-#include <arch/x86_64/x64.h>
 
+#include <arch/x86_64/x64.h>
 #include <arch/x86_64/pic.h>
+#include <arch/x86_64/smp.h>
 
 #define ISR(isr, n) extern void isr(void); \
     idt_install_handler(isr, n)

@@ -1,6 +1,6 @@
 # daphne
 
-Free UNIX-like operating system
+Daphne is a UNIX-like 64-bit operating system written in pure C
 
 ## Build guide
 
@@ -105,7 +105,7 @@ $ xorriso -as mkisofs -b limine-cd.bin \
         iso -o daphne_img_x64.iso
 ```
 
-if you also want BIOS, you might want to run these commands
+if you also want to boot on BIOS, you might need to install limine
 
 ```bash
 $ cd ../src/kernel/arch/x86_64/limine/bin
@@ -127,14 +127,13 @@ in an x86-64 virtual machine such as VirtualBox or QEMU. It contains a complete
 
 #### Testing x64 images in QEMU
 
-Testing under QEMU requires that you have an OVMF image installed, then, at least under linux, you can use
-this command
+Testing under QEMU with UEFI requires that you have an OVMF image installed. If not, you can always just use leagacy BIOS. These commands will do on most linux systems:
 
 ```bash
 # UEFI
-$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -m 2048 -cdrom daphne_img_x64.iso
+$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -smp cores=6 -m 2048 -cdrom daphne_img_x64.iso
 # Legacy BIOS
-$ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -smp cores=16
+$ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -smp cores=6
 ```
 
 ## Contributing to daphne

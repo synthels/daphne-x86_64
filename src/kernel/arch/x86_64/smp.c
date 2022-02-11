@@ -18,12 +18,16 @@
 
 static uint64_t apic;
 static struct processor *cpus;
+static struct smp_cpus *smp_cores;
 static uint64_t lapic_base;
+static uint64_t ioapic_base; /* Can there be multiple IOAPICS? Sure. Do I give a shit? Nope. */
 
 static bool _ap_is_ok = false;
 
 extern uint32_t ap_bootstrap16;
 extern uint32_t ap_bootstrap_end;
+
+static struct madt_table_ioapic **ioapic_table;
 
 /* MSR functions (yes we assume that MSR is supported) */
 inline static uintptr_t rdmsr(uintptr_t msr)
@@ -46,16 +50,52 @@ inline static void wrmsr(uintptr_t msr, uintptr_t value)
                  : "c"(msr), "a"(low), "d"(high));
 }
 
-/* APIC functions */
-inline static void apic_write(uint32_t regs, uint32_t val)
+/* LAPIC functions */
+inline static void lapic_write(uint32_t reg, uint32_t val)
 {
-    *((volatile uint32_t *)(((uintptr_t) apic) + regs)) = val;
+    *((volatile uint32_t *)(((uintptr_t) apic) + reg)) = val;
     asm volatile ("":::"memory");
 }
 
-inline static uint32_t apic_read(uint32_t regs)
+inline static uint32_t lapic_read(uint32_t reg)
 {
-    return *((volatile uint32_t *)((uintptr_t) apic + regs));
+    return *((volatile uint32_t *)((uintptr_t) apic + reg));
+}
+
+/* Send an EOI to the lapic */
+void lapic_eoi(void)
+{
+    lapic_write(EOI, 0);
+}
+
+/* I/O APIC functions */
+inline static void ioapic_write(uint32_t reg, uint32_t val)
+{
+    *(volatile uint32_t *)(ioapic_base) = reg;
+    *(volatile uint32_t *)(ioapic_base + 0x10) = val;
+}
+
+inline static void ioapic_write64(uint32_t reg, uint64_t val)
+{
+    uint32_t lo = val & 0xffffffff;
+    uint32_t hi = val >> 32;
+
+    ioapic_write(reg, lo);
+    ioapic_write(reg + 1, hi);
+}
+
+inline static uint32_t ioapic_read(uint32_t reg)
+{
+    *(volatile uint32_t *)(ioapic_base) = reg;
+    return *(volatile uint32_t *)(ioapic_base + 0x10);
+}
+
+/**
+ * @brief Setup irq for redirect
+ */
+void lapic_redirect(uint8_t irq, uint8_t vector, uint32_t delivery)
+{
+    ioapic_write64(IOAPICREDTBL(irq), delivery | vector);
 }
 
 /**
@@ -64,18 +104,29 @@ inline static uint32_t apic_read(uint32_t regs)
  * Disables the PIC & sets up the APIC
  * for MMIO.
  */
-static void apic_init(void)
+static void lapic_init(void)
 {
     if (!cpu_has_apic()) panic("apic not supported!");
     apic = madt_get_header()->lapic;
+
+    /* Get IOAPIC info from MADT */
+    ioapic_table = (struct madt_table_ioapic **) madt_get_tables(MADT_IOAPIC);
+    ioapic_base = ioapic_table[lapic_read(LAPIC_ID) >> 24]->ioapic_addr;
+
     /* Map APIC base for MMIO */
     mmu_map_mmio(apic, 3);
+    mmu_map_mmio(ioapic_base, 3);
 
     wrmsr(APIC, (rdmsr(APIC) | 0x800) & ~(LAPIC_ENABLE));
 
     /* Disable the PIC & enable the APIC */
-    apic_write(SIVR, apic_read(SIVR) | 0x1ff);
+    lapic_write(SIVR, lapic_read(SIVR) | 0x1ff);
     pic_disable();
+
+    struct madt_table_iso **iso = (struct madt_table_iso **) madt_get_tables(MADT_ISO);
+    for (int i = 0; iso[i]; i++) {
+        lapic_redirect(iso[i]->gsi, iso[i]->irq + 0x20, 0);
+    }
 }
 
 /**
@@ -83,16 +134,16 @@ static void apic_init(void)
  *
  * Sends IPIs to a CPU
  */
-static void apic_send_init(uint32_t cpu_id)
+static void lapic_send_init(uint32_t cpu_id)
 {
-    apic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
-    apic_write(ICR1, LAPIC_ICR_DEST_INIT);
+    lapic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
+    lapic_write(ICR1, LAPIC_ICR_DEST_INIT);
 }
 
-static void apic_send_sipi(uint32_t cpu_id, uintptr_t entry)
+static void lapic_send_sipi(uint32_t cpu_id, uintptr_t entry)
 {
-    apic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
-    apic_write(ICR1, LAPIC_ICR_DEST_SEND_IPI | (entry / 4096));
+    lapic_write(ICR2, (uint64_t) cpu_id << LAPIC_ICR_CPUID_OFFSET);
+    lapic_write(ICR1, LAPIC_ICR_DEST_SEND_IPI | (entry / 4096));
 }
 
 /**
@@ -124,14 +175,14 @@ void ap_startup(void)
 
 void smp_signal_ap(uint32_t lapic)
 {
-    apic_send_init(lapic);
+    lapic_send_init(lapic);
     tsc_delay(5000UL);
-    apic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
+    lapic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
 }
 
 void smp_init(void)
 {
-    apic_init();
+    lapic_init();
     cpus = kmalloc(sizeof(struct processor) * SMP_MAX_CPUS);
     /* Get info from MADT */
     struct madt_table_lapic **m = (struct madt_table_lapic **) madt_get_tables(MADT_LAPIC);
@@ -148,6 +199,10 @@ void smp_init(void)
         cpus[cores].lapic_id = m[cores]->apic_id;
         cpus[cores].task = NULL;
     }
+
+    smp_cores = kmalloc(sizeof(smp_cores));
+    smp_cores->cpus = cpus;
+    smp_cores->size = cores;
 
     /* I like my memory free! */
     kfree(m);
@@ -166,7 +221,7 @@ void smp_init(void)
          * the BSP always has id 0x0, but this check doesn't really
          * impact anything so I'll just leave it here for now
          */
-        if ((uint32_t) cpus[i].cpu_id == (apic_read(LAPIC_ID) >> 24)) continue;
+        if ((uint32_t) cpus[i].cpu_id == (lapic_read(LAPIC_ID) >> 24)) continue;
         uint64_t ap_bootstrap_len = (uintptr_t) &ap_bootstrap_end - (uintptr_t) &ap_bootstrap16;
 
         _ap_is_ok = false;
@@ -202,4 +257,9 @@ void smp_init(void)
     }
 
     ok("smp: initialised SMP with %ui cores", cores);
+}
+
+struct smp_cpus *smp_get_cores(void)
+{
+    return smp_cores;
 }

@@ -11,20 +11,25 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Time module
+ * Time functions
  */
 
-#include "pit.h" /* TODO: APIC... */
-#include "tm.h"
+#include "time.h"
 
 static struct tm_func_node node = { NULL, NULL };
 
-void tm_init(void)
+void time_init(void)
 {
+    /* Boot up te PIT as a first time source... */
     pit_init(&node);
 }
 
-void tm_hook(tm_func_t f)
+struct tm_func_node *time_get_root_func_node(void)
+{
+    return &node;
+}
+
+void time_hook(tm_func_t f)
 {
     struct tm_func_node *current = &node;
     while (current->next != NULL) {
@@ -36,7 +41,7 @@ void tm_hook(tm_func_t f)
     current->next->next = NULL;
 }
 
-uint64_t tm_get_ticks(void)
+uint64_t time_get_ticks(void)
 {
-    return pit_get_ticks();
+    return time_source_get_jiffies();
 }

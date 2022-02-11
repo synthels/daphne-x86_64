@@ -8,19 +8,32 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
 
 #pragma once
 
-#include <stdint.h>
-#include <generic/io/io.h>
-#include <generic/time/sleep.h>
+#include <lib/printk.h>
+
+#include <mod/pit/pit.h>
+#include <mod/hpet/hpet.h>
+
+enum time_source {
+    TIME_SOURCE_PIT,
+    TIME_SOURCE_APIC,
+    TIME_SOURCE_HPET,
+    TIME_SOURCE_NONE
+};
 
 /**
- * pcspk_beep
- *   brief: play freq through the pc speaker for
- *          a few ticks
+ * time_source_get_jiffies
+ *   brief: get jiffies since boot
  */
-void pcspk_beep(uint16_t freq, uint16_t ticks);
+int time_source_get_jiffies(void);
+
+/**
+ * time_source_set
+ *   brief: set current best time source
+ */
+void time_source_set(enum time_source t);
