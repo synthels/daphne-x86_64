@@ -18,31 +18,15 @@
 #include <generic/time/time_source.h>
 #include <generic/time/time_func_node.h>
 #include <generic/time/jiffies.h>
+#include <generic/time/sleep.h>
 
 #include <lib/printk.h>
 
 #include <arch/x86_64/acpi.h> /* TODO: not x64 specific... */
+#include <arch/x86_64/smp.h>
 
 /**
- * hpet_init
- *   brief: init hpet
+ * apic_init
+ *   brief: init apic timer
  */
-void hpet_init(struct tm_func_node *head);
-
-/**
- * hpet_tick
- *   brief: do one tick
- */
-void hpet_tick(regs_t *r);
-
-/**
- * hpet_irq_handler
- *   brief: HPET IRQ handler
- */
-void pit_irq_handler(regs_t *r);
-
-/**
- * hpet_get_jiffies
- *   brief: get jiffies since boot
- */
-uint64_t hpet_get_jiffies(void);
+void apic_init(void);

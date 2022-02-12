@@ -17,24 +17,25 @@
 #include "time_source.h"
 
 static enum time_source best_time_source = TIME_SOURCE_NONE;
+static uint64_t jiffies = 0;
 
 void time_source_set(enum time_source t)
 {
     best_time_source = t;
 }
 
+void time_source_tick(regs_t *r)
+{
+    ++jiffies;
+    time_run_hooks(r, jiffies);
+}
+
+void time_source_irq_handler(regs_t *r)
+{
+    time_source_tick(r);
+}
+
 int time_source_get_jiffies(void)
 {
-    switch(best_time_source) {
-        case TIME_SOURCE_PIT:
-            return pit_get_jiffies();
-        case TIME_SOURCE_APIC:
-            /* TODO */
-            break;
-        case TIME_SOURCE_HPET:
-            return hpet_get_jiffies();
-        default:
-            panic("no time source available!");
-    }
-    __builtin_unreachable();
+    return jiffies;
 }

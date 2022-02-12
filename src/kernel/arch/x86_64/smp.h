@@ -62,7 +62,7 @@ enum SMP_APIC_REGS {
     LVT_TIMER = 0x320,
     LINT1 = 0x350,
     LINT2 = 0x360,
-    TIMER_DIV = 0x3E0,
+    TIMER_DIV = 0x3e0,
     TIC = 0x380,
     TCURR = 0x390
 };
@@ -83,6 +83,18 @@ void smp_init(void);
  *   brief: get processor struct
  */
 struct smp_cpus *smp_get_cores(void);
+
+/**
+ * lapic_write
+ *   brief: write to the lapic
+ */
+void lapic_write(uint32_t reg, uint32_t val);
+
+/**
+ * lapic_read
+ *   brief: read from the lapic
+ */
+uint32_t lapic_read(uint32_t reg);
 
 /**
  * lapic_redirect

@@ -33,3 +33,22 @@ int jiffies_to_usec(int jiff)
 {
     return (jiff / HZ) * 1000000;
 }
+
+int sec_to_jiffies(int sec)
+{
+    return sec * HZ;
+}
+
+int msec_to_jiffies(int millis)
+{
+    if (HZ >= 1000)
+        return (millis * HZ) / 1000;
+    return -1;
+}
+
+int usec_to_jiffies(int millis)
+{
+    if (HZ >= 1000000)
+        return (millis * HZ) / 1000000;
+    return -1;
+}

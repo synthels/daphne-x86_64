@@ -26,22 +26,4 @@
  * pit_init
  *   brief: init pit
  */
-void pit_init(struct tm_func_node *head);
-
-/**
- * pit_tick
- *   brief: do one tick
- */
-void pit_tick(regs_t *r);
-
-/**
- * pit_irq_handler
- *   brief: PIT IRQ handler
- */
-void pit_irq_handler(regs_t *r);
-
-/**
- * pit_get_jiffies
- *   brief: get jiffies since boot
- */
-uint64_t pit_get_jiffies(void);
+void pit_init(void);

@@ -69,8 +69,8 @@ void idt_install_handlers()
     /* syscall (TODO: this needs to be in userspace) */
     ISR(isr128, 128);
 
-    /* PIT */
-    IRQ(irq0, pit_irq_handler, 0);
+    /* Timer */
+    IRQ(irq0, time_source_irq_handler, 0);
     /* Keyboard */
     IRQ(irq1, kbd_irq_handler, 1);
 }

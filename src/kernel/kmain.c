@@ -29,7 +29,7 @@
 
 #include <mod/fb/lfb.h>
 #include <mod/pci/pci.h>
-#include <mod/hpet/hpet.h>
+#include <mod/apic/apic.h>
 #include <mod/kbd/kbd.h>
 
 #include <lib/printk.h>
@@ -132,19 +132,18 @@ void kmain(struct stivale2_struct *stv)
     );
     ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
-    time_init();                    /* time */
-    pci_scan();                     /* pci */
-
     #ifdef ARCH_x86_64
-        acpi_init(rsdp_info->rsdp);           /* acpi */
-        madt_init();                          /* madt */
-        smp_init();                           /* smp */
-        hpet_init(time_get_root_func_node()); /* try to boot up HPET */
+        pci_scan();                         /* pci */
+        acpi_init(rsdp_info->rsdp);         /* acpi */
+        madt_init();                        /* madt */
+        smp_init();                         /* smp */
     #endif
 
-    enable_interrupts(); /* enable interrupts right when the APIC kicks in */
-    kbd_init();          /* init ps2 keyboard */
-    init_sched();        /* init scheduler */
+    enable_interrupts();                    /* enable interrupts */
+    kbd_init();                             /* init ps2 keyboard */
+    time_init();                            /* time */
+    apic_init();                            /* try to boot up the APIC timer */
+    init_sched();                           /* init scheduler */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

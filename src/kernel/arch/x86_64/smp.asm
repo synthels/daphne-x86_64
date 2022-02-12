@@ -54,6 +54,8 @@ ap_bootstrap32:
     or eax, 1 << 31
     mov cr0, eax
 
+    ; load idt & gdt64
+    lidt [SMP_IDT]
     lgdt [gdtr64 - ap_bootstrap16 + TRAMPOLINE_BASE]
     jmp 8:(ap_bootstrap64 - ap_bootstrap16 + TRAMPOLINE_BASE)
 
@@ -68,11 +70,10 @@ ap_bootstrap64:
     mov fs, ax
     mov gs, ax
 
-    lgdt [SMP_GDT]
-    lidt [SMP_IDT]
-
+    ; load stack & gdt
     mov rsp, [SMP_STACK]
     mov rbp, 0x0
+    lgdt [SMP_GDT]
 
     ; reset RFLAGS
     push 0x0

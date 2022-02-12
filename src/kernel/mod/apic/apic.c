@@ -11,17 +11,25 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Sleep function
+ * APIC timer
  */
 
-#include "sleep.h"
+#include "apic.h"
 
-void sleep(uint64_t jiff)
+void apic_init(void)
 {
-    uint32_t start;
-    uint32_t now;
-    start = time_source_get_jiffies();
-    now = time_source_get_jiffies();
-    while ((now - start) < jiff)
-        now = time_source_get_jiffies();
+    lapic_write(TIMER_DIV, 0x3);
+
+    lapic_write(TIC, 0xFFFFFFFF);
+    sleep(HZ); /* TODO: is this correct?? */
+
+    lapic_write(LVT_TIMER, 0x10000);
+
+    uint64_t tenms = 0xFFFFFFFF - lapic_read(TCURR);
+
+    lapic_write(LVT_TIMER, 32 | 0x20000);
+    lapic_write(TIMER_DIV, 0x3);
+    lapic_write(TIC, tenms);
+
+    time_source_set(TIME_SOURCE_APIC);
 }

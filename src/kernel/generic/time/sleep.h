@@ -21,4 +21,4 @@
  * sleep
  *   brief: sleep kernel for n ticks 
  */
-void sleep(uint32_t ticks);
+void sleep(uint64_t jiff);

@@ -17,7 +17,7 @@
 #include <lib/printk.h>
 
 #include <mod/pit/pit.h>
-#include <mod/hpet/hpet.h>
+#include <mod/apic/apic.h>
 
 enum time_source {
     TIME_SOURCE_PIT,
@@ -31,6 +31,12 @@ enum time_source {
  *   brief: get jiffies since boot
  */
 int time_source_get_jiffies(void);
+
+/**
+ * time_source_irq_handler
+ *   brief: time irq handler
+ */
+void time_source_irq_handler(regs_t *r);
 
 /**
  * time_source_set

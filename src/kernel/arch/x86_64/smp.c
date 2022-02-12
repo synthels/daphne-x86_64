@@ -51,13 +51,13 @@ inline static void wrmsr(uintptr_t msr, uintptr_t value)
 }
 
 /* LAPIC functions */
-inline static void lapic_write(uint32_t reg, uint32_t val)
+void lapic_write(uint32_t reg, uint32_t val)
 {
     *((volatile uint32_t *)(((uintptr_t) apic) + reg)) = val;
     asm volatile ("":::"memory");
 }
 
-inline static uint32_t lapic_read(uint32_t reg)
+uint32_t lapic_read(uint32_t reg)
 {
     return *((volatile uint32_t *)((uintptr_t) apic + reg));
 }

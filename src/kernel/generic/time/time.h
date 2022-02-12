@@ -21,6 +21,7 @@
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/irq.h>
 #endif
 
 #include "jiffies.h"
@@ -49,3 +50,9 @@ uint64_t time_get_ticks(void);
  *   brief: get root func node
  */
 struct tm_func_node *time_get_root_func_node(void);
+
+/**
+ * time_run_hooks
+ *   brief: run all hooked functions
+ */
+void time_run_hooks(regs_t *r, uint64_t jiffies);
