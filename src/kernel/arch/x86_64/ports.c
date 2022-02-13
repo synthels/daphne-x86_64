@@ -14,7 +14,7 @@
  * Serial I/O
  */
 
-#include "io.h"
+#include "ports.h"
 
 void outb(uint16_t port, uint8_t val)
 {

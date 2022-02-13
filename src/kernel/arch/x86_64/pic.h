@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <generic/io/io.h>
+#include <arch/x86_64/ports.h>
 #include <stdint.h>
 
 #define pic_wait()                    \

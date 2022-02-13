@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <generic/io/io.h>
+#include <arch/x86_64/ports.h>
 #include <stdint.h>
 
 #ifdef ARCH_x86_64

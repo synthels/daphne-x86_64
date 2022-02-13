@@ -19,7 +19,7 @@
 #include <stivale2.h>
 
 #include <generic/forbia/kernel.h>
-#include <generic/io/io.h>
+#include <arch/x86_64/ports.h>
 #include <generic/memory/mem.h>
 #include <generic/malloc/malloc.h>
 #include <generic/shrimp/shrimp.h>

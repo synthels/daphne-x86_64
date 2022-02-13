@@ -15,7 +15,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <generic/io/io.h>
+#include <arch/x86_64/ports.h>
 
 #include <generic/forbia/types.h>
 #include <lib/printk.h>

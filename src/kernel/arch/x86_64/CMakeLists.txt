@@ -24,6 +24,8 @@ set(SRC
     ${SRCROOT}/smp.asm
     ${SRCROOT}/irq.c
     ${SRCROOT}/irq.h
+    ${SRCROOT}/ports.c
+    ${SRCROOT}/ports.h
 )
 
 add_subdirectory(${SRCROOT}/idt)
