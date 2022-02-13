@@ -82,9 +82,9 @@ uint16_t ins(uint16_t port)
 
 uint16_t ind(uint16_t port)
 {
-	uint16_t ret;
-	asm volatile("in %1, %0" : "=a" (ret) : "d" (port));
-	return ret;
+    uint16_t ret;
+    asm volatile("in %1, %0" : "=a" (ret) : "d" (port));
+    return ret;
 }
 
 void io_wait(void)
