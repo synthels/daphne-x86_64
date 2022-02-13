@@ -130,7 +130,7 @@ void kmain(struct stivale2_struct *stv)
         info.screen_height,
         info.screen_pitch
     );
-    ok("initialized terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
+    ok("initialised terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
 
     #ifdef ARCH_x86_64
         pci_scan();                         /* pci */
@@ -143,7 +143,7 @@ void kmain(struct stivale2_struct *stv)
     kbd_init();                             /* init ps2 keyboard */
     time_init();                            /* time */
     apic_init();                            /* try to boot up the APIC timer */
-    init_sched();                           /* init scheduler */
+    sched_init();                           /* init scheduler */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

@@ -26,11 +26,11 @@
     idt_install_handler(isr, n)
 
 #define IRQ(irq, fn, n) extern void irq(void); \
-    extern void fn(void); \
+    extern void fn(regs_t *); \
     irq_handlers[n] = fn; \
     idt_install_handler(irq, n + 32)
 
-typedef void (*interrupt_handler_t)(void);
+typedef void (*interrupt_handler_t)();
 
 /* IDT entry */
 typedef struct {

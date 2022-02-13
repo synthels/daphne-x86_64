@@ -46,9 +46,9 @@ int msec_to_jiffies(int millis)
     return -1;
 }
 
-int usec_to_jiffies(int millis)
+int usec_to_jiffies(int usec)
 {
     if (HZ >= 1000000)
-        return (millis * HZ) / 1000000;
+        return (usec * HZ) / 1000000;
     return -1;
 }

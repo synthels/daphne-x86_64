@@ -16,7 +16,7 @@
 
 #include "cpu.h"
 
-void arch_swapregs(regs_t *regs)
+void arch_save_regs(regs_t *regs)
 {
     asm volatile (
         "mov %%rax, %0\n"

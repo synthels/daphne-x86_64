@@ -19,6 +19,9 @@
 #include <lib/vec.h>
 
 #include <generic/malloc/malloc.h>
+#include <generic/forbia/lock.h>
+#include <generic/malloc/mmu.h>
+#include <generic/time/time.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
@@ -27,7 +30,7 @@
     #include <arch/x86_64/smp.h>
 #endif
 
-#include <generic/malloc/mmu.h>
+#define SCHED_SINGLE_CORE_MAX_TASKS 4
 
 typedef uint16_t pid_t;
 enum task_state_t {
@@ -37,20 +40,21 @@ enum task_state_t {
 };
 
 struct task {
+    const char *name;
     pid_t pid;
     context_t *context;
-    enum task_state_t state;    /* DEAD/ASLEEP/RUNNING */
+    enum task_state_t state;    /* Task state */
+    int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */
     vec_t *children;            /* Task children */
 };
 
 struct processor {
     /*
-     * Currently running task. If the task
-     * is asleep, the processor sits idle
-     * waiting for an interrupt.
+     * Tasks assigned to this CPU. If task is NULL,
+     * this CPU sits idly
      */
-	volatile struct task *task;
+	struct task *task;
 	int cpu_id;
     int lapic_id;
 
@@ -62,7 +66,13 @@ struct processor {
 };
 
 /**
- * init_sched
- *   brief: init sched
+ * sched_init
+ *   brief: init scheduler
  */
-void init_sched(void);
+void sched_init(void);
+
+/**
+ * sched_run_task
+ *   brief: run task
+ */
+void sched_run_task(const char *name);

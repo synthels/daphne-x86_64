@@ -23,4 +23,4 @@ int jiffies_to_msec(int jiff);
 int jiffies_to_usec(int jiff);
 int sec_to_jiffies(int sec);
 int msec_to_jiffies(int millis);
-int usec_to_jiffies(int millis);
+int usec_to_jiffies(int usec);

@@ -108,5 +108,5 @@ void mmu_vswitch(uint64_t *pml)
 void mmu_switch(context_t *context)
 {
     mmu_vswitch(context->page_table);
-    arch_swapregs(context->regs);
+    arch_save_regs(context->regs);
 }

@@ -86,10 +86,10 @@ enum {
 };
 
 /**
- * arch_swapregs
- *   brief: swap x64 registers
+ * arch_save_regs
+ *   brief: save registers
  */
-void arch_swapregs(regs_t *regs);
+void arch_save_regs(regs_t *regs);
 
 /**
  * cpu_has_apic

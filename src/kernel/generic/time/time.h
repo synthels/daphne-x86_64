@@ -35,7 +35,7 @@ void time_init(void);
 
 /**
  * time_hook
- *   brief: hook f to timer interrupt
+ *   brief: hook f to the timer interrupt
  */
 void time_hook(tm_func_t f);
 

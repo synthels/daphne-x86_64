@@ -19,6 +19,6 @@
 
 /**
  * sleep
- *   brief: sleep kernel for n ticks 
+ *   brief: sleep kernel for n jiffies
  */
 void sleep(uint64_t jiff);
