@@ -4,6 +4,7 @@
 %define SMP_GDT 0x770
 %define SMP_IDT 0x790
 %define AP_ENTRY 0x800
+%define TRAMPOLINE ap_bootstrap16 + TRAMPOLINE_BASE
 
 [bits 16]
 global ap_bootstrap16
@@ -16,14 +17,14 @@ ap_bootstrap16:
     mov gs, ax
     mov ss, ax
 
-    o32 lgdt [gdtr32 - ap_bootstrap16 + TRAMPOLINE_BASE]
+    o32 lgdt [gdtr32 - TRAMPOLINE]
 
     ; enable protected mode
     mov eax, cr0
     or al, 0x1
     mov cr0, eax
 
-    jmp 0x8:(ap_bootstrap32 - ap_bootstrap16 + TRAMPOLINE_BASE)
+    jmp 0x8:(ap_bootstrap32 - TRAMPOLINE)
 
 [bits 32]
 section .text
@@ -56,8 +57,8 @@ ap_bootstrap32:
 
     ; load idt & gdt64
     lidt [SMP_IDT]
-    lgdt [gdtr64 - ap_bootstrap16 + TRAMPOLINE_BASE]
-    jmp 8:(ap_bootstrap64 - ap_bootstrap16 + TRAMPOLINE_BASE)
+    lgdt [gdtr64 - TRAMPOLINE]
+    jmp 8:(ap_bootstrap64 - TRAMPOLINE)
 
 [bits 64]
 extern ap_startup
@@ -75,37 +76,34 @@ ap_bootstrap64:
     mov rbp, 0x0
     lgdt [SMP_GDT]
 
-    ; reset RFLAGS
-    push 0x0
-    popf
-
     mov rax, [AP_ENTRY]
     call rax
 
-; early gdt structures
 align 16
-  gdtr32:
-    dw gdt32_end - gdt32_start - 1
-    dd gdt32_start - ap_bootstrap16 + TRAMPOLINE_BASE
 
-align 16
-  gdt32_start:
+; gdt pointers
+gdtr32:
+  dw gdt32_end - gdt32_start - 1
+  dd gdt32_start - TRAMPOLINE
+gdtr64:
+  dw gdt64_end - gdt64_start - 1
+  dq gdt64_start - TRAMPOLINE
+
+; gdt32
+gdt32_start:
+  dq 0
+  dq 0x00CF9A000000FFFF
+  dq 0x00CF92000000FFFF
+gdt32_end:
+
+; gdt64
+gdt64_start:
     dq 0
-    dq 0x00CF9A000000FFFF
-    dq 0x00CF92000000FFFF
-  gdt32_end:
-
-align 16
-  gdtr64:
-    dw gdt64_end - gdt64_start - 1
-    dq gdt64_start - ap_bootstrap16 + TRAMPOLINE_BASE
-
-align 16
-  gdt64_start:
-    dq 0
-    dq 0x00AF98000000FFFF
-    dq 0x00CF92000000FFFF
-  gdt64_end:
+.code: equ $ - gdt64_start
+    dq (1<<44) | (1<<47) | (1<<41) | (1<<43) | (1<<53)
+.data: equ $ - gdt64_start
+    dq (1<<44) | (1<<47) | (1<<41)
+gdt64_end:
 
 global ap_bootstrap_end
 ap_bootstrap_end:
