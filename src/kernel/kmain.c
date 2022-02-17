@@ -87,6 +87,29 @@ void disable_interrupts(void)
     asm volatile("cli");
 }
 
+/**
+ * @brief Startup routine for APs
+ *
+ * The AP must unset the _ap_startup_flag
+ * so that the next CPU can receive the INIT. The
+ * startup routine then puts the AP in a usable
+ * state
+ */
+void ap_startup(void)
+{
+    smp_next_ap();
+    for (;;) {
+        asm("hlt");
+    }
+}
+
+/**
+ * @brief Kernel main
+ *
+ * Sets up all x86 stuff (TODO: it sould be seperate, anyways...)
+ * and everything needed to eventually boot into
+ * a usable userspace
+ */
 void kmain(struct stivale2_struct *stv)
 {
     /* Get memory map */

@@ -24,6 +24,10 @@
 #include <generic/sched/task.h>
 #include <generic/malloc/malloc.h>
 #include <generic/forbia/types.h>
+#include <generic/forbia/types.h>
+
+/* ap_startup */
+#include <kmain.h>
 
 #define SMP_MAX_CPUS 32
 
@@ -77,6 +81,12 @@ struct smp_cpus {
  *   brief: init smp
  */
 void smp_init(void);
+
+/**
+ * smp_next_ap
+ *   brief: sets up next AP in SMP startup
+ */
+void smp_next_ap(void);
 
 /**
  * smp_get_cores

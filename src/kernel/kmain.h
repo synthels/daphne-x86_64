@@ -19,3 +19,5 @@
     #include <arch/x86_64/vmm.h>
     #include <arch/x86_64/idt/idt.h>
 #endif
+
+void ap_startup(void);

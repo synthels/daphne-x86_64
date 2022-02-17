@@ -22,3 +22,9 @@ uint64_t rdtsc(void)
     asm volatile ( "rdtsc" : "=a"(low), "=d"(hi) );
     return ((uint64_t) hi << 32UL) | (uint64_t) low;
 }
+
+void tsc_delay(uint64_t amount)
+{
+    uint64_t clock = rdtsc();
+    while (rdtsc() < clock + amount);
+}

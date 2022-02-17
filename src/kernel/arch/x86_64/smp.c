@@ -146,31 +146,9 @@ static void lapic_send_sipi(uint32_t cpu_id, uintptr_t entry)
     lapic_write(ICR1, LAPIC_ICR_DEST_SEND_IPI | (entry / 4096));
 }
 
-/**
- * @brief Delay with TSC
- *
- * I need to put this elsewhere...
- */
-static void tsc_delay(unsigned long amount)
-{
-    uint64_t clock = rdtsc();
-    while (rdtsc() < clock + amount);
-}
-
-/**
- * @brief Startup routine for APs
- *
- * The AP must unset the _ap_startup_flag
- * so that the next CPU can receive the INIT. The
- * startup routine then puts the AP in a usable
- * state
- */
-void ap_startup(void)
+void smp_next_ap(void)
 {
     _ap_is_ok = true;
-    for (;;) {
-        asm("hlt");
-    }
 }
 
 void smp_signal_ap(uint32_t lapic)

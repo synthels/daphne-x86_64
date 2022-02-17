@@ -205,8 +205,5 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
 
 void switch_task(regs_t *r, uint64_t jiffies)
 {
-    lock(&sched_lock);
     UNUSED(jiffies);
-    UNUSED(r);
-    unlock(&sched_lock);
 }

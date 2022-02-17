@@ -21,3 +21,9 @@
  *   brief: rdtsc (what, don't you get it??)
  */
 uint64_t rdtsc(void);
+
+/**
+ * tsc_delay
+ *   brief: tsc_delay (what, you still don't get it??)
+ */
+void tsc_delay(uint64_t amount);
