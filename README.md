@@ -123,8 +123,6 @@ $ cd EFI/BOOT
 $ BOOTX64.EFI
 ```
 
-in an x86-64 virtual machine such as VirtualBox or QEMU. It contains a complete
-
 #### Testing x64 images in QEMU
 
 Testing under QEMU with UEFI requires that you have an OVMF image installed. If not, you can always just use leagacy BIOS. These commands will do on most linux systems:
