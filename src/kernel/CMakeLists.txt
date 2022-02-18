@@ -6,8 +6,8 @@ add_subdirectory(${SRCROOT}/mod)
 add_subdirectory(${SRCROOT}/generic)
 
 set(SRC
-    ${SRCROOT}/kmain.c
-    ${SRCROOT}/kmain.h
+    ${SRCROOT}/main.c
+    ${SRCROOT}/main.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

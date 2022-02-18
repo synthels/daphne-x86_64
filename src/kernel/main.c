@@ -43,7 +43,7 @@
     #include <arch/x86_64/smp.h>
 #endif
 
-#include "kmain.h"
+#include "main.h"
 
 /* Kernel stack */
 static uint8_t stack[KERNEL_STACK_SIZE] __attribute__((aligned(16))) = {0};
@@ -116,7 +116,7 @@ void ap_startup(void)
  * and everything needed to eventually boot into
  * a usable userspace
  */
-void kmain(struct stivale2_struct *stv)
+void main(struct stivale2_struct *stv)
 {
     /* Get memory map */
     struct stivale2_struct_tag_memmap *mmap = get_tag(stv, STIVALE2_STRUCT_TAG_MEMMAP_ID); /* TODO: Handle NULL */
@@ -125,8 +125,11 @@ void kmain(struct stivale2_struct *stv)
     /* Get RSDP */
     struct stivale2_struct_tag_rsdp *rsdp_info = get_tag(stv, STIVALE2_STRUCT_TAG_RSDP_ID);
 
-    gdt_init(); /* gdt & tss */
-    idt_init(); /* idt */
+    #ifdef ARCH_x86_64
+        gdt_init(); /* gdt & tss */
+        idt_init(); /* idt */
+    #endif
+
     mem_init(mmap->memmap, mmap->entries); /* mm */
     pmm_init(); /* pmm */
     vmm_init(); /* vmm */

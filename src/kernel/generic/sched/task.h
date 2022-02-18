@@ -51,18 +51,18 @@ struct task {
 
 struct processor {
     /*
-     * Tasks assigned to this CPU. If task is NULL,
-     * this CPU sits idly
-     */
-	struct task *task;
-	int cpu_id;
+        * Tasks assigned to this CPU. If task is NULL,
+        * this CPU sits idly
+        */
+    struct task *task;
+    int cpu_id;
     int lapic_id;
 
     /* TODO: not used */
-	int  cpu_model;
-	int  cpu_family;
-	char cpu_model_name[48];
-	const char *cpu_manufacturer;
+    int  cpu_model;
+    int  cpu_family;
+    char cpu_model_name[48];
+    const char *cpu_manufacturer;
 };
 
 /**

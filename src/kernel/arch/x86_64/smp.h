@@ -27,7 +27,7 @@
 #include <generic/forbia/types.h>
 
 /* ap_startup */
-#include <kmain.h>
+#include <main.h>
 
 #define SMP_MAX_CPUS 32
 
