@@ -23,7 +23,7 @@
 #include <lib/printk.h>
 
 #include <arch/x86_64/acpi.h> /* TODO: not x64 specific... */
-#include <arch/x86_64/cmos.h>
+#include <arch/x86_64/tsc.h>
 #include <arch/x86_64/smp.h>
 
 /**

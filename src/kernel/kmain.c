@@ -39,6 +39,7 @@
 #ifdef ARCH_x86_64
     #include <arch/x86_64/acpi.h>
     #include <arch/x86_64/madt.h>
+    #include <arch/x86_64/tsc.h>
     #include <arch/x86_64/smp.h>
 #endif
 
@@ -97,7 +98,12 @@ void disable_interrupts(void)
  */
 void ap_startup(void)
 {
+    const struct processor *cpu = &(smp_get_cores()->cpus[smp_get_current_ap()]);
+    cpu_set_current_core((uintptr_t) cpu);
     smp_next_ap();
+    pit_init();
+    apic_init();
+    enable_interrupts();
     for (;;) {
         asm("hlt");
     }

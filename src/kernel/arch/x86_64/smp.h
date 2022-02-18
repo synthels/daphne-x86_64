@@ -17,7 +17,7 @@
 #include <arch/x86_64/madt.h>
 #include <arch/x86_64/vmm.h>
 #include <arch/x86_64/pic.h>
-#include <arch/x86_64/cmos.h>
+#include <arch/x86_64/tsc.h>
 
 #include <lib/printk.h>
 
@@ -93,6 +93,18 @@ void smp_next_ap(void);
  *   brief: get processor struct
  */
 struct smp_cpus *smp_get_cores(void);
+
+/**
+ * smp_get_current_ap
+ *   brief: get current ap
+ */
+int smp_get_current_ap(void);
+
+/**
+ * lapic_init
+ *   brief: init lapic
+ */
+void lapic_init(void);
 
 /**
  * lapic_write

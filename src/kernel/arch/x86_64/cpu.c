@@ -52,6 +52,13 @@ void arch_save_regs(regs_t *regs)
     );
 }
 
+void cpu_set_current_core(uintptr_t base)
+{
+	asm volatile("wrmsr" : : "c"(0xc0000101), "d"((uint32_t)(base >> 32)), "a"((uint32_t)(base & 0xFFFFFFFF)));
+	asm volatile("wrmsr" : : "c"(0xc0000102), "d"((uint32_t)(base >> 32)), "a"((uint32_t)(base & 0xFFFFFFFF)));
+	asm volatile("swapgs");
+}
+
 bool cpu_has_apic(void)
 {
     uint32_t u, eax, edx;

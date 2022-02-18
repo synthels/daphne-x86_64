@@ -98,6 +98,12 @@ void arch_save_regs(regs_t *regs);
 bool cpu_has_apic(void);
 
 /**
+ * cpu_set_current_core
+ *   brief: set current core
+ */
+void cpu_set_current_core(uintptr_t base);
+
+/**
  * cpu_get_cr3
  *   brief: get cr3's value
  */

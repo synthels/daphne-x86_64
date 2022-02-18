@@ -66,6 +66,12 @@ struct processor {
 };
 
 /**
+ * this_core
+ *   brief: points to the current core
+ */
+static struct processor __seg_gs *const this_core = NULL;
+
+/**
  * sched_init
  *   brief: init scheduler
  */

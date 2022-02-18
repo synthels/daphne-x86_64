@@ -11,10 +11,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * CMOS routines
+ * TSC
  */
 
-#include "cmos.h"
+#include "tsc.h"
+
+#include <lib/printk.h>
 
 uint64_t rdtsc(void)
 {

@@ -147,6 +147,7 @@ void isr_handler(regs_t *r)
     if (r->irq < 32) {
         panic(exceptions[r->irq]);
     } else if (r->irq == __SYSCALL_INDEX) {
+        printk(NORMAL, "syscall from: 0x%x\n", this_core->cpu_id);
         syscall_handler(r);
         return;
     } else {

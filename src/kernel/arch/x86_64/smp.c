@@ -22,6 +22,8 @@ static struct smp_cpus *smp_cores;
 static uint64_t lapic_base;
 static uint64_t ioapic_base; /* Can there be multiple IOAPICS? Sure. Do I give a shit? Nope. */
 
+static int current_ap = 0;
+
 static bool _ap_is_ok = false;
 
 extern uint32_t ap_bootstrap16;
@@ -104,7 +106,7 @@ void lapic_redirect(uint8_t irq, uint8_t vector, uint32_t delivery)
  * Disables the PIC & sets up the APIC
  * for MMIO.
  */
-static void lapic_init(void)
+void lapic_init(void)
 {
     if (!cpu_has_apic()) panic("apic not supported!");
     apic = madt_get_header()->lapic;
@@ -151,8 +153,14 @@ void smp_next_ap(void)
     _ap_is_ok = true;
 }
 
+int smp_get_current_ap(void)
+{
+    return current_ap;
+}
+
 void smp_signal_ap(uint32_t lapic)
 {
+    ++current_ap;
     lapic_send_init(lapic);
     tsc_delay(5000UL);
     lapic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
@@ -192,6 +200,7 @@ void smp_init(void)
     mmu_map_mmio(lapic_base, 1);
 
     for (int i = 0; i < cores; i++) {
+        const uint32_t bsp_id = (lapic_read(LAPIC_ID) >> 24);
         /*
          * Don't put the BSP in real mode! 
          *
@@ -199,9 +208,11 @@ void smp_init(void)
          * the BSP always has id 0x0, but this check doesn't really
          * impact anything so I'll just leave it here for now
          */
-        if ((uint32_t) cpus[i].cpu_id == (lapic_read(LAPIC_ID) >> 24)) continue;
+        if ((uint32_t) cpus[i].cpu_id == bsp_id) {
+            cpu_set_current_core((uintptr_t)&(smp_cores->cpus[bsp_id]));
+            continue;
+        };
         uint64_t ap_bootstrap_len = (uintptr_t) &ap_bootstrap_end - (uintptr_t) &ap_bootstrap16;
-
         _ap_is_ok = false;
 
         /**

@@ -19,8 +19,8 @@ set(SRC
     ${SRCROOT}/madt.h
     ${SRCROOT}/smp.c
     ${SRCROOT}/smp.h
-    ${SRCROOT}/cmos.c
-    ${SRCROOT}/cmos.h
+    ${SRCROOT}/tsc.c
+    ${SRCROOT}/tsc.h
     ${SRCROOT}/smp.asm
     ${SRCROOT}/irq.c
     ${SRCROOT}/irq.h
