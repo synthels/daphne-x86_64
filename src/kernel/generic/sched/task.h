@@ -50,10 +50,10 @@ struct task {
 };
 
 struct processor {
-    /*
-        * Tasks assigned to this CPU. If task is NULL,
-        * this CPU sits idly
-        */
+    /**
+     * Tasks assigned to this CPU. If task is NULL,
+     * this CPU sits idly
+     */
     struct task *task;
     int cpu_id;
     int lapic_id;
