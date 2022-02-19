@@ -22,7 +22,7 @@ void time_init(void)
 {
     /* Boot up te PIT as a first time source... */
     pit_init();
-    irq_enable(0);
+    lapic_irq_enable(0);
 }
 
 struct tm_func_node *time_get_root_func_node(void)

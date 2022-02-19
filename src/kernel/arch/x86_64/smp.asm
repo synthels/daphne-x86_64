@@ -9,7 +9,6 @@
 [bits 16]
 global ap_bootstrap16
 ap_bootstrap16:
-    cli
     mov ax, 0x0
     mov ds, ax
     mov es, ax

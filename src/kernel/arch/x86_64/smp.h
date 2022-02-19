@@ -101,6 +101,12 @@ struct smp_cpus *smp_get_cores(void);
 int smp_get_current_ap(void);
 
 /**
+ * smp_get_lapic_base
+ *   brief: get lapic base
+ */
+uint64_t smp_get_lapic_base(void);
+
+/**
  * lapic_init
  *   brief: init lapic
  */

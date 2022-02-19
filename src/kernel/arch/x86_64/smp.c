@@ -16,13 +16,17 @@
 
 #include "smp.h"
 
-static uint64_t apic;
 static struct processor *cpus;
 static struct smp_cpus *smp_cores;
 static uint64_t lapic_base;
 static uint64_t ioapic_base; /* Can there be multiple IOAPICS? Sure. Do I give a shit? Nope. */
 
 static int current_ap = 0;
+
+/**
+ * LAPIC base address
+ */
+static uint64_t apic;
 
 static bool _ap_is_ok = false;
 
@@ -156,6 +160,11 @@ void smp_next_ap(void)
 int smp_get_current_ap(void)
 {
     return current_ap;
+}
+
+uint64_t smp_get_lapic_base(void)
+{
+    return apic;
 }
 
 void smp_signal_ap(uint32_t lapic)

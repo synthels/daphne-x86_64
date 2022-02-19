@@ -16,7 +16,7 @@
 
 #include "irq.h"
 
-void irq_enable(int vec_no)
+void lapic_irq_enable(int vec_no)
 {
     lapic_redirect(vec_no, vec_no + 0x20, 0);
 }

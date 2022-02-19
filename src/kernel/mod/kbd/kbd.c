@@ -26,7 +26,7 @@ static int kbd_keyev = 0;
 void kbd_init(void)
 {
     kbd_enabled = 1;
-    irq_enable(1);
+    lapic_irq_enable(1);
 }
 
 void kbd_read(void)

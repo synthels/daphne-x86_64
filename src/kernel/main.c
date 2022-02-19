@@ -19,7 +19,6 @@
 #include <stivale2.h>
 
 #include <generic/forbia/kernel.h>
-#include <arch/x86_64/ports.h>
 #include <generic/memory/mem.h>
 #include <generic/malloc/malloc.h>
 #include <generic/shrimp/shrimp.h>
@@ -41,6 +40,7 @@
     #include <arch/x86_64/madt.h>
     #include <arch/x86_64/tsc.h>
     #include <arch/x86_64/smp.h>
+    #include <arch/x86_64/ports.h>
 #endif
 
 #include "main.h"
@@ -101,9 +101,9 @@ void ap_startup(void)
     const struct processor *cpu = &(smp_get_cores()->cpus[smp_get_current_ap()]);
     cpu_set_current_core((uintptr_t) cpu);
     smp_next_ap();
-    pit_init();
+    lapic_init();
     apic_init();
-    enable_interrupts();
+
     for (;;) {
         asm("hlt");
     }
@@ -168,12 +168,13 @@ void main(struct stivale2_struct *stv)
         pci_scan();                         /* pci */
         acpi_init(rsdp_info->rsdp);         /* acpi */
         madt_init();                        /* madt */
-        smp_init();                         /* smp */
     #endif
 
     enable_interrupts();                    /* enable interrupts */
     kbd_init();                             /* init ps2 keyboard */
     time_init();                            /* time */
+    smp_init();                             /* smp */
+    tsc_init();                             /* tsc */
     apic_init();                            /* try to boot up the APIC timer */
     sched_init();                           /* init scheduler */
 

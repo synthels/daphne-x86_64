@@ -17,7 +17,7 @@
 #include <arch/x86_64/smp.h>
 
 /**
- * irq_enable
- *   brief: Unmask a LAPIC interrupt
+ * lapic_irq_enable
+ *   brief: redirect irq
  */
-void irq_enable(int vec_no);
+void lapic_irq_enable(int vec_no);

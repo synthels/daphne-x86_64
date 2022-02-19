@@ -15,6 +15,13 @@
 #pragma once
 
 #include <stdint.h>
+#include <generic/time/sleep.h>
+
+/**
+ * tsc_init
+ *   brief: calibrate tsc
+ */
+void tsc_init(void);
 
 /**
  * rdtsc
@@ -27,3 +34,9 @@ uint64_t rdtsc(void);
  *   brief: tsc_delay (what, you still don't get it??)
  */
 void tsc_delay(uint64_t amount);
+
+/**
+ * tsc_get_mhz
+ *   brief: get tsc timing
+ */
+uint64_t tsc_get_mhz(void);

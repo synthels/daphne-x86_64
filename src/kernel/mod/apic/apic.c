@@ -19,13 +19,13 @@
 void apic_init(void)
 {
     lapic_write(TIMER_DIV, 0x3);
+    lapic_write(TIC, 0xffffffff);
 
-    lapic_write(TIC, 0xFFFFFFFF);
-    sleep(HZ); /* TODO: is this correct?? */
+    tsc_delay(1000UL); /* TODO: is this correct?? */
 
     lapic_write(LVT_TIMER, 0x10000);
 
-    uint64_t tenms = 0xFFFFFFFF - lapic_read(TCURR);
+    uint64_t tenms = 0xffffffff - lapic_read(TCURR);
 
     lapic_write(LVT_TIMER, 32 | 0x20000);
     lapic_write(TIMER_DIV, 0x3);
