@@ -19,7 +19,9 @@
 
 #include <lib/string.h>
 
+#include <generic/time/persistent_time.h>
 #include <generic/forbia/types.h>
+#include <generic/time/time.h>
 
 #define CMOS_ADDRESS 0x70
 #define CMOS_DATA 0x71
@@ -34,7 +36,19 @@ enum cmos_data {
 };
 
 /**
+ * cmos_get_persistent_time_source
+ *   brief: get cmos persistent time source
+ */
+struct persistent_time_source *cmos_get_persistent_time_source(void);
+
+/**
  * cmos_to_unix
  *   brief: convert cmos time to unix timestamp
  */
 uint64_t cmos_to_unix(void);
+
+/**
+ * cmos_time
+ *   brief: get tm structure
+ */
+struct tm *cmos_time(void);

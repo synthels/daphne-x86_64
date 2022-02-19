@@ -18,22 +18,50 @@
 
 #define bcd_to_bin(val) ((val / 16) * 10 + (val & 0xf))
 
+static uint16_t data[128];
+static uint16_t prev_data[128];
+
+static struct persistent_time_source cmos = {
+    .get_unix_timestamp = cmos_to_unix,
+    .localtime = cmos_time
+};
+
+struct persistent_time_source *cmos_get_persistent_time_source(void)
+{
+    return &cmos;
+}
+
 static inline bool is_leap_year(int year)
 {
     return (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0));
 }
 
+/**
+ * @brief Check if the cmos is updating
+ */
+static bool is_cmos_updating(void)
+{
+    outb(CMOS_ADDRESS, 0x0A);
+    return (inb(CMOS_DATA) & 0x80);
+}
+
 static void cmos_dump(uint16_t *values)
 {
-    for (uint16_t index = 0; index < 128; ++index) {
-        outb(CMOS_ADDRESS, index);
-        values[index] = inb(CMOS_DATA);
+    for (uint16_t i = 0; i < 128; ++i) {
+        outb(CMOS_ADDRESS, i);
+        values[i] = inb(CMOS_DATA);
     }
 }
 
 static uint64_t cmos_get(enum cmos_data data, uint16_t *val)
 {
     return bcd_to_bin(val[data]);
+}
+
+static void cmos_update(void)
+{
+    while (is_cmos_updating());
+    cmos_dump(data);
 }
 
 static void leap_years_correction(uint64_t *days, int years)
@@ -112,23 +140,9 @@ static uint64_t cmos_get_unix_timestamp(uint16_t *data)
         (cmos_get(CMOS_SECOND, data));
 }
 
-/**
- * @brief Check if the cmos is updating
- */
-static bool is_cmos_updating(void)
-{
-    outb(CMOS_ADDRESS, 0x0A);
-    return (inb(CMOS_DATA) & 0x80);
-}
-
 uint64_t cmos_to_unix(void)
 {
-    uint16_t data[128];
-    uint16_t prev_data[128];
-
-    while (is_cmos_updating());
-    cmos_dump(data);
-
+    cmos_update();
     do {
         while (is_cmos_updating());
         memcpy(prev_data, data, 128);
@@ -141,4 +155,20 @@ uint64_t cmos_to_unix(void)
         (prev_data[CMOS_YEAR] != data[CMOS_YEAR]));
 
     return cmos_get_unix_timestamp(data);
+}
+
+struct tm *cmos_time(void)
+{
+    cmos_update();
+    static struct tm time;
+    time.tm_sec   = cmos_get(CMOS_SECOND, data);
+    time.tm_min   = cmos_get(CMOS_MINUTE, data);
+    time.tm_hour  = cmos_get(CMOS_HOUR, data);
+    time.tm_mday  = cmos_get(CMOS_DAY, data);
+    time.tm_mon   = cmos_get(CMOS_MONTH, data);
+    time.tm_year  = cmos_get(CMOS_YEAR, data);
+    time.tm_wday  = 0;
+    time.tm_yday  = 0;
+    time.tm_isdst = 0;
+    return &time;
 }

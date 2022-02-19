@@ -14,14 +14,39 @@
 
 #pragma once
 
-struct tm {
-    int tm_sec;     /* seconds (0-59) */
-    int tm_min;     /* minutes (0-59) */
-    int tm_hour;    /* hours (0-23) */
-    int tm_mday;    /* day of the month (1-31) */
-    int tm_mon;     /* month (0-11) */
-    int tm_year;    /* The number of years since 1900 */
-    int tm_wday;    /* day of the week (0-6) */
-    int tm_yday;    /* day in the year (0-365) */
-    int tm_isdst;   /* daylight saving time */
-};
+#include <stdint.h>
+
+#include "persistent_time.h"
+#include "jiffies.h"
+#include "clock.h"
+#include "tm.h"
+
+/**
+ * time_init
+ *   brief: init time module
+ */
+void time_init(void);
+
+/**
+ * time_set_persistent_time_source
+ *   brief: set persistent time source
+ */
+void time_set_persistent_time_source(struct persistent_time_source *tms);
+
+/**
+ * localtime
+ *   brief: get local time
+ */
+struct tm *localtime(void);
+
+/**
+ * time
+ *   brief: get seconds since the epoch
+ */
+uint64_t time(void);
+
+/**
+ * uptime
+ *   brief: get seconds since boot
+ */
+uint64_t uptime(void);

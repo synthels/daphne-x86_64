@@ -20,8 +20,9 @@ static struct tm_func_node node = { NULL, NULL };
 
 void clock_init(void)
 {
-    /* Boot up te PIT as a first time source... */
+    /* Boot up the PIT as a first time source... */
     pit_init();
+    time_set_persistent_time_source(cmos_get_persistent_time_source());
     lapic_irq_enable(0);
 }
 
@@ -42,7 +43,7 @@ void clock_hook(tm_func_t f)
     current->next->next = NULL;
 }
 
-uint64_t clock_get_ticks(void)
+uint64_t clock_get_jiffies(void)
 {
     return time_source_get_jiffies();
 }

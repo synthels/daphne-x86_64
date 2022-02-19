@@ -16,7 +16,7 @@
 
 #include "sleep.h"
 
-void sleep(uint64_t jiff)
+void delay(uint64_t jiff)
 {
     uint32_t start;
     uint32_t now;
@@ -24,4 +24,19 @@ void sleep(uint64_t jiff)
     now = time_source_get_jiffies();
     while ((now - start) < jiff)
         now = time_source_get_jiffies();
+}
+
+void sleep(int sec)
+{
+    delay(sec_to_jiffies(sec));
+}
+
+void nanosleep(int usec)
+{
+    delay(usec_to_jiffies(usec));
+}
+
+void microsleep(int msec)
+{
+    delay(msec_to_jiffies(msec));
 }

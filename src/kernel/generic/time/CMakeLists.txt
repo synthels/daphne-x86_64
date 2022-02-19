@@ -7,10 +7,12 @@ set(SRC
     ${SRCROOT}/jiffies.h
     ${SRCROOT}/time_source.c
     ${SRCROOT}/time_source.h
+    ${SRCROOT}/persistent_time.h
     ${SRCROOT}/sleep.c
     ${SRCROOT}/sleep.h
     ${SRCROOT}/time.c
     ${SRCROOT}/time.h
+    ${SRCROOT}/tm.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

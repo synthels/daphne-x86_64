@@ -23,6 +23,7 @@
 #include <generic/malloc/malloc.h>
 #include <generic/shrimp/shrimp.h>
 #include <generic/time/clock.h>
+#include <generic/time/time.h>
 #include <generic/time/sleep.h>
 #include <generic/sched/task.h>
 
@@ -175,7 +176,8 @@ void main(struct stivale2_struct *stv)
 
     enable_interrupts();                    /* enable interrupts */
     kbd_init();                             /* init ps2 keyboard */
-    clock_init();                           /* time */
+    clock_init();                           /* clock */
+    time_init();                            /* time */
     smp_init();                             /* smp */
     tsc_init();                             /* tsc */
     apic_init();                            /* try to boot up the APIC timer */

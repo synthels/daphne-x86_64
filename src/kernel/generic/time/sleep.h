@@ -18,7 +18,27 @@
 #include <stdint.h>
 
 /**
- * sleep
- *   brief: sleep kernel for n jiffies
+ * delay
+ *   brief: kernel-wide sleep (jiffies)
  */
-void sleep(uint64_t jiff);
+void delay(uint64_t jiff);
+
+/**
+ * sleep
+ *   brief: kernel-wide sleep (sec)
+ */
+void sleep(int sec);
+
+/* WARNING: nanosleep & microsleep depend on the HZ constant being of a certain value & might not work. */
+
+/**
+ * nanosleep
+ *   brief: kernel-wide sleep (nanosec)
+ */
+void nanosleep(int usec);
+
+/**
+ * microsleep
+ *   brief: kernel-wide sleep (microsec)
+ */
+void microsleep(int msec);

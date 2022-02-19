@@ -26,7 +26,7 @@ void tsc_init(void)
      * Calibrate TSC using current timer
      */
     int start = rdtsc();
-    sleep(HZ);
+    delay(HZ);
     int end = rdtsc();
     tsc_mhz = (end - start) / 1000000;
     ok("tsc: timed at ~%ui MHz", tsc_mhz);

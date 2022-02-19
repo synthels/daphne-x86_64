@@ -20,12 +20,14 @@
 #include <mod/pit/pit.h>
 
 #ifdef ARCH_x86_64
+    #include <arch/x86_64/cmos.h>
     #include <arch/x86_64/x64.h>
     #include <arch/x86_64/irq.h>
 #endif
 
 #include "jiffies.h"
 #include "time_func_node.h"
+#include "time_source.h"
 
 /**
  * clock_init
@@ -38,6 +40,12 @@ void clock_init(void);
  *   brief: hook f to the timer interrupt
  */
 void clock_hook(tm_func_t f);
+
+/**
+ * clock_get_jiffies
+ *   brief: get current jiffy count
+ */
+uint64_t clock_get_jiffies(void);
 
 /**
  * clock_get_root_func_node

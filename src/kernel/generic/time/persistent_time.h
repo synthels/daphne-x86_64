@@ -14,14 +14,9 @@
 
 #pragma once
 
-#ifdef ARCH_x86_64
-    #define HZ 100 /* TODO: this should be a kernel parameter */
-#endif
+#include "tm.h"
 
-/* Conversion routines */
-int jiffies_to_sec(int jiff);
-int jiffies_to_msec(int jiff);
-int jiffies_to_usec(int jiff);
-int sec_to_jiffies(int sec);
-int msec_to_jiffies(int millis);
-int usec_to_jiffies(int usec);
+struct persistent_time_source {
+    uint64_t (*get_unix_timestamp)(void);
+    struct tm *(*localtime)(void);
+};

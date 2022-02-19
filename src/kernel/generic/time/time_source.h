@@ -37,3 +37,9 @@ void time_source_irq_handler(regs_t *r);
  *   brief: set current best time source
  */
 void time_source_set(enum time_source t);
+
+/**
+ * time_source_get_jiffies
+ *   brief: get current jiffy count
+ */
+int time_source_get_jiffies(void);

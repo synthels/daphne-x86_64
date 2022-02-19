@@ -15,3 +15,37 @@
  */
 
 #include "time.h"
+
+static struct persistent_time_source *src;
+static struct tm *info;
+static uint64_t timestamp;
+
+void time_init(void)
+{
+    info = src->localtime();
+    timestamp = src->get_unix_timestamp();
+}
+
+void time_set_persistent_time_source(struct persistent_time_source *tms)
+{
+    src = tms;
+}
+
+struct tm *localtime(void)
+{
+    /**
+     * HACK: localtime looks up the structure
+     * from the time source EVERY SINGLE TIME
+     */
+    return src->localtime();
+}
+
+uint64_t time(void)
+{
+    return (timestamp + jiffies_to_sec(clock_get_jiffies()));
+}
+
+uint64_t uptime(void)
+{
+    return jiffies_to_sec(clock_get_jiffies());
+}

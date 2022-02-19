@@ -14,14 +14,14 @@
 
 #pragma once
 
-#ifdef ARCH_x86_64
-    #define HZ 100 /* TODO: this should be a kernel parameter */
-#endif
-
-/* Conversion routines */
-int jiffies_to_sec(int jiff);
-int jiffies_to_msec(int jiff);
-int jiffies_to_usec(int jiff);
-int sec_to_jiffies(int sec);
-int msec_to_jiffies(int millis);
-int usec_to_jiffies(int usec);
+struct tm {
+    int tm_sec;     /* seconds (0-59) */
+    int tm_min;     /* minutes (0-59) */
+    int tm_hour;    /* hours (0-23) */
+    int tm_mday;    /* day of the month (1-31) */
+    int tm_mon;     /* month (0-11) */
+    int tm_year;    /* The number of years since 2000 */
+    int tm_wday;    /* day of the week (0-6) */
+    int tm_yday;    /* day in the year (0-365) */
+    int tm_isdst;   /* daylight saving time */
+};
