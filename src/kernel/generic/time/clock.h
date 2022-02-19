@@ -14,26 +14,39 @@
 
 #pragma once
 
-#include <lib/printk.h>
-
+#include <stdint.h>
+#include <stddef.h>
+#include <generic/malloc/malloc.h>
 #include <mod/pit/pit.h>
-#include <mod/apic/apic.h>
 
-enum time_source {
-    TIME_SOURCE_PIT,
-    TIME_SOURCE_APIC,
-    TIME_SOURCE_HPET,
-    TIME_SOURCE_NONE
-};
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/x64.h>
+    #include <arch/x86_64/irq.h>
+#endif
 
-/**
- * time_source_irq_handler
- *   brief: time irq handler
- */
-void time_source_irq_handler(regs_t *r);
+#include "jiffies.h"
+#include "time_func_node.h"
 
 /**
- * time_source_set
- *   brief: set current best time source
+ * clock_init
+ *   brief: init tm module
  */
-void time_source_set(enum time_source t);
+void clock_init(void);
+
+/**
+ * clock_hook
+ *   brief: hook f to the timer interrupt
+ */
+void clock_hook(tm_func_t f);
+
+/**
+ * clock_get_root_func_node
+ *   brief: get root func node
+ */
+struct tm_func_node *clock_get_root_func_node(void);
+
+/**
+ * clock_run_hooks
+ *   brief: run all hooked functions
+ */
+void clock_run_hooks(regs_t *r, uint64_t jiffies);

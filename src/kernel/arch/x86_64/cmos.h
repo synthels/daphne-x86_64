@@ -14,14 +14,27 @@
 
 #pragma once
 
-struct tm {
-    int tm_sec;     /* seconds (0-59) */
-    int tm_min;     /* minutes (0-59) */
-    int tm_hour;    /* hours (0-23) */
-    int tm_mday;    /* day of the month (1-31) */
-    int tm_mon;     /* month (0-11) */
-    int tm_year;    /* The number of years since 1900 */
-    int tm_wday;    /* day of the week (0-6) */
-    int tm_yday;    /* day in the year (0-365) */
-    int tm_isdst;   /* daylight saving time */
+#include <stdint.h>
+#include <arch/x86_64/ports.h>
+
+#include <lib/string.h>
+
+#include <generic/forbia/types.h>
+
+#define CMOS_ADDRESS 0x70
+#define CMOS_DATA 0x71
+
+enum cmos_data {
+    CMOS_SECOND = 0,
+    CMOS_MINUTE = 2,
+    CMOS_HOUR = 4,
+    CMOS_DAY = 7,
+    CMOS_MONTH = 8,
+    CMOS_YEAR = 9
 };
+
+/**
+ * cmos_to_unix
+ *   brief: convert cmos time to unix timestamp
+ */
+uint64_t cmos_to_unix(void);

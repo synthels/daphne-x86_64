@@ -187,7 +187,7 @@ void sched_init(void)
     } else {
         _multicore = true;
     }
-    time_hook(switch_task);
+    clock_hook(switch_task);
     ok("sched: initialised scheduler (%s multicore)", _multicore ? "with" : "without");
 }
 

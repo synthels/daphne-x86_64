@@ -14,10 +14,4 @@
 
 #pragma once
 
-#ifdef ARCH_x86_64
-    #include <arch/x86_64/gdt.h>
-    #include <arch/x86_64/vmm.h>
-    #include <arch/x86_64/idt/idt.h>
-#endif
-
 void ap_startup(void);

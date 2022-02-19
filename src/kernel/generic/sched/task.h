@@ -21,7 +21,7 @@
 #include <generic/malloc/malloc.h>
 #include <generic/forbia/lock.h>
 #include <generic/malloc/mmu.h>
-#include <generic/time/time.h>
+#include <generic/time/clock.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>

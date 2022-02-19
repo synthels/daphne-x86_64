@@ -17,7 +17,7 @@
 #include <arch/x86_64/ports.h>
 #include <generic/forbia/kernel.h>
 
-#include <generic/time/time.h>
+#include <generic/time/clock.h>
 #include <generic/time/time_source.h>
 #include <generic/time/time_func_node.h>
 #include <generic/time/jiffies.h>

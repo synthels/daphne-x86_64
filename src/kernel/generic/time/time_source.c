@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Time sources
+ * Controls time IRQ sources
  */
 
 #include "time_source.h"
@@ -27,7 +27,7 @@ void time_source_set(enum time_source t)
 void time_source_tick(regs_t *r)
 {
     ++jiffies;
-    time_run_hooks(r, jiffies);
+    clock_run_hooks(r, jiffies);
 }
 
 void time_source_irq_handler(regs_t *r)

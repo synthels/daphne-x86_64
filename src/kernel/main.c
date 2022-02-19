@@ -22,7 +22,7 @@
 #include <generic/memory/mem.h>
 #include <generic/malloc/malloc.h>
 #include <generic/shrimp/shrimp.h>
-#include <generic/time/time.h>
+#include <generic/time/clock.h>
 #include <generic/time/sleep.h>
 #include <generic/sched/task.h>
 
@@ -41,6 +41,9 @@
     #include <arch/x86_64/tsc.h>
     #include <arch/x86_64/smp.h>
     #include <arch/x86_64/ports.h>
+    #include <arch/x86_64/gdt.h>
+    #include <arch/x86_64/vmm.h>
+    #include <arch/x86_64/idt/idt.h>
 #endif
 
 #include "main.h"
@@ -172,7 +175,7 @@ void main(struct stivale2_struct *stv)
 
     enable_interrupts();                    /* enable interrupts */
     kbd_init();                             /* init ps2 keyboard */
-    time_init();                            /* time */
+    clock_init();                           /* time */
     smp_init();                             /* smp */
     tsc_init();                             /* tsc */
     apic_init();                            /* try to boot up the APIC timer */
