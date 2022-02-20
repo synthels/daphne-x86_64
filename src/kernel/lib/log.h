@@ -18,10 +18,9 @@
 
 #include "printk.h"
 
-#define log(level, fmt, ...) printk(level, "[  %i.%i] " fmt "\n", time(), uptime(), ##__VA_ARGS__)
+#define log(level, fmt, ...) printk(level, "%s[  %i.%i] " fmt "\n", "\xff[1d3d3d3", time(), uptime(), ##__VA_ARGS__)
 
 #define pr_info(fmt, ...) log(NORMAL, fmt, ##__VA_ARGS__)
-#define pr_warn(fmt, ...) log(WARNING, fmt, ##__VA_ARGS__)
-#define pr_err(fmt, ...) log(ERROR, fmt, ##__VA_ARGS__)
-#define pr_test(fmt, ...)log(ERROR, fmt, ##__VA_ARGS__)
-
+#define pr_warn(fmt, ...) log(WARNING, "%sWARN " fmt, "\xff[1ffc107", ##__VA_ARGS__)
+#define pr_err(fmt, ...) log(ERROR, "%sERROR " fmt, "\xff[1dc3545", ##__VA_ARGS__)
+#define pr_test(fmt, ...)log(ERROR, "%sTEST " fmt, "\xff[1007bff", ##__VA_ARGS__)

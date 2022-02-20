@@ -64,11 +64,3 @@ void set_log_level(int level);
  *   brief: print formatted string to buffer
  */
 int vsprintf(char *buf, const char *fmt, va_list args);
-
-/* Colors! */
-#define KERN_COLOR_SUCCESS "\xff[10v0020"
-#define KERN_COLOR_INFO "\xff[10 703\13"
-#define KERN_COLOR_WARN "\xff[1vu0210"
-#define KERN_COLOR_ERR "\xff[1v00200"
-#define KERN_COLOR_RESET "\xff[1ffffff"
-#define KERN_COLOR_TEST "\xff[10 725\13"

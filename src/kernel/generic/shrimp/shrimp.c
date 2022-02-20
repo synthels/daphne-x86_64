@@ -27,14 +27,8 @@
  *
  * @ Printing with colors:
  * \xff[1YYYXXX
- * where every Y is a multiplier value between 0-9
- * and every X is a number between 0-9. (can also be any ASCII character,
- * in that case it will be interpreted as c - 48). The special value
- * \xff[1ffffff resets to FG_COLOR
- *
- * The final (R,G,B) color is calculated by multiplying
- * the first Y with the first X (R), the 2nd Y with the second X (G)
- * and the third Y with the thrid X (B).
+ * Where YYYXXX is the hex code of the color. The special value
+ * \xff[1ffffff resets to FG_COLOR (not always white!)
  *
  * WARNING: be very careful with escape sequences. After seeing
  *          \xff in a string, the terminal expects exactly 8
@@ -55,6 +49,8 @@ static char **shrimp_buf;
 static size_t shrimp_index = 0;
 static int impl_newln = 0;
 
+/* dumb utilities that should not be here... */
+
 static int strcut(char *str, int begin, int len)
 {
     int l = strlen(str);
@@ -64,9 +60,32 @@ static int strcut(char *str, int begin, int len)
     return len;
 }
 
+static uint32_t hextol(char *hex)
+{
+    uint32_t val = 0;
+    for (size_t i = 0; i < 6; i++) {
+        uint8_t byte = *hex++; 
+        if (byte >= '0' && byte <= '9') byte = byte - '0';
+        else if (byte >= 'a' && byte <='f') byte = byte - 'a' + 10;
+        else if (byte >= 'A' && byte <='F') byte = byte - 'A' + 10;    
+        val = (val << 4) | (byte & 0xF);
+    }
+
+    return val;
+}
+
 void shrimp_update(void);
 
-/* Parse "ANSI" sequences */
+/**
+ * @brief parse these "ANSI" escape sequences
+ *
+ * Called by shrimp_update every time an 
+ * escape sequence is found.
+ *
+ * @param str the string to be parsed
+ * @param color if a color sequence is found, the color is put here
+ * @param reset set when a new string is ready to be parsed
+ */
 void ansi_parse(char *str, struct color *color, bool reset)
 {
     static size_t saved_index = 0;
@@ -103,9 +122,10 @@ void ansi_parse(char *str, struct color *color, bool reset)
                             return;
                         }
                         /* Calculate color */
-                        color->r = ((int) str[k+1] - 48) * ((int) str[k+4] - 48);
-                        color->g = ((int) str[k+2] - 48) * ((int) str[k+5] - 48);
-                        color->b = ((int) str[k+3] - 48) * ((int) str[k+6] - 48);
+                        uint32_t hex = hextol(&str[k+1]);
+                        color->r = ((hex >> 16) & 0xFF);
+                        color->g = ((hex >> 8) & 0xFF);
+                        color->b = ((hex) & 0xFF);
                         color->a = 255;
                         /* Save the index right after the escape in the string, so that
                            we can continue where we left off last time */
@@ -117,7 +137,9 @@ void ansi_parse(char *str, struct color *color, bool reset)
     }
 }
 
-/* Clear terminal */
+/**
+ * @brief Clear the framebuffer
+ */
 void shrimp_clear(void)
 {
     shrimp_x = 0;
@@ -130,7 +152,9 @@ void shrimp_clear(void)
     }
 }
 
-/* Init fbterm */
+/**
+ * @brief Initialise shrimp
+ */
 void shrimp_init(int _handle)
 {
     handle = _handle;
@@ -145,14 +169,18 @@ void shrimp_init(int _handle)
     shrimp_clear();
 }
 
-/* Free terminal buffer */
+/**
+ * @brief Free terminal buffer
+ */
 void shrimp_kill(void)
 {
     kfree(shrimp_buf);
     shrimp_clear();
 }
 
-/* Put character at (x,y) */
+/**
+ * @brief Put character at (x, y)
+ */
 void _shrimp_putc(char a, uint16_t _x, uint16_t _y, struct color c)
 {
     const uint16_t *bmp = shrimp_font[(int) a];
@@ -164,6 +192,12 @@ void _shrimp_putc(char a, uint16_t _x, uint16_t _y, struct color c)
     }
 }
 
+/**
+ * @brief Put character at (x, y)
+ *
+ * Renders character-by-character & is
+ * wrap aware
+ */
 void shrimp_putc(char a, struct color c)
 {
     /* We don't really need tabs */
@@ -191,7 +225,12 @@ void shrimp_putc(char a, struct color c)
     _shrimp_putc(a, shrimp_x++, shrimp_y, c);
 }
 
-/* Update terminal */
+/**
+ * @brief Re-render whole buffer
+ *
+ * Clears screen & draws all strings in the buffer,
+ * taking care of escape sequences & scrolling
+ */
 void shrimp_update(void)
 {
     /* Clear terminal */
@@ -232,6 +271,9 @@ void shrimp_update(void)
     }
 }
 
+/**
+ * @brief Add string to buffer & update
+ */
 int shrimp_print(const char *str)
 {
     /* Add string to buffer */
