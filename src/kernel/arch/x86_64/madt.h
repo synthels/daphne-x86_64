@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <arch/x86_64/acpi.h>
 #include <arch/x86_64/vmm.h>
 
 #include <generic/malloc/malloc.h>
@@ -61,8 +60,20 @@ struct madt_table_nmi {
     uint8_t lintno;
 } __attribute__((packed));
 
+struct madt_rsdt_header {
+    char signature[4];
+    uint32_t len;
+    uint8_t rev;
+    uint8_t checksum;
+    char oem[6];
+    char oem_table_id[8];
+    uint32_t oemrev;
+    uint32_t creator_id;
+    uint32_t creator_rev;
+} __attribute__((packed));
+
 struct madt_head {
-    struct rsdt_header head;
+    struct madt_rsdt_header head;
     uint32_t lapic;
     uint32_t flags;
     struct madt_record_table_entry madt_table[];

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <lib/printk.h>
+#include <lib/log.h>
 #include <lib/string.h>
 #include <lib/vec.h>
 
@@ -42,11 +42,11 @@ enum task_state_t {
 struct task {
     const char *name;
     pid_t pid;
-    context_t *context;
+    struct _Context *context;
     enum task_state_t state;    /* Task state */
     int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */
-    vec_t *children;            /* Task children */
+    struct Vector *children;            /* Task children */
 };
 
 struct processor {

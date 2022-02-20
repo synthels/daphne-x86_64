@@ -19,4 +19,4 @@
 #include <lib/vec.h>
 
 /* Test vector */
-test_result_t *vec_test(void);
+test_result_t *struct Vectorest(void);

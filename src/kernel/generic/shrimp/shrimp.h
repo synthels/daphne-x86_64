@@ -22,7 +22,7 @@
 #include <generic/forbia/types.h>
 
 #include <lib/string.h>
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #include "font.h"
 
@@ -47,7 +47,7 @@ void shrimp_init(int _handle);
  *   parameters:
  *     - str: string
  */
-void shrimp_print(char *str);
+int shrimp_print(const char *str);
 
 /**
  * shrimp_kill

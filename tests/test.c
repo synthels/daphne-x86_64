@@ -18,23 +18,23 @@
 
 /* tests... (can't put these in the header file) */
 #include "cases/malloc/malloc_test.h"
-#include "cases/vec/vec_test.h"
+#include "cases/vec/struct Vectorest.h"
 /* ... */
 
 void run_unit_tests(void)
 {
     unit_test("malloc test", malloc_test);
-    unit_test("vector test", vec_test);
+    unit_test("vector test", struct Vectorest);
 }
 
 void unit_test(const char *name, test_t test)
 {
     test_result_t *res = test();
     if (!res->result) {
-        log_test("test \"%s\" failed with error \"%s\"", name, res->err);
+        pr_test("test \"%s\" failed with error \"%s\"", name, res->err);
         panic("test failed, kernel hung");
     }
-    log_test("test \"%s\" passed", name);
+    pr_test("test \"%s\" passed", name);
 }
 
 test_result_t *test_result(bool result, char *err)

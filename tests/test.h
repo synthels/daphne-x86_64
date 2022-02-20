@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <lib/printk.h>
+#include <lib/log.h>
 #include <generic/forbia/types.h>
 #include <generic/malloc/malloc.h>
 

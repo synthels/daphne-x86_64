@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <arch/x86_64/x64.h>
+
 typedef void (*tm_func_t)(regs_t *, uint64_t);
 
 struct tm_func_node {

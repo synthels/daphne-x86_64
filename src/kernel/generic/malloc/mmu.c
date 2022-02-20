@@ -90,9 +90,9 @@ void mmu_map_mmio(uintptr_t base, size_t pages)
     }
 }
 
-context_t *mmu_init_context(size_t heap, uint64_t stack)
+struct _Context *mmu_init_context(size_t heap, uint64_t stack)
 {
-    return (context_t *) init_context(heap, stack);
+    return (struct _Context *) init_context(heap, stack);
 }
 
 uint64_t *mmu_vmalloc(size_t n)
@@ -105,7 +105,7 @@ void mmu_vswitch(uint64_t *pml)
     vswitch(pml);
 }
 
-void mmu_switch(context_t *context)
+void mmu_switch(struct _Context *context)
 {
     mmu_vswitch(context->page_table);
     arch_save_regs(context->regs);

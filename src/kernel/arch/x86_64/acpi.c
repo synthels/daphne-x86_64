@@ -34,8 +34,6 @@ void acpi_init(uint64_t rsdp)
 
     if (!validate_rsdt()) {
         panic("invalid rsdt checksum");
-    } else {
-        ok("acpi: loaded rsdt");
     }
 }
 

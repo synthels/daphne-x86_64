@@ -12,21 +12,16 @@
  * GNU General Public License for more details.
  */
 
-#include "struct Vectorest.h"
+#pragma once
 
-test_result_t *struct Vectorest(void)
-{
-    struct Vector *v = vector();
-    int a = 1;
-    int b = 2;
-    int c = 3;
-    int d = 4;
-    vec_push_ptr(v, &a);
-    vec_push_ptr(v, &b);
-    vec_push_ptr(v, &c);
-    vec_push_ptr(v, &d);
+#include <generic/time/time.h>
 
-    TEST_ASSERT(vec_get_as(v, 1, int) == 2, "vector item incorrect");
+#include "printk.h"
 
-    return test_result(TEST_SUCCESS, "");
-}
+#define log(level, fmt, ...) printk(level, "[  %i.%i] " fmt "\n", time(), uptime(), ##__VA_ARGS__)
+
+#define pr_info(fmt, ...) log(NORMAL, fmt, ##__VA_ARGS__)
+#define pr_warn(fmt, ...) log(WARNING, fmt, ##__VA_ARGS__)
+#define pr_err(fmt, ...) log(ERROR, fmt, ##__VA_ARGS__)
+#define pr_test(fmt, ...)log(ERROR, fmt, ##__VA_ARGS__)
+

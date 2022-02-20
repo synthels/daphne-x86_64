@@ -19,7 +19,7 @@
 #include <arch/x86_64/pic.h>
 #include <arch/x86_64/tsc.h>
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #include <generic/sched/task.h>
 #include <generic/malloc/malloc.h>

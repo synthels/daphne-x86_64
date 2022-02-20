@@ -155,10 +155,10 @@ void shrimp_kill(void)
 /* Put character at (x,y) */
 void _shrimp_putc(char a, uint16_t _x, uint16_t _y, struct color c)
 {
+    const uint16_t *bmp = shrimp_font[(int) a];
     for (uint8_t y = 0; y < FONT_HEIGHT; y++) {
-        const uint8_t bmp = shrimp_font[(a - 32) * FONT_HEIGHT + y];
         for (uint8_t x = 0; x < FONT_WIDTH; x++) {
-            if (bmp & (1 << ((FONT_WIDTH - 1) - x)))
+            if (bmp[y] & (1 << (15-x)))
                 lfb_set_pixel(handle, FBTERM_OFFSET + x + (_x * FONT_WIDTH), FBTERM_OFFSET + y + (_y * FONT_HEIGHT), c);
         }
     }
@@ -232,10 +232,11 @@ void shrimp_update(void)
     }
 }
 
-void shrimp_print(char *str)
+int shrimp_print(const char *str)
 {
     /* Add string to buffer */
-    shrimp_buf[shrimp_index++] = str;
+    shrimp_buf[shrimp_index++] = (char *) str;
     /* Print string! */
     shrimp_update();
+    return NOERR;
 }

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #include <mod/pit/pit.h>
 #include <mod/apic/apic.h>

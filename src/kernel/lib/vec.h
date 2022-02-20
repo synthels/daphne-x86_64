@@ -21,11 +21,11 @@
 
 #define VEC_CAPACITY 5
 
-typedef struct Vector {
+struct Vector {
     void **data;
     size_t size;
     size_t _Size; /* Actual internal size */
-} vec_t;
+};
 
 /**
  * vec_get_as
@@ -49,22 +49,22 @@ typedef struct Vector {
  * vector
  *   brief: allocate new vector
  */
-vec_t *vector(void);
+struct Vector *vector(void);
 
 /**
  * vec_push
  *   brief: push element to vector
  */
-void vec_push(vec_t *v, void *e);
+void vec_push(struct Vector *v, void *e);
 
 /**
  * vec_get
  *   brief: get element from vector
  */
-void *vec_get(vec_t *v, size_t i);
+void *vec_get(struct Vector *v, size_t i);
 
 /**
  * vec_free
  *   brief: free vector
  */
-void vec_free(vec_t *v);
+void vec_free(struct Vector *v);

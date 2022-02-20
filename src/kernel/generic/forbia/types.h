@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #define bool _Bool
 
 #ifndef true

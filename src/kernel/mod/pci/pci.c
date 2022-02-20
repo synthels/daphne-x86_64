@@ -49,12 +49,6 @@ void pci_scan_func(int bus, int slot, int func)
     if (vend == PCI_NONE) {
         return;
     }
-    info(
-        "pci: device located (vendor: 0x%x, class: 0x%x, subclass: 0x%x) @ %ui:%ui:%ui",
-        vend, class, 
-        subclass, bus, 
-        slot, func
-    );
     struct pci_device *dev = kmalloc(sizeof(struct pci_device));
     dev->class_id = class;
     dev->subclass_id = subclass;

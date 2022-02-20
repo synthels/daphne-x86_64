@@ -20,7 +20,7 @@
 #include <generic/time/jiffies.h>
 #include <generic/time/sleep.h>
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #include <arch/x86_64/acpi.h> /* TODO: not x64 specific... */
 #include <arch/x86_64/tsc.h>

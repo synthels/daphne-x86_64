@@ -16,7 +16,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <generic/malloc/malloc.h>
 #include <mod/pit/pit.h>
 
 #ifdef ARCH_x86_64

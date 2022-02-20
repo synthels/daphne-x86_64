@@ -32,7 +32,7 @@
 #include <mod/apic/apic.h>
 #include <mod/kbd/kbd.h>
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #include <tests/test.h>
 
@@ -160,14 +160,6 @@ void main(struct stivale2_struct *stv)
         set_log_level(TEST);
     #endif
 
-    info("daphne (forbia %s, running on %s)", KERNEL_VERSION, KERNEL_ARCH);
-    info("display info - width: %i, height: %i, pitch: %i", 
-        info.screen_width,
-        info.screen_height,
-        info.screen_pitch
-    );
-    ok("initialised terminal with printk_buffer_size=%i, log_level=%i", __PRINTK_BUFFER_SIZE, get_log_level());
-
     #ifdef ARCH_x86_64
         pci_scan();                         /* pci */
         acpi_init(rsdp_info->rsdp);         /* acpi */
@@ -186,7 +178,7 @@ void main(struct stivale2_struct *stv)
     #ifdef BUILD_TESTS
         /* Run unit tests */
         run_unit_tests();
-        log_test("All tests complete!");
+        pr_test("All tests complete!");
     #endif
 
     for (;;) {

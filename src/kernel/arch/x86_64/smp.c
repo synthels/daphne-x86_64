@@ -187,7 +187,7 @@ void smp_init(void)
     for (; m[cores]; cores++) {
         /* Too many? Only use SMP_MAX_CPUS */
         if (cores > SMP_MAX_CPUS) {
-            warn("smp: too many cpus, defaulting to %ui", SMP_MAX_CPUS);
+            pr_warn("smp: too many cpus, defaulting to %ui", SMP_MAX_CPUS);
             break;
         }
         cpus[cores].cpu_id = m[cores]->processor_id;
@@ -254,7 +254,7 @@ void smp_init(void)
         } while (!_ap_is_ok);
     }
 
-    ok("smp: initialised SMP with %ui cores", cores);
+    pr_info("smp: initialised SMP with %ui cores", cores);
 }
 
 struct smp_cpus *smp_get_cores(void)

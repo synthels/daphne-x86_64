@@ -17,10 +17,10 @@
 #include "printk.h"
 
 /* Don't let anyone see this... */
-static char *printk_buf;
+static char *printf_buf;
 static int log_level = NORMAL;
 
-declare_lock(printk_lock);
+declare_lock(printf_lock);
 
 /* Not too bad, right? */
 int vsprintf(char *buf, const char *fmt, va_list args)
@@ -29,9 +29,9 @@ int vsprintf(char *buf, const char *fmt, va_list args)
     for (int i = 0; (c = *fmt++);) {
         buf[i++] = c;
         if (c == '%') {
-            c = *fmt++;
             /* Allocate memory for the va_arg strings */
-            char *str = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
+            char *str = kmalloc(sizeof(char) * VSPRINTF_BUFFER_SIZE);
+            c = *fmt++;
             switch (c) {
                 /* Strings */
                 case 's':
@@ -85,28 +85,96 @@ int vsprintf(char *buf, const char *fmt, va_list args)
     return NOERR;
 }
 
-int printk(int level, const char *fmt, ...)
+size_t vsprintf_length(const char *fmt, va_list args)
 {
-    if (level >= log_level) {
-        lock(&printk_lock);
-        /* This will be later freed by shrimp, so it's fine */
-        printk_buf = kmalloc(sizeof(char) * __PRINTK_BUFFER_SIZE);
-
-        for (size_t i = 0; i < __PRINTK_BUFFER_SIZE; i++) {
-            printk_buf[i] = '\0';
+    char c;
+    size_t length = 0;
+    char *str = kmalloc(VSPRINTF_BUFFER_SIZE * sizeof(char));
+    for (int i = 0; (c = *fmt++);) {
+        if (c == '%') {
+            c = *fmt++;
+            switch (c) {
+                /* Strings */
+                case 's':
+                    length += strlen(va_arg(args, char *));
+                    break;
+                /* Unsigned (no prettier way to do this) */
+                case 'u':
+                    switch (*fmt++) {
+                        case 'i':
+                            uitoa(va_arg(args, uint64_t), str);
+                            break;
+                    }
+                    break;
+                case 'i':
+                    itoa(va_arg(args, int64_t), str);
+                    break;
+                /* Hex */
+                case 'x':
+                    uitoh(va_arg(args, uint64_t), str);
+                    break;
+                /* Binary */
+                case 'b':
+                    /* TODO */
+                    break;
+                /* Just print a '%' */
+                case '%':
+                    length++;
+                    break;
+                /* Unknown type */
+                default:
+                    break;
+            }
+            /* Skip '%' sign */
+            i--;
+            /* Copy string to buffer */
+            for (; (c = *str++); i++) {
+                length++;
+            }
+            length += strlen(str);
         }
-
-        va_list ap;
-        va_start(ap, fmt);
-        int err = vsprintf(printk_buf, fmt, ap);
-        va_end(ap);
-        shrimp_print(printk_buf);
-
-        unlock(&printk_lock);
-        return err;
     }
 
-    return NOERR;
+    kfree(str);
+    return length;
+}
+
+int printf(printk_out_func out, const char *fmt, ...)
+{    
+    lock(&printf_lock);
+
+    va_list ap;
+    va_list cp;
+    va_start(ap, fmt);
+
+    /* Make a copy of the list
+       since va_arg pops elements off of it! */
+    va_copy(cp, ap);
+    va_start(cp, fmt);
+    size_t len = vsprintf_length(fmt, cp);
+
+    /* This will be later freed by shrimp, so it's fine */
+    printf_buf = kmalloc(sizeof(char) * len);
+
+    for (size_t i = 0; i < len; i++) {
+        printf_buf[i] = '\0';
+    }
+
+    int err = vsprintf(printf_buf, fmt, ap);
+    va_end(ap);
+    out(printf_buf);
+
+    unlock(&printf_lock);
+    return err;
+}
+
+int printk(int level, const char *fmt, ...)
+{
+    int err = NOERR;
+    if (level >= log_level) {
+        err = printf(shrimp_print, fmt);
+    }
+    return err;
 }
 
 int get_log_level(void)

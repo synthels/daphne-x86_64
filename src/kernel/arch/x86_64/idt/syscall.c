@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <arch/x86_64/x64.h>
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 #ifdef ARCH_x86_64
     #include <arch/x86_64/x64.h>
@@ -27,5 +27,5 @@
 /* syscall handler */
 void syscall_handler(regs_t *r)
 {
-    warn("not implemented - syscall(%i)", r->rax);
+    pr_warn("not implemented - syscall(%i)", r->rax);
 }

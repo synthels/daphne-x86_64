@@ -12,7 +12,7 @@ add_executable(${KERNEL_BIN})
 
 set(SRCROOT ${PROJECT_SOURCE_DIR})
 set(CMAKE_C_FLAGS "-ffreestanding -O2 -Wall -Wextra -fPIE -Ilib -Ikernel -Wno-maybe-uninitialized")
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 
 # Build tests if needed
 if (BUILD_TESTS)

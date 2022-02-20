@@ -16,7 +16,7 @@
 
 #include "tsc.h"
 
-#include <lib/printk.h>
+#include <lib/log.h>
 
 static uint64_t tsc_mhz;
 
@@ -29,7 +29,7 @@ void tsc_init(void)
     delay(HZ);
     int end = rdtsc();
     tsc_mhz = (end - start) / 1000000;
-    ok("tsc: timed at ~%ui MHz", tsc_mhz);
+    pr_info("tsc: timed at ~%ui MHz", tsc_mhz);
 }
 
 uint64_t rdtsc(void)

@@ -18,7 +18,7 @@
 #include <arch/x86_64/ports.h>
 
 #include <generic/forbia/types.h>
-#include <lib/printk.h>
+#include <lib/log.h>
 #include <generic/malloc/malloc.h>
 
 #define PCI_SECONDARY_BUS   0x19

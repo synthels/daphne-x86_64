@@ -1,12 +1,16 @@
 /**
- * Linux terminal font
+ * This font is not mine! Look here:
+ * https://gitlab.com/bytensky/knxt
  */
 
-#pragma once
+#ifndef FBTERM_FONT
+#define FBTERM_FONT
 
 #include <stdint.h>
 
-#define FONT_HEIGHT 16
-#define FONT_WIDTH  8
+#define FONT_HEIGHT 20
+#define FONT_WIDTH  9
 
-extern uint8_t shrimp_font[];
+extern uint16_t shrimp_font[][20];
+
+#endif

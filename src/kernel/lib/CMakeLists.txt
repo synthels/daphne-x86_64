@@ -9,6 +9,7 @@ set(SRC
     ${SRCROOT}/printk.h
     ${SRCROOT}/vec.c
     ${SRCROOT}/vec.h
+    ${SRCROOT}/log.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

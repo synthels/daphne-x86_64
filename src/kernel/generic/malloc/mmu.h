@@ -24,7 +24,6 @@
 #include "malloc.h"
 
 #define ROUND(n, m) (n + m - 1) & -m
-typedef struct _Context context_t;
 
 /**
  * init_mmu
@@ -66,10 +65,10 @@ void mmu_vswitch(uint64_t *pml);
  * mmu_init_context
  *   brief: init virtual context
  */
-context_t *mmu_init_context(size_t heap, uint64_t stack);
+struct _Context *mmu_init_context(size_t heap, uint64_t stack);
 
 /**
  * mmu_switch
  *   brief: switch context
  */
-void mmu_switch(context_t *context);
+void mmu_switch(struct _Context *context);

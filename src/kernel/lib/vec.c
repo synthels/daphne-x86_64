@@ -14,22 +14,22 @@
 
 #include "vec.h"
 
-vec_t *vector(void)
+struct Vector *vector(void)
 {
-    vec_t *v = kmalloc(sizeof(vec_t));
+    struct Vector *v = kmalloc(sizeof(struct Vector));
     v->data = kmalloc(sizeof(void *) * VEC_CAPACITY);
     v->_Size = VEC_CAPACITY;
     v->size = 0;
     return v;
 }
 
-void vec_resize(vec_t *v)
+void vec_resize(struct Vector *v)
 {
     v->_Size += VEC_CAPACITY;
     v->data = krealloc(v->data, sizeof(void *) * v->_Size);
 }
 
-void vec_push(vec_t *v, void *e)
+void vec_push(struct Vector *v, void *e)
 {
     if (v->size >= v->_Size) {
         vec_resize(v);
@@ -37,7 +37,7 @@ void vec_push(vec_t *v, void *e)
     v->data[v->size++] = e;
 }
 
-void *vec_get(vec_t *v, size_t i)
+void *vec_get(struct Vector *v, size_t i)
 {
     if (i < v->size) {
         return v->data[i];
@@ -46,7 +46,7 @@ void *vec_get(vec_t *v, size_t i)
     }
 }
 
-void vec_free(vec_t *v)
+void vec_free(struct Vector *v)
 {
     kfree(v->data);
     kfree(v);
