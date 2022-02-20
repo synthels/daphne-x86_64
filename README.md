@@ -10,36 +10,32 @@ Daphne is a UNIX-like 64-bit operating system written in pure C
 - WSL
 - MinGW (will probably work, but not very well tested)
 
-### Supported emulators
+### Tested emulators
 
 - QEMU
 - Virtualbox
 - VMWare
 
-We use CMake as our build system, so you will have to install that first of all.
+We use CMake as our build system, so you will have to install that first of all (see https://cmake.org/install/)
 
-If you haven't built gcc already, please run the `tools/gcc_pre.sh` script first.
-Before building, you must also build the `x86_64-elf-gcc` compiler. The easiest way to build it is to use brew like so
+### Building gcc
+
+You can build the toolchain yourself using the scripts under the `tools` directory. Alternatively you can use brew like so:
 
 ```bash
 $ brew install x86_64-elf-gcc
 ```
 
-#### WSL note
+#### Brew note
 
-On WSL/Some linux distros, you may have to run these 2 commands every time you start up the shell, otherwise CMake will not be able to find the compiler
+If you installed gcc using brew, you may have to run these two commands before building the kernel, or CMake will not be able to find the compiler.
 
 ```bash
 $ export BREW_HOME="/home/linuxbrew/.linuxbrew/bin"
-```
-
-```bash
 $ export PATH="$PATH:$BREW_HOME"
 ```
 
-If there are no errors and everything went well, you should now have a stivale2 compliant binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
-
-### Building for x64
+### Building for x86_64
 
 First, clone the repositorty with the following command
 
@@ -49,9 +45,11 @@ $ git clone https://github.com/synthels/daphne.git --recursive
 
 #### Building limine
 
-building limine is really simple. All you have to do is run `./autogen.sh` and then `make` from inside the `src/kernel/arch/x86_64/limine` directory.
+Building limine is really simple. All you have to do is run `./autogen.sh` and then `make` from inside the `src/kernel/arch/x86_64/limine` directory.
 
 #### Building the kernel
+
+Change your working directory to the root directory (`daphne/`) & follow this guide.
 
 First, run
 
@@ -59,17 +57,12 @@ First, run
 $ ./tools/setup.sh -x64
 ```
 
-from the root directory in order to create the `build` directory. In this directory you will find the `iso` directory and a clean script. Don't worry about these for now.
+which will setup the build environment for x86_64.
 
 Then run
 
 ```bash
 $ cd build
-```
-
-Now that you're in the `build` directory, we can start fiddling with CMake!
-
-```bash
 $ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
 
@@ -81,7 +74,7 @@ To finally build the binary, you can run CMake's generic build command
 $ cmake --build .
 ```
 
-If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then fix them! It's not my fault you can't write C!)
+If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then go back and fix them! It's not my fault you can't write C!)
 
 ### Building an ISO image
 
