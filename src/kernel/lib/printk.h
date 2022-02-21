@@ -37,7 +37,7 @@ enum printk_log_level {
     PANIC    = 4,
 };
 
-typedef int (*printk_out_func)(const char *);
+typedef int (*printk_stream)(const char *);
 
 /**
  * printk
@@ -64,3 +64,9 @@ void set_log_level(int level);
  *   brief: print formatted string to buffer
  */
 int vsprintf(char *buf, const char *fmt, va_list args);
+
+/**
+ * vfprintf
+ *   brief: print formatted string to stream
+ */
+int vfprintf(printk_stream stream, const char *fmt, va_list args);
