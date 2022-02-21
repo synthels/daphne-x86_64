@@ -65,6 +65,12 @@ void lfb_get_info(struct lfb_info *info);
 void lfb_get_ctx_info(int handle, struct lfb_info *info);
 
 /**
+ * lfb_get_addr
+ *   brief: get lfb address
+ */
+uint64_t lfb_get_addr(void);
+
+/**
  * lfb_create_ctx
  *   brief: create context
  */

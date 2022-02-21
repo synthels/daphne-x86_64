@@ -20,11 +20,6 @@
  *         where every X is any number 
  *         between 1-9.
  *
- * @ Overwriting the current line:
- * \xff[0000000
- * If this sequence is found anywhere in the string, the
- * current line will be overwritten with this string.
- *
  * @ Printing with colors:
  * \xff[1YYYXXX
  * Where YYYXXX is the hex code of the color. The special value
@@ -43,22 +38,9 @@
 static int handle;
 static uint16_t ctx_width, ctx_height;
 static uint16_t shrimp_x = 0, shrimp_y = 0;
+static uint64_t lfb_address;
 
-/* Terminal buffer */
-static char **shrimp_buf;
-static size_t shrimp_index = 0;
 static int impl_newln = 0;
-
-/* dumb utilities that should not be here... */
-
-static int strcut(char *str, int begin, int len)
-{
-    int l = strlen(str);
-    if (len < 0) len = l - begin;
-    if (begin + len > l) len = l - begin;
-    memmove(str + begin, str + begin + len, l - len + 1);
-    return len;
-}
 
 static uint32_t hextol(char *hex)
 {
@@ -74,7 +56,7 @@ static uint32_t hextol(char *hex)
     return val;
 }
 
-void shrimp_update(void);
+void shrimp_update(char *str);
 
 /**
  * @brief parse these "ANSI" escape sequences
@@ -105,17 +87,6 @@ void ansi_parse(char *str, struct color *color, bool reset)
             for (size_t k = j; k < _strlen; k++) {
                 c = str[k];
                 switch (c) {
-                    case ESCAPE_OVERWRITE:
-                        /* Overwrite current line */
-                        if (shrimp_y > 0) {
-                            /* Cut the escape sequence */
-                            strcut(str, k-2, 9);
-                            /* Free overwritten line */
-                            kfree(shrimp_buf[--shrimp_index]);
-                            shrimp_buf[shrimp_index] = str;
-                            shrimp_update(); /* Note: no, this doesn't cause infinite recursion */
-                        }
-                        break;
                     case ESCAPE_COLOR_PRINT:
                         if (!memcmp(&str[k], "1ffffff", 7)) {
                             *color = FG_COLOR;
@@ -162,9 +133,7 @@ void shrimp_init(int _handle)
     lfb_get_ctx_info(_handle, &info);
     ctx_width  = info.screen_width;
     ctx_height = info.screen_height;
-    /* Allocate terminal buffer */
-    shrimp_buf = kmalloc((((ctx_height / FONT_HEIGHT) - FBTERM_OFFSET) * sizeof(char *)));
-
+    lfb_address = lfb_get_addr();
     /* Clear terminal */
     shrimp_clear();
 }
@@ -174,7 +143,6 @@ void shrimp_init(int _handle)
  */
 void shrimp_kill(void)
 {
-    kfree(shrimp_buf);
     shrimp_clear();
 }
 
@@ -210,13 +178,8 @@ void shrimp_putc(char a, struct color c)
         /* Scroll terminal if it fills up */
         if (shrimp_y >= ((ctx_height / FONT_HEIGHT))) {
             shrimp_y = ((ctx_height / FONT_HEIGHT)) - 1;
-            shrimp_index = shrimp_y;
-            /* Free topmost string (fixes the
-               memory leaks) */
-            kfree(shrimp_buf[0]);
-            for (size_t i = 0; i < shrimp_y; i++) {
-                shrimp_buf[i] = shrimp_buf[i+1];
-            }
+            memmove((uint64_t *) lfb_address, (uint64_t *) (lfb_address + sizeof(uint32_t) * ctx_width * FONT_HEIGHT), (ctx_height - FONT_HEIGHT) * ctx_width * 4);
+            memset((uint64_t *) (lfb_address + sizeof(uint32_t) * (ctx_height - FONT_HEIGHT) * ctx_width), 0x00, FONT_HEIGHT * ctx_width * 4);
         }
         return;
     }
@@ -226,49 +189,43 @@ void shrimp_putc(char a, struct color c)
 }
 
 /**
- * @brief Re-render whole buffer
+ * @brief Print new string
  *
- * Clears screen & draws all strings in the buffer,
- * taking care of escape sequences & scrolling
+ * Draws new string while taking care of escape sequences & scrolling
  */
-void shrimp_update(void)
+void shrimp_update(char *str)
 {
-    /* Clear terminal */
-    shrimp_clear();
     /* Flush buffer */
-    for (size_t i = 0; i < shrimp_index; i++) {
-        struct color color = FG_COLOR;
-        char *str = shrimp_buf[i];
-        /* Set on implicit newline */
-        bool newline = false;
-        for (size_t j = 0; j < strlen(str); j++) {
-            /* Parse "ansi" sequences */
-            /* A bit hacky to make colors work correctly, oh well! */
-            if (str[j] == ESCAPE_SEQ) {
-                ansi_parse(str, &color, false);
-                if (str[j + 2] == ESCAPE_COLOR_PRINT) {
-                    j += 9;
-                }
+    struct color color = FG_COLOR;
+    /* Set on implicit newline */
+    bool newline = false;
+    for (size_t j = 0; j < strlen(str); j++) {
+        /* Parse "ansi" sequences */
+        /* A bit hacky to make colors work correctly, oh well! */
+        if (str[j] == ESCAPE_SEQ) {
+            ansi_parse(str, &color, false);
+            if (str[j + 2] == ESCAPE_COLOR_PRINT) {
+                j += 9;
             }
-            /* Go to next line when this line is filled up */
-            if ((impl_newln > ((ctx_width / FONT_WIDTH) - FBTERM_OFFSET)) && str[j] != '\n') {
-                shrimp_putc('\n', FG_COLOR);
-                newline = true;
-                impl_newln = 0;
-            }
-            /* Skip space after newline */
-            if (j > 0) {
-                if (((str[j-1] == '\n') || newline) && str[j] == ' ') {
-                    newline = false;
-                    continue;
-                }
-            }
-            /* Draw character */
-            shrimp_putc(str[j], color);
-            impl_newln++;
         }
-        ansi_parse(str, &color, true);
+        /* Go to next line when this line is filled up */
+        if ((impl_newln > ((ctx_width / FONT_WIDTH) - FBTERM_OFFSET)) && str[j] != '\n') {
+            shrimp_putc('\n', FG_COLOR);
+            newline = true;
+            impl_newln = 0;
+        }
+        /* Skip space after newline */
+        if (j > 0) {
+            if (((str[j-1] == '\n') || newline) && str[j] == ' ') {
+                newline = false;
+                continue;
+            }
+        }
+        /* Draw character */
+        shrimp_putc(str[j], color);
+        impl_newln++;
     }
+    ansi_parse(str, &color, true);
 }
 
 /**
@@ -276,9 +233,6 @@ void shrimp_update(void)
  */
 int shrimp_print(const char *str)
 {
-    /* Add string to buffer */
-    shrimp_buf[shrimp_index++] = (char *) str;
-    /* Print string! */
-    shrimp_update();
+    shrimp_update((char *) str);
     return NOERR;
 }

@@ -62,6 +62,11 @@ int lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, ui
     return NOERR;
 }
 
+uint64_t lfb_get_addr(void)
+{
+    return framebuffer;
+}
+
 int lfb_destroy_ctx(int handle)
 {
     if (handle >= MAX_CONTEXTS) return EINVAL;
