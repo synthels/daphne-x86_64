@@ -181,6 +181,12 @@ void main(struct stivale2_struct *stv)
         pr_test("All tests complete!");
     #endif
 
+    sched_run_task("INIT1");
+    sched_run_task("INIT2");
+    sched_run_task("INIT3");
+    sched_run_task("INIT4");
+    sched_run_task("INIT5");
+
     for (;;) {
         asm("hlt");
     }

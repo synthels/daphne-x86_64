@@ -18,6 +18,8 @@
 #include <stddef.h>
 #include <mod/pit/pit.h>
 
+#include <generic/sched/task.h>
+
 #ifdef ARCH_x86_64
     #include <arch/x86_64/cmos.h>
     #include <arch/x86_64/x64.h>

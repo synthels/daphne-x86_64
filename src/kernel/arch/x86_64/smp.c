@@ -210,15 +210,12 @@ void smp_init(void)
 
     for (int i = 0; i < cores; i++) {
         const uint32_t bsp_id = (lapic_read(LAPIC_ID) >> 24);
-        /*
+        /**
          * Don't put the BSP in real mode! 
-         *
-         * Note! I don't know if this check is necessary or if
-         * the BSP always has id 0x0, but this check doesn't really
-         * impact anything so I'll just leave it here for now
          */
         if ((uint32_t) cpus[i].cpu_id == bsp_id) {
             cpu_set_current_core((uintptr_t)&(smp_cores->cpus[bsp_id]));
+            smp_cores->cpus[bsp_id].is_bsp = true;
             continue;
         };
         uint64_t ap_bootstrap_len = (uintptr_t) &ap_bootstrap_end - (uintptr_t) &ap_bootstrap16;

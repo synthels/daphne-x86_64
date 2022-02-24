@@ -22,9 +22,9 @@ static bool _tasks_distributed = false;
 static bool _multicore;
 static pid_t pid = 0;
 
-declare_lock(sched_lock);
-
 void switch_task(regs_t *r, uint64_t jiffies);
+
+declare_lock(sched_lock);
 
 /**
  * @brief Make a copy of a task (disconnected from its tree)
@@ -163,10 +163,10 @@ static void init_task(struct task *t, const char *name)
     prev = prev->next;
 
     /* It's probably time to distribute tasks! */
-    if (pid > SCHED_SINGLE_CORE_MAX_TASKS && !_tasks_distributed) {
+    if (pid > SCHED_SINGLE_CORE_MAX_TASKS && !_tasks_distributed && _multicore) {
         assign_tasks_to_cpus(NULL);
         _tasks_distributed = true;
-    } else if (_tasks_distributed) {
+    } else if (_tasks_distributed && _multicore) {
         /* Assign ONLY new task */
         assign_tasks_to_cpus(t);
     }
@@ -174,8 +174,10 @@ static void init_task(struct task *t, const char *name)
 
 void sched_run_task(const char *name)
 {
+    lock(&sched_lock);
     struct task *t = kmalloc(sizeof(struct task));
     init_task(t, name);
+    unlock(&sched_lock);
 }
 
 void sched_init(void)
@@ -203,7 +205,18 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
     mmu_switch(t2->context);
 }
 
+/**
+ * @brief Per processor task switch
+ *
+ * Checks which CPU calls & switches to its
+ * next task
+ */
 void switch_task(regs_t *r, uint64_t jiffies)
 {
-    UNUSED(jiffies);
+    /* If we are in the middle of a sched_run_task call,
+       return so that we don't run into a race condition! */
+    if (sched_lock) return;
+    struct task *cpu_tasks = &root;
+    if (_multicore && _tasks_distributed)
+        cpu_tasks = this_core->task;
 }

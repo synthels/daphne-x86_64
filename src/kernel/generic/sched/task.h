@@ -57,6 +57,7 @@ struct processor {
     struct task *task;
     int cpu_id;
     int lapic_id;
+    bool is_bsp; /* set if this cpu is the bsp */
 
     /* TODO: not used */
     int  cpu_model;
@@ -82,3 +83,9 @@ void sched_init(void);
  *   brief: run task
  */
 void sched_run_task(const char *name);
+
+/**
+ * switch_task
+ *   brief: switch task
+ */
+void switch_task(regs_t *r, uint64_t jiffies);
