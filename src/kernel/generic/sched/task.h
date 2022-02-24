@@ -54,7 +54,8 @@ struct processor {
      * Tasks assigned to this CPU. If task is NULL,
      * this CPU sits idly
      */
-    struct task *task;
+    struct task *root;
+    struct task *running_task;
     int cpu_id;
     int lapic_id;
     bool is_bsp; /* set if this cpu is the bsp */

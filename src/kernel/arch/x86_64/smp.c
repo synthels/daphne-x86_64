@@ -175,9 +175,10 @@ void smp_signal_ap(uint32_t lapic)
     lapic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
 }
 
-void smp_init(void)
+bool smp_init(void)
 {
     lapic_init();
+
     cpus = kmalloc(sizeof(struct processor) * SMP_MAX_CPUS);
     /* Get info from MADT */
     struct madt_table_lapic **m = (struct madt_table_lapic **) madt_get_tables(MADT_LAPIC);
@@ -192,18 +193,21 @@ void smp_init(void)
         }
         cpus[cores].cpu_id = m[cores]->processor_id;
         cpus[cores].lapic_id = m[cores]->apic_id;
-        cpus[cores].task = NULL;
+        cpus[cores].root = NULL;
     }
 
-    smp_cores = kmalloc(sizeof(smp_cores));
+    /* No SMP needed? */
+    if (cores <= 1) {
+        kfree(cpus);
+        return false;
+    }
+
+    smp_cores = kmalloc(sizeof(struct smp_cpus));
     smp_cores->cpus = cpus;
     smp_cores->size = cores;
 
     /* I like my memory free! */
     kfree(m);
-
-    /* No SMP needed? */
-    if (cores <= 1) return;
 
     /* Map lapic for MMIO */
     mmu_map_mmio(lapic_base, 1);
@@ -252,6 +256,7 @@ void smp_init(void)
     }
 
     pr_info("smp: initialised SMP with %ui cores", cores);
+    return true;
 }
 
 struct smp_cpus *smp_get_cores(void)

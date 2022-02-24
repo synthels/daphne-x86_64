@@ -80,7 +80,7 @@ struct smp_cpus {
  * smp_init
  *   brief: init smp
  */
-void smp_init(void);
+bool smp_init(void);
 
 /**
  * smp_next_ap

@@ -52,10 +52,10 @@ static void copy_task_to_cpu(struct processor *cpu, struct task *t)
      * of this task, the BSP will have to signal
      * other APs when a task's state changes
      */
-    struct task *ptr = cpu->task;
+    struct task *ptr = cpu->root;
     t->assigned_to_cpu = cpu->cpu_id;
     if (!ptr) {
-        cpu->task = copy_task(t);
+        cpu->root = copy_task(t);
         return;
     }
 
@@ -185,10 +185,13 @@ void sched_init(void)
     /* Check if we run within a multicore system */
     cpus = smp_get_cores();
     if (cpus->size < 2) {
+        /* Point bsp's root to our root */
+        this_core->root = &root;
         _multicore = false;
     } else {
         _multicore = true;
     }
+
     clock_hook(switch_task);
     pr_info("sched: initialised scheduler (%s multicore)", _multicore ? "with" : "without");
 }
@@ -216,7 +219,13 @@ void switch_task(regs_t *r, uint64_t jiffies)
     /* If we are in the middle of a sched_run_task call,
        return so that we don't run into a race condition! */
     if (sched_lock) return;
-    struct task *cpu_tasks = &root;
-    if (_multicore && _tasks_distributed)
-        cpu_tasks = this_core->task;
+    struct task *cpu_task = this_core->running_task;
+
+    /* Switch back to first task */
+    if (!cpu_task) {
+        this_core->running_task = this_core->root;
+    } else {
+        cpu_task = cpu_task->next;
+        this_core->running_task = cpu_task;
+    }
 }
