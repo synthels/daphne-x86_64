@@ -175,7 +175,7 @@ void smp_signal_ap(uint32_t lapic)
     lapic_send_sipi(lapic, AP_BOOTSTRAP_VIRT_START);
 }
 
-bool smp_init(void)
+void smp_init(void)
 {
     lapic_init();
 
@@ -196,15 +196,16 @@ bool smp_init(void)
         cpus[cores].root = NULL;
     }
 
-    /* No SMP needed? */
-    if (cores <= 1) {
-        kfree(cpus);
-        return false;
-    }
-
     smp_cores = kmalloc(sizeof(struct smp_cpus));
     smp_cores->cpus = cpus;
     smp_cores->size = cores;
+
+    /* No SMP needed? (note: we return here since
+       sched depends on smp_get_cores in order to function, even
+       if SMP is disabled!) */
+    if (cores <= 1) {
+        return;
+    }
 
     /* I like my memory free! */
     kfree(m);
@@ -256,7 +257,7 @@ bool smp_init(void)
     }
 
     pr_info("smp: initialised SMP with %ui cores", cores);
-    return true;
+    return;
 }
 
 struct smp_cpus *smp_get_cores(void)

@@ -166,15 +166,11 @@ void main(struct stivale2_struct *stv)
         madt_init();                        /* madt */
     #endif
 
-    /* Set up the BSP's processor struct here, in case SMP
-       is disabled */
-    const struct processor bsp = { NULL, NULL, -1, -1, true, 0, 0, "", "" };
-
     enable_interrupts();                                     /* enable interrupts */
     kbd_init();                                              /* init ps2 keyboard */
     clock_init();                                            /* clock */
     time_init();                                             /* time */
-    if (!smp_init()) cpu_set_current_core((uintptr_t) &bsp); /* smp */
+    smp_init();                                              /* smp */
     tsc_init();                                              /* tsc */
     apic_init();                                             /* try to boot up the APIC timer */
     sched_init();                                            /* init scheduler */

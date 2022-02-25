@@ -46,7 +46,7 @@ struct task {
     enum task_state_t state;    /* Task state */
     int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */
-    struct Vector *children;            /* Task children */
+    struct Vector *children;    /* Task children */
 };
 
 struct processor {

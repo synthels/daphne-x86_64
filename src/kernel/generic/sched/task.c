@@ -22,6 +22,10 @@ static bool _tasks_distributed = false;
 static bool _multicore;
 static pid_t pid = 0;
 
+/* Utilised as a drop-in replacement for
+   this_core->running_task on non-SMP systems */
+static struct task *running_task = NULL;
+
 void switch_task(regs_t *r, uint64_t jiffies);
 
 declare_lock(sched_lock);
@@ -210,22 +214,28 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
 
 /**
  * @brief Per processor task switch
+ * @todo task children? and there seems to exist a "weird" task
+ * with an invalid PID > 50000, get rid of it. (Also, qemu doesn't like
+ * this code in SMP systems? Seems to work fine in virtbox)
  *
  * Checks which CPU calls & switches to its
  * next task
  */
 void switch_task(regs_t *r, uint64_t jiffies)
 {
+    UNUSED(jiffies);
+    const bool multicore_and_distributed = _multicore && _tasks_distributed;
+    const struct task *running = multicore_and_distributed ? this_core->running_task : running_task;
     /* If we are in the middle of a sched_run_task call,
        return so that we don't run into a race condition! */
     if (sched_lock) return;
-    struct task *cpu_task = this_core->running_task;
-
-    /* Switch back to first task */
-    if (!cpu_task) {
-        this_core->running_task = this_core->root;
+    if (!running) {
+        /* Go back to root if this is last task in list */
+        if (multicore_and_distributed) this_core->running_task = &root;
+        else running_task = &root;
     } else {
-        cpu_task = cpu_task->next;
-        this_core->running_task = cpu_task;
+        if (multicore_and_distributed) this_core->running_task = running->next;
+        else running_task = running->next;
     }
+    save_task_context_and_switch(r, (struct task *) running, running_task);
 }
