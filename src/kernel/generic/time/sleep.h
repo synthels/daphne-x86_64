@@ -29,16 +29,16 @@ void delay(uint64_t jiff);
  */
 void sleep(int sec);
 
-/* WARNING: nanosleep & microsleep depend on the HZ constant being of a certain value & might not work. */
+/* WARNING: millisleep & nanosleep depend on the HZ constant being of a certain value & might not work. */
+
+/**
+ * millisleep
+ *   brief: kernel-wide sleep (millisec)
+ */
+void millisleep(int msec);
 
 /**
  * nanosleep
  *   brief: kernel-wide sleep (nanosec)
  */
 void nanosleep(int usec);
-
-/**
- * microsleep
- *   brief: kernel-wide sleep (microsec)
- */
-void microsleep(int msec);

@@ -15,7 +15,7 @@
 #pragma once
 
 #ifdef ARCH_x86_64
-    #define HZ 100 /* TODO: this should be a kernel parameter */
+    #define HZ 1000 /* TODO: this should be a kernel parameter */
 #endif
 
 /* Conversion routines */

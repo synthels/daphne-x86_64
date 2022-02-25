@@ -31,12 +31,12 @@ void sleep(int sec)
     delay(sec_to_jiffies(sec));
 }
 
+void millisleep(int msec)
+{
+    delay(msec_to_jiffies(msec));
+}
+
 void nanosleep(int usec)
 {
     delay(usec_to_jiffies(usec));
-}
-
-void microsleep(int msec)
-{
-    delay(msec_to_jiffies(msec));
 }

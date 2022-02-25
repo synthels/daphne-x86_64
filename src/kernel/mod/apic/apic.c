@@ -21,15 +21,15 @@ void apic_init(void)
     lapic_write(TIMER_DIV, 0x3);
     lapic_write(TIC, 0xffffffff);
 
-    sleep(1); /* TODO: is this correct?? */
+    millisleep(100);
 
     lapic_write(LVT_TIMER, 0x10000);
 
-    uint64_t tenms = 0xffffffff - lapic_read(TCURR);
+    uint64_t onems = (0xffffffff - lapic_read(TCURR)) / 100;
 
     lapic_write(LVT_TIMER, 32 | 0x20000);
     lapic_write(TIMER_DIV, 0x3);
-    lapic_write(TIC, tenms);
+    lapic_write(TIC, onems);
 
     time_source_set(TIME_SOURCE_APIC);
 }
