@@ -166,14 +166,14 @@ void main(struct stivale2_struct *stv)
         madt_init();                        /* madt */
     #endif
 
-    enable_interrupts();                                     /* enable interrupts */
-    kbd_init();                                              /* init ps2 keyboard */
-    clock_init();                                            /* clock */
-    time_init();                                             /* time */
-    smp_init();                                              /* smp */
-    tsc_init();                                              /* tsc */
-    apic_init();                                             /* try to boot up the APIC timer */
-    sched_init();                                            /* init scheduler */
+    enable_interrupts();                    /* enable interrupts */
+    kbd_init();                             /* init ps2 keyboard */
+    clock_init();                           /* clock */
+    time_init();                            /* time */
+    smp_init();                             /* smp */
+    tsc_init();                             /* tsc */
+    apic_init();                            /* try to boot up the APIC timer */
+    sched_init();                           /* init scheduler */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

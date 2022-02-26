@@ -35,6 +35,7 @@
 typedef uint16_t pid_t;
 enum task_state_t {
     DEAD,
+    SUSPENDED,
     ASLEEP,
     RUNNING
 };

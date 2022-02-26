@@ -24,7 +24,7 @@ static pid_t pid = 0;
 
 /* Utilised as a drop-in replacement for
    this_core->running_task on non-SMP systems */
-static struct task *running_task = NULL;
+static struct task *running_task = &root;
 
 void switch_task(regs_t *r, uint64_t jiffies);
 
@@ -156,7 +156,7 @@ static void init_task(struct task *t, const char *name)
     t->pid = ++pid;
     t->name = name;
     t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
-    t->state = ASLEEP;
+    t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = vector();
     t->next = NULL;
@@ -188,14 +188,7 @@ void sched_init(void)
 {
     /* Check if we run within a multicore system */
     cpus = smp_get_cores();
-    if (cpus->size < 2) {
-        /* Point bsp's root to our root */
-        this_core->root = &root;
-        _multicore = false;
-    } else {
-        _multicore = true;
-    }
-
+    _multicore = (cpus->size > 1);
     clock_hook(switch_task);
     pr_info("sched: initialised scheduler (%s multicore)", _multicore ? "with" : "without");
 }
@@ -208,15 +201,19 @@ void sched_init(void)
  */
 static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task *t2)
 {
-    t1->context->regs = r;
-    mmu_switch(t2->context);
+    if (t2->state == SUSPENDED) {
+        /* Suspend current task and run next task */
+        t1->state = SUSPENDED;
+        t2->state = RUNNING;
+        /* Context switch! */
+        t1->context->regs = r;
+        mmu_switch(t2->context);
+   }
 }
 
 /**
  * @brief Per processor task switch
- * @todo task children? and there seems to exist a "weird" task
- * with an invalid PID > 50000, get rid of it. (Also, qemu doesn't like
- * this code in SMP systems? Seems to work fine in virtbox)
+ * @todo task children?
  *
  * Checks which CPU calls & switches to its
  * next task
@@ -225,17 +222,40 @@ void switch_task(regs_t *r, uint64_t jiffies)
 {
     UNUSED(jiffies);
     const bool multicore_and_distributed = _multicore && _tasks_distributed;
-    const struct task *running = multicore_and_distributed ? this_core->running_task : running_task;
+    struct task *prev;
     /* If we are in the middle of a sched_run_task call,
        return so that we don't run into a race condition! */
     if (sched_lock) return;
-    if (!running) {
-        /* Go back to root if this is last task in list */
-        if (multicore_and_distributed) this_core->running_task = &root;
-        else running_task = &root;
+
+    /* I am aware that this is a very stupid way to go about it and it can
+       be reduced to just a few lines, but when I try to do away with
+       the duplication by using a pointer, it GPFs! Go figure! */
+    if (multicore_and_distributed) {
+        prev = this_core->running_task;
+        /* Initialise running_task */
+        if (!this_core->running_task) {
+            this_core->running_task = this_core->root;
+        /* Same shit as below */
+        } else if (!this_core->running_task->next) {
+            save_task_context_and_switch(r, this_core->running_task, this_core->root);
+            this_core->running_task = this_core->root;
+            return;
+        } else {
+            this_core->running_task = this_core->running_task->next;
+        }
     } else {
-        if (multicore_and_distributed) this_core->running_task = running->next;
-        else running_task = running->next;
+        prev = running_task;
+        /* Jump from last task in list to root task (does some
+           dodgy stuff, but it shouldn't matter...) */
+        if (!running_task->next) {
+            save_task_context_and_switch(r, running_task, &root);
+            running_task = &root;
+            return;
+        } else {
+            running_task = running_task->next;
+        }
     }
-    save_task_context_and_switch(r, (struct task *) running, running_task);
+    /* Switch tasks! */
+    if (prev)
+        save_task_context_and_switch(r, prev, multicore_and_distributed ? this_core->running_task : running_task);
 }
