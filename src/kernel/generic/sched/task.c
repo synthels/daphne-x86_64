@@ -205,10 +205,12 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
         /* Suspend current task and run next task */
         t1->state = SUSPENDED;
         t2->state = RUNNING;
-        /* Context switch! */
-        t1->context->regs = r;
-        mmu_switch(t2->context);
-   }
+        /* Context switch (if t2 isn't root!) */
+        if (t2->pid > 0) {
+            t1->context->regs = r;
+            mmu_switch(t2->context);
+        }
+    }
 }
 
 /**
