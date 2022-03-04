@@ -102,7 +102,7 @@ void disable_interrupts(void)
  */
 void ap_startup(void)
 {
-    const struct processor *cpu = &(smp_get_cores()->cpus[smp_get_current_ap()]);
+    const struct processor *cpu = smp_get_cores()->cpus[smp_get_current_ap()];
     cpu_set_current_core((uintptr_t) cpu);
     smp_next_ap();
     lapic_init();

@@ -29,7 +29,7 @@
 /* ap_startup */
 #include <main.h>
 
-#define SMP_MAX_CPUS 32
+#define SMP_MAX_CPUS 7
 
 #define LAPIC_ENABLE (1 << 10)
 #define LAPIC_ICR_CPUID_OFFSET 24
@@ -72,7 +72,7 @@ enum SMP_APIC_REGS {
 };
 
 struct smp_cpus {
-    struct processor *cpus;
+    struct processor **cpus;
     size_t size;
 };
 

@@ -14,56 +14,55 @@
 
 #pragma once
 
+
 #include <stddef.h>
 #include <stdint.h>
 
 #include <generic/forbia/kernel.h>
 #include <generic/forbia/panic.h>
 #include <generic/forbia/lock.h>
-
 #include <generic/memory/mem.h>
 
 #include <lib/string.h>
 
+#include "object.h"
 #include "mmu.h"
 
-#define MAX_PAGES 12 /* Max pages in bin */
-
-#define fast_ceil(x, y) ((long long) x + y - 1) / y
-#define kmem_align(n) 32 * fast_ceil(n, 32)
-#define kmem_page_align(n) PAGE_SIZE * fast_ceil(n, PAGE_SIZE)
-
 #define PAGE_SIZE 4096
+#define SLAB_PAGES_INITIAL 12
+#define SLAB_MAX_SIZE SIZE_MAX
+
+/* Magic number for headers */
+#define MALLOC_HEADER_MAGIC 0xcafebabe
 
 struct malloc_page {
-    struct malloc_page *next_page; /* NULL if last page */
-    uint8_t free;
+    struct malloc_page *next;
     uint64_t *base;
-} __attribute__((packed));
+};
 
-typedef struct malloc_page malloc_page_t;
+struct malloc_slab {
+    struct malloc_slab *next;
+    struct malloc_page *pages;
+    size_t length;
+    size_t size;
+};
 
-struct malloc_bin {
-    struct malloc_bin *next_bin; /* NULL if last node */
-    struct malloc_page *first_page;
-    size_t page_size; /* This bin's page size */
-    size_t pages; /* Number of pages in bin */
-} __attribute__((packed));
+struct malloc_header {
+    uint64_t magic;
+    size_t true_size;
+    struct malloc_slab *slab;
+    struct malloc_page *page;
+};
 
-typedef struct malloc_bin malloc_bin_t;
-
-struct malloc_ptr {
-    uint64_t size;
-    uint64_t *base;
-} __attribute__((packed));
-
-typedef struct malloc_ptr malloc_ptr_t;
-
-#define malloc_get_info(ptr) (malloc_ptr_t *) (((uint64_t *) ptr) - 1)
+struct object_pool {
+    const char *name;
+    struct malloc_slab *slab;
+    obj_ctor ctor;
+};
 
 /**
  * kmalloc
- *   brief: attempt to allocate memory of size n
+ *   brief: attempt to allocate a page on the kmalloc_slab of size n
  */
 void *kmalloc(size_t n);
 
@@ -82,13 +81,19 @@ void *krealloc(void *ptr, size_t size);
 void *kfree(void *ptr);
 
 /**
- * kalloc_mem_aligned
- *   brief: watermark allocator
+ * pool_create
+ *   brief: create pool for object
  */
-void *kalloc_mem_aligned(size_t n);
+struct object_pool *pool_create(const char *name, obj_ctor ctor, size_t size);
 
 /**
- * kalloc_mem_page_aligned
- *   brief: allocate page
+ * pool_alloc
+ *   brief: allocate from object pool
  */
-void *kalloc_mem_page_aligned(size_t n);
+void *pool_alloc(struct object_pool *pool);
+
+/**
+ * pool_free
+ *   brief: free pool object
+ */
+void *pool_free(void *object);

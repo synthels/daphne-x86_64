@@ -26,10 +26,10 @@
 #define ROUND(n, m) (n + m - 1) & -m
 
 /**
- * init_mmu
+ * mmu_init
  *   brief: init mmu
  */
-void init_mmu(void);
+void mmu_init(void);
 
 /**
  * mmu_alloc

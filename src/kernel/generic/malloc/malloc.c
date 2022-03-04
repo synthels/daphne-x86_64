@@ -13,35 +13,11 @@
  *
  * synthels' slab allocator
  *
- * This allocator works by keeping track of a linked list
- * of bins, which are essentially structures that point to
- * the head of a page in memory (All bins can have a different page size).
- * These pages also point to other pages, creating another linked list.
- * When a new page needs to be allocated, we try to find an
- * existing free page that is in a bin of the correct (or greater) size,
- * but if we don't have one, we have to create a new bin and allocate the page there
- * or allocate the page in an existing bin, if not all bins are full
- *
- * (All pages are 32 byte aligned)
- *
- * Our strategy in a diagram:
- *
- * bin -> bin -> bin -> ...
- *  \      \      \
- *   \      \    page -> page -> page -> ...
- *    \      \
- *     \     page -> page -> page -> ...
- *      \
- *      page -> page -> page -> ...
- *
- * The way kmalloc allocates pages can be seen here:
- *
- * +------------------------------+
- * | page size (uint64_t)  | page |
- * +------------------------------+
- *                         ^~~~ ptr returned
- *
- * TODO: Merge blocks, align pages, ...
+ * This is currently a very barebones object allocator, working
+ * with slabs, without any caches (although we should implement them at some point).
+ * For a quick gist, kmalloc allocates memory on small slabs with sizes ranging from 64 to
+ * 1024. For bigger allocations, we expose routines that access special "object pools" of
+ * arbitrary sizes.
  */
 
 #include "malloc.h"
@@ -49,176 +25,317 @@
 declare_lock(malloc_lock);
 declare_lock(realloc_lock);
 declare_lock(free_lock);
+declare_lock(pool_create_lock);
+declare_lock(pool_alloc_lock);
+declare_lock(pool_free_lock);
 
-void *kalloc_mem_aligned(size_t n)
-{   
-    return (void *) mmu_alloc(kmem_align(n));
+static struct malloc_slab root = {NULL, NULL, 0, SLAB_MAX_SIZE};
+
+/* Exponential function (should not be here) */
+static unsigned int exp(unsigned int n)
+{
+    return (1 << n);
 }
 
-void *kalloc_mem_page_aligned(size_t n)
+/* Default object constructor */
+static void null_ctor(void *obj)
 {
-    const size_t mask = PAGE_SIZE - 1;
-    const uintptr_t mem = (uintptr_t) mmu_alloc(n + PAGE_SIZE);
-    return (void *) ((mem + mask) & ~mask);
+    UNUSED(obj);
 }
 
-static malloc_bin_t *head_bin = NULL;
-
-/* Actual size is 0, but kmalloc doesn't bother to increment,
-   so initialising to 1 is a clean solution */
-static size_t hbin_size = 1;
-
-/* Init bin (EXPECTS BIN TO BE ALLOCATED) */
-void init_bin(malloc_bin_t *bin, size_t size)
+/**
+ * @brief Append any number of pages to a page
+ *
+ * @param slab the slab in question :^)
+ * @param page the page that new pages will be appended to
+ * @param n Number of pages to append
+ */
+void slab_append_pages_to_page(struct malloc_slab *slab, struct malloc_page *page, size_t n)
 {
-    bin->page_size = kmem_align(size);
+    for (size_t i = 0; i < n; i++) {
+        struct malloc_page *p = mmu_alloc(sizeof(struct malloc_page));
+        p->base = mmu_alloc(slab->size + sizeof(struct malloc_header));
 
-    /* Init first page */
-    bin->first_page = kalloc_mem_aligned(sizeof(malloc_page_t));
-    bin->first_page->base = kalloc_mem_aligned(size);
-    bin->first_page->free = 1;
-
-    /* Fill rest of bin */
-    malloc_page_t *page = bin->first_page;
-    for (int i = 0; i < MAX_PAGES - 1; i++) {
-        malloc_page_t *node = kalloc_mem_aligned(sizeof(malloc_page_t));
-        node->base = kalloc_mem_aligned(size);
-        node->free = 1;
-
-        /* Copy page */
-        page->next_page = node;
-        page = page->next_page;
+        page->next = p;
+        p->next = NULL;
+        page = page->next;
     }
-    page->next_page = NULL;
-    bin->pages = MAX_PAGES;
+    slab->length += n;
 }
 
-/* Add a new bin to head_bin */
-void add_bin(malloc_bin_t *bin)
+/**
+ * @brief Create an initial list of pages for the slab
+ *
+ * @param slab the slab in question :^)
+ */
+void pages_create_initial_list(struct malloc_slab *slab)
 {
-    /* Add a new bin */
-    malloc_bin_t *b = head_bin;
-    for (size_t i = 0; i < hbin_size - 1; i++) {
-        b = b->next_bin;
+    slab_append_pages_to_page(slab, slab->pages, SLAB_PAGES_INITIAL);
+}
+
+/**
+ * @brief Append any number of pages to a slab
+ *
+ * @param slab the slab in question :^)
+ * @param n Number of pages to append
+ */
+void slab_append_pages(struct malloc_slab *slab, size_t n)
+{
+    struct malloc_page *end = slab->pages;
+    while (end->next) {
+        /* Skip to last page */
+        end = end->next;
     }
-    b->next_bin = bin;
-    ++hbin_size;
+    slab_append_pages_to_page(slab, end, n);
 }
 
-/* Find a free page in a large enough bin and 
-   populate it with a new page of size n */
-malloc_page_t *find_free_page_and_alloc(malloc_bin_t *bin, size_t n)
+/**
+ * @brief Create a slab and append it to root
+ *
+ * @param size Slab size
+ */
+struct malloc_slab *slab_create(size_t size)
 {
-    if ((n - 4) > bin->page_size) return NULL;
-    malloc_page_t *page = bin->first_page;
-    for (size_t i = 0; i < bin->pages; i++) {
-        if (page->free) {
-            page->free = 0;
-            return page;
+    static struct malloc_slab *prev = &root;
+    struct malloc_slab *slab = mmu_alloc(sizeof(struct malloc_slab));
+    slab->size = size;
+    slab->length = 1;
+    slab->pages = mmu_alloc(sizeof(struct malloc_page));
+    slab->pages->base = mmu_alloc(slab->size + sizeof(struct malloc_header));
+    pages_create_initial_list(slab);
+
+    prev->next = slab;
+    slab->next = NULL;
+    prev = prev->next;
+    return slab;
+}
+
+/**
+ * @brief Remove page from slab
+ *
+ * @param slab the slab in question :^)
+ * @param page Page which will be removed
+ */
+void slab_remove_page(struct malloc_slab *slab, struct malloc_page *page)
+{
+    if (page->next && page) {
+        struct malloc_page **iter = &(slab->pages);
+        while ((*iter) != page)
+            iter = &(*iter)->next;
+        *iter = page->next;
+    }
+}
+
+/**
+ * @brief Push page to slab
+ *
+ * @param slab The slab in question :^)
+ * @param page The page to be pushed
+ */
+void slab_push_page(struct malloc_slab *slab, struct malloc_page *page)
+{
+    struct malloc_page *iter = slab->pages;
+    while (iter->next)
+        iter = iter->next;
+    iter->next = page;
+    page->next = NULL;
+}
+
+/**
+ * @brief Pops the top page from a slab
+ *
+ * @param slab Well, you get it by now
+ */
+struct malloc_page *slab_pop_page(struct malloc_slab *slab)
+{
+    struct malloc_page *page = slab->pages->next;
+    if (slab->length > 0) {
+        /* Set malloc header */
+        struct malloc_header *header = (struct malloc_header *) (page->base);
+        header->slab = slab;
+        header->page = page;
+        header->magic = MALLOC_HEADER_MAGIC;
+        header->true_size = slab->size + sizeof(struct malloc_header);
+        /* Remove this page from the list */
+        slab_remove_page(slab, page);
+        slab->length--;
+        return page;
+    }
+
+    /* No free page, push new pages! */
+    slab_append_pages_to_page(slab, page, SLAB_PAGES_INITIAL);
+    /* We can now allocate from the new pages */
+    return slab_pop_page(slab);
+}
+
+/**
+ * @brief Pick the best-fit slab from a list of slabs for this allocation
+ *
+ * @param n Slab list size
+ * @param alloaction_size Allocation size
+ */
+struct malloc_page *slab_pick_and_allocate(struct malloc_slab **slabs, size_t n, size_t allocation_size)
+{
+    /* We initially point best_fit to root, since root has the maximum allowed
+       size for any slab */
+    struct malloc_slab *best_fit = &root;
+
+    for (size_t i = 0; i < n; i++) {
+        /* Find best-fit slab */
+        if ((slabs[i]->size >= allocation_size) && (slabs[i]->size < best_fit->size)) {
+            best_fit = slabs[i];
         }
-        page = page->next_page;
     }
 
-    return NULL;
+    if (!best_fit)
+        return NULL;
+
+    return slab_pop_page(best_fit);
 }
 
-/* Attempt to find a large enough existing free page and
-   populate it */
-malloc_page_t *find_best_bin_and_alloc(size_t n)
+/**
+ * @brief Free slab page
+ *
+ * @param ptr ptr to page
+ */
+void *slab_free(void *ptr)
 {
-    n = kmem_align(n);
-    malloc_bin_t *b = head_bin;
-    malloc_page_t *page;
-    for (size_t i = 0; i < hbin_size; i++) {
-        /* Try to fit page in existing free page */
-        if ((page = find_free_page_and_alloc(b, n)) != NULL) {
-            return page;
-        }
-        b = b->next_bin;
-    }
+    if (!ptr)
+        return NULL;
 
-    return NULL;
+    /* Arithmetic on void pointers is illegal! */
+    struct malloc_header *header = (struct malloc_header *) ((uint8_t *) ptr - sizeof(struct malloc_header));
+
+    /* Invalid pointer! */
+    if (header->magic != MALLOC_HEADER_MAGIC)
+        return NULL;
+
+    /* Just put the page back! */
+    slab_push_page(header->slab, header->page);
+    return ptr;
 }
 
-/* Frees a single page from a bin */
-void *free_page(malloc_bin_t *bin, void *base)
+/**
+ * @brief Create object pool
+ *
+ * @param name pool name
+ * @param ctor object constructor
+ * @param size slab size
+ */
+struct object_pool *pool_create(const char *name, obj_ctor ctor, size_t size)
 {
-    malloc_page_t *page = bin->first_page;
-    for (size_t i = 0; i < bin->pages; i++) {
-        if ((!(page->free)) && ((page->base + 1) == base)) {
-            page->free = 1;
-            return page->base;
-        }
-        page = page->next_page;
-    }
-    return NULL;
+    lock(&pool_create_lock);
+    struct object_pool *pool = mmu_alloc(sizeof(struct object_pool));
+    pool->name = name;
+    pool->slab = slab_create(size);
+    pool->ctor = ctor ? ctor : null_ctor;
+    unlock(&pool_create_lock);
+    return pool;
 }
 
+/**
+ * @brief Allocate object from pool
+ *
+ * @param pool object pool
+ */
+void *pool_alloc(struct object_pool *pool)
+{
+    lock(&pool_alloc_lock);
+    /* TODO: cache constructed objects */
+    struct malloc_page *page = slab_pop_page(pool->slab);
+    pool->ctor(page);
+    unlock(&pool_alloc_lock);
+    return (page->base + sizeof(struct malloc_header) / 8);
+}
+
+/**
+ * @brief Free object from pool
+ *
+ * @param object object returned by pool_alloc
+ * @param pool object pool
+ */
+void *pool_free(void *object)
+{
+    lock(&pool_free_lock);
+    /* TODO: cache constructed objects */
+    void *ret = slab_free(object);
+    unlock(&pool_free_lock);
+    return ret;
+}
+
+/**
+ * @brief Allocate a page on one of the "small" kmalloc slabs
+ *
+ * @param n Allocation size
+ */
 void *kmalloc(size_t n)
 {
     lock(&malloc_lock);
+    static struct malloc_slab **kmalloc_slabs = NULL;
     /* First call, init bin */
-    if (head_bin == NULL) {
-        init_mmu();
-        head_bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
-        init_bin(head_bin, n);
+    if (!kmalloc_slabs) {
+        mmu_init();
+        kmalloc_slabs = mmu_alloc(5 * sizeof(struct malloc_slab *));
+        /* Create 4 slabs of sizes 64, 128, 256, 512 and 1024 */
+        for (int i = 0; i < 5; i++) {
+            kmalloc_slabs[i] = slab_create(64 * exp(i));
+        }
     }
 
-    malloc_bin_t *bin;
-    malloc_page_t *page;
-    if ((page = find_best_bin_and_alloc(n)) == NULL) {
-        /* We couldn't find an existing page large enough
-           to accommodate our page */
-        bin = kalloc_mem_aligned(sizeof(malloc_bin_t));
-        init_bin(bin, n);
-        add_bin(bin);
-        bin->first_page->free = 0;
-        unlock(&malloc_lock);
-        *(bin->first_page->base) = (uint64_t) kmem_align(n);
-        return bin->first_page->base + 1;
-    }
+    /* Allocate on fitting slab */
+    struct malloc_page *page = slab_pick_and_allocate(kmalloc_slabs, 5, n);
 
-    page->free = 0;
-    *(page->base) = (uint64_t) kmem_align(n);
+    /* Return address right next to header */
     unlock(&malloc_lock);
-    return page->base + 1;
+    return (page->base + sizeof(struct malloc_header) / 8);
 }
 
+/**
+ * @brief Reallocates a given area of memory previously allocated by kmalloc
+ *
+ * @param ptr pointer to memory
+ * @param size new size
+ */
 void *krealloc(void *ptr, size_t size)
 {
     lock(&realloc_lock);
-    void *new = kmalloc(size);
-    memcpy(new, ptr, size);
-    kfree(ptr);
+    struct malloc_header *header = (struct malloc_header *) ((uint8_t *) ptr - sizeof(struct malloc_header));
+    size_t ptr_size = header->true_size;
+
+    if (!size) {
+        kfree(ptr);
+        unlock(&realloc_lock);
+        return NULL;
+    } else if (!ptr) {
+        unlock(&realloc_lock);
+        return kmalloc(size);
+    }
+    else if (size <= ptr_size) {
+        unlock(&realloc_lock);
+        return ptr;
+    } else {
+        void *new = kmalloc(size);
+        if (new) {
+            memcpy(new, ptr, ptr_size);
+            kfree(ptr);
+        }
+        unlock(&realloc_lock);
+        return new;
+    }
+
     unlock(&realloc_lock);
-    return new;
+    return NULL;
 }
 
-/* whether this returns NULL or not 
-   should not be trusted.
-   I don't know what I did but it works and I
-   really don't want to touch it */
+/**
+ * @brief Frees a given area of memory previously allocated by kmalloc
+ *
+ * @param ptr pointer to memory
+ */
 void *kfree(void *ptr)
 {
     lock(&free_lock);
-    /* Get size of allocated object */
-    uint64_t malloc_size = (uint64_t) *((uint64_t *)(ptr) - 1);
-    malloc_bin_t *b = head_bin;
-    void *page_base;
-    for (size_t i = 0; i < hbin_size; i++) {
-        /* Only bother searching bins with the
-           same size as the object */
-        if (b->page_size == malloc_size) {
-            /* Correct bin is found */
-            if ((page_base = free_page(b, ptr))) {
-                unlock(&free_lock);
-                return NULL;
-            }
-        }
-        b = b->next_bin;
-    }
+    void *ret = slab_free(ptr);
     unlock(&free_lock);
-
-    /* Pointer was not allocated by kmalloc */
-    return NULL;
+    return ret;
 }

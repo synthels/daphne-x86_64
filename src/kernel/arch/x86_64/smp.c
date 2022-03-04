@@ -16,7 +16,7 @@
 
 #include "smp.h"
 
-static struct processor *cpus;
+static struct processor *cpus[SMP_MAX_CPUS];
 static struct smp_cpus *smp_cores;
 static uint64_t lapic_base;
 static uint64_t ioapic_base; /* Can there be multiple IOAPICS? Sure. Do I give a shit? Nope. */
@@ -179,10 +179,18 @@ void smp_init(void)
 {
     lapic_init();
 
-    cpus = kmalloc(sizeof(struct processor) * SMP_MAX_CPUS);
+    /* Create pools for CPU structures */
+    struct object_pool *cpu_pool = pool_create("cpus", NULL, sizeof(struct processor));
+    struct object_pool *stc_pool = pool_create("stacks", NULL, KERNEL_STACK_SIZE * sizeof(uint8_t));
+    for (int i = 0; i < SMP_MAX_CPUS; i++) {
+        cpus[i] = pool_alloc(cpu_pool);
+    }
+
     /* Get info from MADT */
     struct madt_table_lapic **m = (struct madt_table_lapic **) madt_get_tables(MADT_LAPIC);
+
     lapic_base = madt_get_header()->lapic;
+    
     int cores = 0;
     /* Enumerate all cores */
     for (; m[cores]; cores++) {
@@ -191,9 +199,9 @@ void smp_init(void)
             pr_warn("smp: too many cpus, defaulting to %ui", SMP_MAX_CPUS);
             break;
         }
-        cpus[cores].cpu_id = m[cores]->processor_id;
-        cpus[cores].lapic_id = m[cores]->apic_id;
-        cpus[cores].root = NULL;
+        cpus[cores]->cpu_id = m[cores]->processor_id;
+        cpus[cores]->lapic_id = m[cores]->apic_id;
+        cpus[cores]->root = NULL;
     }
 
     smp_cores = kmalloc(sizeof(struct smp_cpus));
@@ -218,11 +226,12 @@ void smp_init(void)
         /**
          * Don't put the BSP in real mode! 
          */
-        if ((uint32_t) cpus[i].cpu_id == bsp_id) {
+        if ((uint32_t) cpus[i]->cpu_id == bsp_id) {
             cpu_set_current_core((uintptr_t)&(smp_cores->cpus[bsp_id]));
-            smp_cores->cpus[bsp_id].is_bsp = true;
+            smp_cores->cpus[bsp_id]->is_bsp = true;
             continue;
         };
+
         uint64_t ap_bootstrap_len = (uintptr_t) &ap_bootstrap_end - (uintptr_t) &ap_bootstrap16;
         _ap_is_ok = false;
 
@@ -232,7 +241,7 @@ void smp_init(void)
          * bootstrap code where the AP can retrieve them
          */
         mmu_map_mmio(0x0, 1);
-        uint8_t *cpu_stack = kmalloc(KERNEL_STACK_SIZE * sizeof(uint8_t));
+        uint8_t *cpu_stack = pool_alloc(stc_pool);
         *((volatile uint64_t *)(SMP_PAGE_TABLE)) = (uint64_t) vmm_get_pml4();
         *((volatile uint64_t *)(SMP_STACK)) = ((uint64_t) cpu_stack + KERNEL_STACK_SIZE);
         *((volatile uint64_t *)(AP_ENTRY)) = ((uintptr_t) ap_startup);
@@ -248,8 +257,7 @@ void smp_init(void)
         memcpy((void *) AP_BOOTSTRAP_VIRT_START, (void *) &ap_bootstrap16, ap_bootstrap_len);
 
         /* Startup CPU */
-        smp_signal_ap(cpus[i].lapic_id);
-
+        smp_signal_ap(cpus[i]->lapic_id);
         /* Wait for AP to do its thing before continuing */
         do { 
             asm volatile ("pause" : : : "memory");

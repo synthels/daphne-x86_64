@@ -18,7 +18,7 @@
 #include <generic/malloc/malloc.h>
 #include <generic/forbia/kernel.h>
 
-#define MAX_CONTEXTS 50
+#define MAX_CONTEXTS 5
 
 struct pos {
     uint16_t x;

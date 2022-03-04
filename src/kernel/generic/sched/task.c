@@ -91,7 +91,7 @@ static void copy_task_to_cpu(struct processor *cpu, struct task *t)
  */
 static void assign_tasks_to_cpus(struct task *added_task)
 {
-    struct processor *cores = cpus->cpus;
+    struct processor **cores = cpus->cpus;
     struct task *taskptr = &root;
     static unsigned int added_task_idx = 0;
     /* Do we consider all tasks or not? */
@@ -111,7 +111,7 @@ static void assign_tasks_to_cpus(struct task *added_task)
                 if (!taskptr->next) break;
                 for (size_t j = 0; j < share; j++) {
                     /* Copy task to CPU */
-                    copy_task_to_cpu(&cores[i], taskptr);
+                    copy_task_to_cpu(cores[i], taskptr);
                     /* Next task! (if a next task exists) */
                     if (taskptr->next) {
                         taskptr = taskptr->next;
@@ -127,18 +127,18 @@ static void assign_tasks_to_cpus(struct task *added_task)
             while (taskptr) {
                 /* Found unassigned task */
                 if (taskptr->assigned_to_cpu < 0) {
-                    copy_task_to_cpu(&cores[i++], taskptr);
+                    copy_task_to_cpu(cores[i++], taskptr);
                     if (i == cpus->size) i = 0;
                 }
                 taskptr = taskptr->next;
             }
         } else {
             /* May not be the BSP, but who cares?? */
-            copy_task_to_cpu(&cores[0], taskptr->next);
+            copy_task_to_cpu(cores[0], taskptr->next);
         }
     } else {
         /* Only add this task! */
-        copy_task_to_cpu(&cores[added_task_idx++], added_task);
+        copy_task_to_cpu(cores[added_task_idx++], added_task);
         if (added_task_idx == cpus->size) added_task_idx = 0;
     }
 }

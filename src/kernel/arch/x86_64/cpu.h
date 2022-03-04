@@ -87,7 +87,7 @@ enum {
 
 /**
  * arch_save_regs
- *   brief: save registers
+ *   brief: save registers into regs
  */
 void arch_save_regs(regs_t *regs);
 

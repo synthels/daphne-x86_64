@@ -36,7 +36,7 @@ static void *__alloc_primitive(size_t n)
     return (void *) (ap - n);
 }
 
-void init_mmu(void)
+void mmu_init(void)
 {
     bmp = __alloc_primitive(sizeof(struct bitmap));
     bmp->buf = __alloc_primitive((heap_size / 64) * sizeof(char));
