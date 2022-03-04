@@ -142,22 +142,20 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
 {
     char c;
     static char buf[VSPRINTF_BUFFER_SIZE];
+    char str[VSPRINTF_BUFFER_SIZE];
+    char *tmp;
+    bool fmt_string = false;
     memset(buf, '\0', VSPRINTF_BUFFER_SIZE);
 
     for (int i = 0; (c = *fmt++);) {
         buf[i++] = c;
         if (c == '%') {
-            /* Allocate memory for the va_arg strings */
-            char *str = kmalloc(sizeof(char) * VSPRINTF_BUFFER_SIZE);
             c = *fmt++;
             switch (c) {
                 /* Strings */
                 case 's':
-                    /* Free string here again, since the other free
-                       will not work, as we are essentially losing
-                       the pointer here */
-                    kfree(str);
-                    str = va_arg(args, char *);
+                    tmp = va_arg(args, char *);
+                    fmt_string = true;
                     break;
                 /* Unsigned (no prettier way to do this) */
                 case 'u':
@@ -181,8 +179,7 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
                 /* Just print a '%' */
                 case '%':
                     /* Same as above... */
-                    kfree(str);
-                    str = "%";
+                    stream("%");
                     break;
                 /* Unknown type */
                 default:
@@ -190,14 +187,14 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
             }
             /* Skip '%' sign */
             i--;
+            if (!fmt_string) tmp = str;
             /* Copy string to buffer */
-            for (; (c = *str++); i++) {
+            for (int j = 0; (c = tmp[j]); i++, j++) {
                 buf[i] = c;
             }
-
-            /* We don't need str anymore */
-            kfree(str);
+            fmt_string = false;
         }
+        memset(str, '\0', VSPRINTF_BUFFER_SIZE);
     }
 
     stream(buf);
