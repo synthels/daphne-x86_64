@@ -187,8 +187,9 @@ struct malloc_page *slab_pick_and_allocate(struct malloc_slab **slabs, size_t n,
         }
     }
 
-    if (!best_fit)
+    if (!best_fit) {
         return NULL;
+    }
 
     return slab_pop_page(best_fit);
 }
@@ -280,6 +281,17 @@ void *kmalloc(size_t n)
         for (int i = 0; i < 5; i++) {
             kmalloc_slabs[i] = slab_create(64 * exp(i));
         }
+    }
+
+    if (n > kmalloc_slabs[4]->size) {
+        pr_err(
+            "slab_pick_and_allocate: oops! That shouldn't happen! "
+            "It seems like someone tried to allocate "
+            "more memory than they should be able to with kmalloc(). If you're seeing this "
+            "and you're sure that this is not from code that you wrote, please report this "
+            "error."
+        );
+        return NULL;
     }
 
     /* Allocate on fitting slab */

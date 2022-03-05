@@ -221,6 +221,8 @@ void shrimp_update(char *str)
         }
         /* Draw character */
         shrimp_putc(str[j], color);
+        /* FIX: setting this fixes some scrolling issues */
+        newline = false;
         impl_newln++;
     }
     ansi_parse(str, &color, true);
