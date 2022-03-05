@@ -17,7 +17,7 @@
 #include <generic/forbia/types.h>
 
 #include <lib/string.h>
-#include <generic/forbia/panic.h>
+#include <lib/panic.h>
 
 struct rsdp_desc {
     char signature[8];

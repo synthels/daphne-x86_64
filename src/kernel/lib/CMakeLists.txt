@@ -7,6 +7,10 @@ set(SRC
     ${SRCROOT}/stdlib.h
     ${SRCROOT}/printk.c
     ${SRCROOT}/printk.h
+    ${SRCROOT}/panic.c
+    ${SRCROOT}/panic.h
+    ${SRCROOT}/lock.c
+    ${SRCROOT}/lock.h
     ${SRCROOT}/vec.c
     ${SRCROOT}/vec.h
     ${SRCROOT}/log.h

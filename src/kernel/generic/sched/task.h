@@ -19,7 +19,7 @@
 #include <lib/vec.h>
 
 #include <generic/malloc/malloc.h>
-#include <generic/forbia/lock.h>
+#include <lib/lock.h>
 #include <generic/malloc/mmu.h>
 #include <generic/time/clock.h>
 

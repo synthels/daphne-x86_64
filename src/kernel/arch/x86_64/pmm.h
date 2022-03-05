@@ -18,8 +18,8 @@
 #include <stdint.h>
 
 #include <generic/forbia/kernel.h>
-#include <generic/forbia/panic.h>
-#include <generic/forbia/lock.h>
+#include <lib/panic.h>
+#include <lib/lock.h>
 
 #include <lib/string.h>
 #include <generic/memory/mem.h>

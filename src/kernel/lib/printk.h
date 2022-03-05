@@ -21,7 +21,7 @@
 
 #include <generic/forbia/kernel.h>
 #include <generic/forbia/types.h>
-#include <generic/forbia/lock.h>
+#include <lib/lock.h>
 #include <generic/malloc/malloc.h>
 
 #include <lib/stdlib.h>

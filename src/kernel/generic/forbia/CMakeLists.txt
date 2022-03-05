@@ -3,10 +3,6 @@ set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/generic/forbia)
 set(SRC
     ${SRCROOT}/kernel.c
     ${SRCROOT}/kernel.h
-    ${SRCROOT}/panic.c
-    ${SRCROOT}/panic.h
-    ${SRCROOT}/lock.c
-    ${SRCROOT}/lock.h
     ${SRCROOT}/types.h
 )
 

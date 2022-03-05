@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <generic/forbia/kernel.h>
 #include <generic/forbia/types.h>
-#include <generic/forbia/panic.h>
+#include <lib/panic.h>
 #include <generic/memory/mem.h>
 
 #include "pmm.h"
