@@ -16,7 +16,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <mod/pit/pit.h>
+#include <modules/pit/pit.h>
 
 #include <generic/sched/task.h>
 

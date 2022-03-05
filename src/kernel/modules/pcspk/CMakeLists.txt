@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod/pcspk)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules/pcspk)
 
 set(SRC
     ${SRCROOT}/pcspk.c

@@ -16,8 +16,8 @@
 
 #include <lib/log.h>
 
-#include <mod/pit/pit.h>
-#include <mod/apic/apic.h>
+#include <modules/pit/pit.h>
+#include <modules/apic/apic.h>
 
 enum time_source {
     TIME_SOURCE_PIT,

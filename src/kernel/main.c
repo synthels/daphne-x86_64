@@ -27,10 +27,10 @@
 #include <generic/time/sleep.h>
 #include <generic/sched/task.h>
 
-#include <mod/fb/lfb.h>
-#include <mod/pci/pci.h>
-#include <mod/apic/apic.h>
-#include <mod/kbd/kbd.h>
+#include <modules/fb/lfb.h>
+#include <modules/pci/pci.h>
+#include <modules/apic/apic.h>
+#include <modules/kbd/kbd.h>
 
 #include <lib/log.h>
 

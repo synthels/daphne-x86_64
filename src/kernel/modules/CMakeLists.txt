@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules)
 
 add_subdirectory(${SRCROOT}/kbd)
 add_subdirectory(${SRCROOT}/pcspk)

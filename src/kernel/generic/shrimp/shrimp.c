@@ -12,17 +12,15 @@
  * GNU General Public License for more details.
  *
  * Shrimp - early kernel terminal
- */
-
-/**
+ *
  * Our ANSI-like escape sequences:
  * format: \xff[XXXXXXX
  *         where every X is any number 
  *         between 1-9.
  *
- * @ Printing with colors:
- * \xff[1YYYXXX
- * Where YYYXXX is the hex code of the color. The special value
+ * Printing with colors:
+ * \xff[1XXXXXX
+ * Where XXXXXX is the hex code of the color. The special value
  * \xff[1ffffff resets to FG_COLOR (not always white!)
  *
  * WARNING: be very careful with escape sequences. After seeing
@@ -234,5 +232,5 @@ void shrimp_update(char *str)
 int shrimp_print(const char *str)
 {
     shrimp_update((char *) str);
-    return NOERR;
+    return 0;
 }

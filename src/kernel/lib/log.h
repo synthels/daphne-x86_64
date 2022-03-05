@@ -20,7 +20,7 @@
 
 #define log(level, fmt, ...) printk(level, "%s[  %i.%i] " fmt "\n", "\xff[1d3d3d3", time(), uptime(), ##__VA_ARGS__)
 
-#define pr_info(fmt, ...) log(NORMAL, fmt, ##__VA_ARGS__)
-#define pr_warn(fmt, ...) log(WARNING, "%sWARN " fmt, "\xff[1ffc107", ##__VA_ARGS__)
-#define pr_err(fmt, ...) log(ERROR, "%sERROR " fmt, "\xff[1dc3545", ##__VA_ARGS__)
-#define pr_test(fmt, ...)log(ERROR, "%sTEST " fmt, "\xff[1007bff", ##__VA_ARGS__)
+#define pr_info(fmt, ...) log(NORMAL, "%sINFO %s" fmt, "\xff[101ff70", "\xff[1d3d3d3", ##__VA_ARGS__)
+#define pr_warn(fmt, ...) log(WARNING, "%sWARN %s" fmt, "\xff[1ffc107", "\xff[1d3d3d3", ##__VA_ARGS__)
+#define pr_err(fmt, ...) log(ERROR, "%sERROR %s" fmt, "\xff[1ff4136", "\xff[1d3d3d3", ##__VA_ARGS__)
+#define pr_test(fmt, ...)log(ERROR, "%sTEST %s" fmt, "\xff[1007bff", "\xff[1d3d3d3", ##__VA_ARGS__)

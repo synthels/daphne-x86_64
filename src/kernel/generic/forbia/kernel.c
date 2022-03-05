@@ -14,20 +14,7 @@
 
 #include "kernel.h"
 
-/* Current kernel mode */
-static int kernel_mode;
-
-void set_kernel_mode(int mode)
-{
-    kernel_mode = mode;
-}
-
-int get_kernel_mode(void)
-{
-    return kernel_mode;
-}
-
 void kernel_hang(void)
 {
-    for(;;);
+    for(;;) { asm("hlt"); }
 }

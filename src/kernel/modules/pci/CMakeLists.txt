@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod/pci)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules/pci)
 
 set(SRC
     ${SRCROOT}/pci.c

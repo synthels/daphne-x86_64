@@ -53,13 +53,13 @@ void lfb_get_ctx_info(int handle, struct lfb_info *info)
 
 int lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height)
 {
-    if (ctx->handle >= MAX_CONTEXTS || _pos.x > width || _pos.y > height) return EINVAL;
+    if (ctx->handle >= MAX_CONTEXTS || _pos.x > width || _pos.y > height) return -1;
     ctx->pos    = _pos;
     ctx->width  = _width;
     ctx->height = _height;
     ctx->handle = last_handle;
     contexts[last_handle++] = ctx;
-    return NOERR;
+    return 0;
 }
 
 uint64_t lfb_get_addr(void)
@@ -69,25 +69,25 @@ uint64_t lfb_get_addr(void)
 
 int lfb_destroy_ctx(int handle)
 {
-    if (handle >= MAX_CONTEXTS) return EINVAL;
+    if (handle >= MAX_CONTEXTS) return -1;
     contexts[handle] = NULL;
-    return NOERR;
+    return 0;
 }
 
 int lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
 {
-    if (handle > MAX_CONTEXTS) return EINVAL;
+    if (handle > MAX_CONTEXTS) return -1;
     struct gfx_context *ctx = contexts[handle];
     
     /* Destroyed context */
-    if (ctx == NULL) return EINVAL;
+    if (ctx == NULL) return -1;
     if (x <= ctx->width && y <= ctx->height) {
         const uint64_t realpos = (ctx->pos.x + x) + (width * (y + ctx->pos.y));
         struct color *frb = (struct color *) framebuffer;
         frb[realpos] = c;
-        return NOERR;
+        return 0;
     } else {
         /* invalid position */
-        return EINVAL;
+        return -1;
     }
 }

@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod/kbd)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules/kbd)
 
 set(SRC
     ${SRCROOT}/kbd.c

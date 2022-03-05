@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod/fb)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules/fb)
 
 set(SRC
     ${SRCROOT}/lfb.c

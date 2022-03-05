@@ -67,7 +67,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
                     break;
                 /* Unknown type */
                 default:
-                    return EINVAL;
+                    return -1;
             }
             /* Skip '%' sign */
             i--;
@@ -81,7 +81,7 @@ int vsprintf(char *buf, const char *fmt, va_list args)
         }
     }
 
-    return NOERR;
+    return 0;
 }
 
 size_t vsprintf_length(const char *fmt, va_list args)
@@ -145,7 +145,7 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
     char str[VSPRINTF_BUFFER_SIZE];
     char *tmp;
     bool fmt_string = false;
-    memset(buf, '\0', VSPRINTF_BUFFER_SIZE);
+    memset(buf, 0, VSPRINTF_BUFFER_SIZE);
 
     for (int i = 0; (c = *fmt++);) {
         buf[i++] = c;
@@ -157,33 +157,21 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
                     tmp = va_arg(args, char *);
                     fmt_string = true;
                     break;
-                /* Unsigned (no prettier way to do this) */
                 case 'u':
-                    switch (*fmt++) {
-                        case 'i':
-                            uitoa(va_arg(args, uint64_t), str);
-                            break;
-                    }
+                    uitoa(va_arg(args, uint64_t), str);
                     break;
                 case 'i':
                     itoa(va_arg(args, int64_t), str);
                     break;
-                /* Hex */
                 case 'x':
                     uitoh(va_arg(args, uint64_t), str);
                     break;
-                /* Binary */
                 case 'b':
                     /* TODO */
                     break;
-                /* Just print a '%' */
-                case '%':
-                    /* Same as above... */
-                    stream("%");
-                    break;
                 /* Unknown type */
                 default:
-                    return EINVAL;
+                    return -1;
             }
             /* Skip '%' sign */
             i--;
@@ -194,32 +182,26 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
             }
             fmt_string = false;
         }
-        memset(str, '\0', VSPRINTF_BUFFER_SIZE);
+        memset(str, 0, VSPRINTF_BUFFER_SIZE);
     }
 
     stream(buf);
-    return NOERR;
-}
-
-int printf(printk_stream out, const char *fmt, ...)
-{    
-    lock(&printf_lock);
-
-    va_list ap;
-    va_start(ap, fmt);
-
-    int err = vfprintf(out, fmt, ap);
-    va_end(ap);
-
-    unlock(&printf_lock);
-    return err;
+    return 0;
 }
 
 int printk(int level, const char *fmt, ...)
 {
-    int err = NOERR;
+    int err = 0;
     if (level >= log_level) {
-        err = printf(shrimp_print, fmt);
+        lock(&printf_lock);
+
+        va_list ap;
+        va_start(ap, fmt);
+
+        err = vfprintf(shrimp_print, fmt, ap);
+        va_end(ap);
+
+        unlock(&printf_lock);
     }
     return err;
 }

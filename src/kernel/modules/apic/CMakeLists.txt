@@ -1,4 +1,4 @@
-set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/mod/apic)
+set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/modules/apic)
 
 set(SRC
     ${SRCROOT}/apic.c

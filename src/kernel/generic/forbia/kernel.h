@@ -37,62 +37,10 @@
  */
 #define UNUSED(x) (void) (x)
 
-/**
- * EINVAL
- *   brief: invalid argument error
- */
-#define EINVAL -1
-
-/**
- * NOERR
- *   brief: No error
- */
-#define NOERR 0
-
-/**
- * kern_queue_calls
- *   brief: Calls f1 before f2 if cond is true,
- *          calls f1 after f2 otherwise
- */
-#define kern_queue_calls(f1, f2, cond) if (cond) { f1; f2; } else { f2; f1; }
-
 #define KERNEL_STACK_SIZE 65536 /* 64KiB */
-
-/**
- * set_kernel_mode
- *   brief: Set current kernel mode
- *   parameters:
- *     - mode: new kernel mode
- */
-void set_kernel_mode(int mode);
-
-/**
- * set_kernel_mode
- *   brief: Get current kernel mode
- */
-int get_kernel_mode(void);
 
 /**
  * kernel_hang
  *   brief: hangs the kernel
  */
 void kernel_hang(void);
-
-/**
- * TTY_MODE
- *   brief: tty mode puts the kernel in a state where
- *          it can only write to the screen, but not
- *          accept user input.
- */
-#define TTY_MODE 1
-
-/**
- * USR_MODE
- *   brief: user mode puts the kernel in a state where
- *          it can perform all normal 
- *          user I/O operations.
- */
-#define USR_MODE 2
-
-/* printk escape sequences */
-#define KERN_OVERWRITE "\xff[0000000"
