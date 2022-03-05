@@ -11,7 +11,32 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * VFS
+ * Virtual filesystem
  */
 
 #include "vfs.h"
+
+static struct object_pool *file_pool;
+static struct vfs_graph *graph;
+
+/**
+ * @brief Create initial vfs graph
+ */
+void vfs_create_graph(void)
+{
+    graph = kmalloc(sizeof(struct vfs_graph));
+    graph->size = VFS_GRAPH_INITIAL_SIZE;
+    graph->adj_lists = kmalloc(VFS_GRAPH_INITIAL_SIZE * sizeof(struct node *));
+
+    for (int i = 0; i < VFS_GRAPH_INITIAL_SIZE; i++) {
+        graph->adj_lists[i] = NULL;
+    }
+}
+
+/**
+ * @brief Initialise vfs
+ */
+void vfs_init(void)
+{
+    file_pool = pool_create("files", NULL, sizeof(struct vfs_file));
+}

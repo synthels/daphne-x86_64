@@ -79,7 +79,10 @@ void *krealloc(void *ptr, size_t size);
  *          allocated by kmalloc
  */
 void *kfree(void *ptr);
-
+/**
+ * pool_create
+ *   brief: create pool for object
+ */
 /**
  * pool_create
  *   brief: create pool for object

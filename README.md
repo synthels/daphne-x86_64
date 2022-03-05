@@ -158,7 +158,7 @@ You can go into more detail, but make sure your commit messages aren't too long.
 
 #### Code style
 
-I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with 4 spaces when writing C and CMakeLists.txt files.
+I ask that you follow our code style, since it makes the codebase more pretty and organized. First of all, we only use spaces. Please indent your code with 4 spaces when writing C and CMakeLists.txt files. I also ask that you leave an empty line at the end of every file. This can usually be configured to be done automagically by your text editor.
 
 ##### Functions
 
