@@ -11,6 +11,8 @@ set(SRC
     ${SRCROOT}/panic.h
     ${SRCROOT}/lock.c
     ${SRCROOT}/lock.h
+    ${SRCROOT}/list.c
+    ${SRCROOT}/list.h
     ${SRCROOT}/vec.c
     ${SRCROOT}/vec.h
     ${SRCROOT}/log.h

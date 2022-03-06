@@ -16,7 +16,7 @@
 
 test_result_t *struct Vectorest(void)
 {
-    struct Vector *v = vector();
+    struct vector *v = vector();
     int a = 1;
     int b = 2;
     int c = 3;

@@ -21,7 +21,7 @@
 
 #define VEC_CAPACITY 6
 
-struct Vector {
+struct vector {
     void **data;
     size_t size;
     size_t _Size; /* Actual internal size */
@@ -55,22 +55,22 @@ struct Vector {
  * vector
  *   brief: allocate new vector
  */
-struct Vector *vector(void);
+struct vector *vector(void);
 
 /**
  * vec_push
  *   brief: push element to vector
  */
-void vec_push(struct Vector *v, void *e);
+void vec_push(struct vector *v, void *e);
 
 /**
  * vec_get
  *   brief: get element from vector
  */
-void *vec_get(struct Vector *v, size_t i);
+void *vec_get(struct vector *v, size_t i);
 
 /**
  * vec_free
  *   brief: free vector
  */
-void vec_free(struct Vector *v);
+void vec_free(struct vector *v);
