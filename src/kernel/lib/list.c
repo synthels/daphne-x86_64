@@ -30,17 +30,17 @@ void list_insert(struct list *ls, void *data)
     struct list_node *node = kmalloc(sizeof(struct list_node));
     node->data = data;
     node->next = NULL;
-	if (!ls->size) {
-		ls->head = node;
-		ls->tail = node;
-		node->prev = NULL;
-		node->next = NULL;
-		ls->size++;
-		return;
-	}
-	ls->tail->next = node;
-	node->prev = ls->tail;
-	ls->tail = node;
+    if (!ls->size) {
+        ls->head = node;
+        ls->tail = node;
+        node->prev = NULL;
+        node->next = NULL;
+        ls->size++;
+        return;
+    }
+    ls->tail->next = node;
+    node->prev = ls->tail;
+    ls->tail = node;
     ls->size++;
 }
 

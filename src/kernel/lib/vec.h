@@ -28,18 +28,6 @@ struct vector {
 };
 
 /**
- * vec_get_as
- *   brief: get element i as type T from v
- */
-#define vec_get_as(v, i, T) *((T *) vec_get(v, i))
-
-/**
- * vec_get_as_ptr
- *   brief: get element i as pointer of T from v
- */
-#define vec_get_as_ptr(v, i, T) (T) vec_get(v, i)
-
-/**
  * vec_foreach
  *   brief: loop over vector
  */
