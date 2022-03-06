@@ -14,10 +14,16 @@
 
 #include "vec.h"
 
+static struct object_pool *vec_pool;
+
 struct Vector *vector(void)
 {
+    static bool _first_vec = true;
+    if (_first_vec) {
+        vec_pool = pool_create("vectors", NULL, sizeof(void *) * VEC_CAPACITY);
+    }
     struct Vector *v = kmalloc(sizeof(struct Vector));
-    v->data = kmalloc(sizeof(void *) * VEC_CAPACITY);
+    v->data = pool_alloc(vec_pool);
     v->_Size = VEC_CAPACITY;
     v->size = 0;
     return v;
@@ -26,7 +32,7 @@ struct Vector *vector(void)
 void vec_resize(struct Vector *v)
 {
     v->_Size += VEC_CAPACITY;
-    v->data = krealloc(v->data, sizeof(void *) * v->_Size);
+    v->data = pool_realloc(vec_pool, v->data, sizeof(void *) * v->_Size);
 }
 
 void vec_push(struct Vector *v, void *e)
@@ -48,6 +54,6 @@ void *vec_get(struct Vector *v, size_t i)
 
 void vec_free(struct Vector *v)
 {
-    kfree(v->data);
+    pool_free(v->data);
     kfree(v);
 }

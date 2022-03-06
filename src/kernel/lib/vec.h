@@ -19,7 +19,7 @@
 
 #include <generic/malloc/malloc.h>
 
-#define VEC_CAPACITY 5
+#define VEC_CAPACITY 6
 
 struct Vector {
     void **data;
@@ -38,6 +38,12 @@ struct Vector {
  *   brief: get element i as pointer of T from v
  */
 #define vec_get_as_ptr(v, i, T) (T) vec_get(v, i)
+
+/**
+ * vec_foreach
+ *   brief: loop over vector
+ */
+#define vec_foreach(v, it) for (size_t it = 0; it < v->size; ++it)
 
 /**
  * vec_push_ptr

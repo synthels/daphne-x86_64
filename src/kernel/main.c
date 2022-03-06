@@ -26,6 +26,7 @@
 #include <generic/time/time.h>
 #include <generic/time/sleep.h>
 #include <generic/sched/task.h>
+#include <generic/fs/vfs.h>
 
 #include <modules/fb/lfb.h>
 #include <modules/pci/pci.h>
@@ -173,7 +174,8 @@ void main(struct stivale2_struct *stv)
     smp_init();                             /* smp */
     tsc_init();                             /* tsc */
     apic_init();                            /* try to boot up the APIC timer */
-    sched_init();                           /* init scheduler */
+    sched_init();                           /* scheduler */
+    vfs_init();                             /* vfs */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

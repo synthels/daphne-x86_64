@@ -43,6 +43,7 @@ struct malloc_page {
 struct malloc_slab {
     struct malloc_slab *next;
     struct malloc_page *pages;
+    bool realloc;
     size_t length;
     size_t size;
 };
@@ -91,6 +92,12 @@ struct object_pool *pool_create(const char *name, obj_ctor ctor, size_t size);
  *   brief: allocate from object pool
  */
 void *pool_alloc(struct object_pool *pool);
+
+/**
+ * pool_realloc
+ *   brief: reallocate object
+ */
+void *pool_realloc(struct object_pool *pool, void *ptr, size_t size);
 
 /**
  * pool_free

@@ -27,9 +27,10 @@ declare_lock(realloc_lock);
 declare_lock(free_lock);
 declare_lock(pool_create_lock);
 declare_lock(pool_alloc_lock);
+declare_lock(pool_realloc_lock);
 declare_lock(pool_free_lock);
 
-static struct malloc_slab root = {NULL, NULL, 0, SLAB_MAX_SIZE};
+static struct malloc_slab root = {NULL, NULL, false, 0, SLAB_MAX_SIZE};
 
 /* Exponential function (should not be here) */
 static unsigned int exp(unsigned int n)
@@ -100,6 +101,7 @@ struct malloc_slab *slab_create(size_t size)
     struct malloc_slab *slab = mmu_alloc(sizeof(struct malloc_slab));
     slab->size = size;
     slab->length = 1;
+    slab->realloc = false;
     slab->pages = mmu_alloc(sizeof(struct malloc_page));
     slab->pages->base = mmu_alloc(slab->size + sizeof(struct malloc_header));
     pages_create_initial_list(slab);
@@ -149,6 +151,20 @@ void slab_push_page(struct malloc_slab *slab, struct malloc_page *page)
 struct malloc_page *slab_pop_page(struct malloc_slab *slab)
 {
     struct malloc_page *page = slab->pages->next;
+
+    if (slab->realloc) {
+        /* Remove & free all pages */
+        while (page) {
+            slab_remove_page(slab, page);
+            mmu_free(page);
+            mmu_free(page->base);
+            page = page->next;
+        }
+        slab->realloc = false;
+        slab->length = 0;
+    }
+
+    /* Skip to adding new pages if there are none */
     if (slab->length > 0) {
         /* Set malloc header */
         struct malloc_header *header = (struct malloc_header *) (page->base);
@@ -163,7 +179,7 @@ struct malloc_page *slab_pop_page(struct malloc_slab *slab)
     }
 
     /* No free page, push new pages! */
-    slab_append_pages_to_page(slab, page, SLAB_PAGES_INITIAL);
+    slab_append_pages_to_page(slab, slab->pages, SLAB_PAGES_INITIAL);
     /* We can now allocate from the new pages */
     return slab_pop_page(slab);
 }
@@ -247,6 +263,40 @@ void *pool_alloc(struct object_pool *pool)
     pool->ctor(page);
     unlock(&pool_alloc_lock);
     return (page->base + sizeof(struct malloc_header) / 8);
+}
+
+void *pool_realloc(struct object_pool *pool, void *ptr, size_t size)
+{
+    lock(&pool_realloc_lock);
+    struct malloc_header *header = (struct malloc_header *) ((uint8_t *) ptr - sizeof(struct malloc_header));
+    size_t ptr_size = header->true_size;
+
+    if (!size) {
+        kfree(ptr);
+        unlock(&pool_realloc_lock);
+        return NULL;
+    } else if (!ptr) {
+        unlock(&pool_realloc_lock);
+        return pool_alloc(pool);
+    }
+    else if (size <= ptr_size) {
+        unlock(&pool_realloc_lock);
+        return ptr;
+    } else {
+        /* Increase pool size */
+        pool->slab->size = size;
+        pool->slab->realloc = true;
+        void *new = pool_alloc(pool);
+        if (new) {
+            memcpy(new, ptr, ptr_size);
+            pool_free(ptr);
+        }
+        unlock(&pool_realloc_lock);
+        return new;
+    }
+
+    unlock(&pool_realloc_lock);
+    return NULL;
 }
 
 /**
