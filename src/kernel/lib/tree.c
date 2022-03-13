@@ -26,9 +26,9 @@ struct tree *tree(void)
 
 void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match)
 {
-    list_foreach(parent->children, child) {
-        if (match(child->data, data)) {
-            return child;
+    tree_children_foreach(parent, child) {
+        if (match(tree_child_get(child), data)) {
+            return child->data;
         }
     }
     return NULL;

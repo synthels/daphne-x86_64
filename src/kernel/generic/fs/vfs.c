@@ -18,9 +18,9 @@
 
 static struct vfs *fs;
 
-bool vfs_match_name(struct tree_node *node, void *name)
+bool vfs_match_name(void *node, void *name)
 {
-    return !strncmp(((struct fs_node *) node)->file->name, name, VFS_MAX_FILE_NAME);
+    return !strcmp(((struct fs_node *) node)->file->name, name);
 }
 
 /**
@@ -35,6 +35,7 @@ bool vfs_match_name(struct tree_node *node, void *name)
 void vfs_mount(const char *path, struct fs_node *node)
 {
     /* Check if path is absolute */
+    UNUSED(node);
     if (path[0] != '/' || !path) {
         pr_err("vfs: calls to vfs_mount must use absolute paths!");
         return;
