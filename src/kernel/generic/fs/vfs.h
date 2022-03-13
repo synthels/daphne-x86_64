@@ -30,7 +30,6 @@ typedef void *(*read_func)(int, size_t);
 
 enum fs_node_flags {
     VFS_IS_DEVICE = (1 << 0),
-    VFS_IS_PSEUDOFILE = (1 << 1)
 };
 
 struct vfs_file {

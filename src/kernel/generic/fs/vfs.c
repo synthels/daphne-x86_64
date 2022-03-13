@@ -20,8 +20,7 @@ static struct vfs *fs;
 
 bool vfs_match_name(struct tree_node *node, void *name)
 {
-    pr_warn("matching %s against %s", ((struct fs_node *) node)->file->name, name); // this is cucked??
-    return 0;//!strncmp(((struct fs_node *) node)->file->name, name, VFS_MAX_FILE_NAME);
+    return !strncmp(((struct fs_node *) node)->file->name, name, VFS_MAX_FILE_NAME);
 }
 
 /**
@@ -40,34 +39,6 @@ void vfs_mount(const char *path, struct fs_node *node)
         pr_err("vfs: calls to vfs_mount must use absolute paths!");
         return;
     }
-
-    /* Parse path */
-    struct tree_node *vfs_level = fs->tree->root;
-    char *buf = kmalloc(VFS_MAX_FILE_NAME);
-    for (int i = 0, j = 0; path[i]; ++i, ++j) {
-        char p = path[i];
-        if (p == '/') {
-            j = -1;
-            if (i > 0) {
-                buf[i] = 0;
-                pr_err("%s", buf);
-                struct tree_node *child;
-                if (!(child = tree_match_child(vfs_level, buf, vfs_match_name))) {
-                    struct fs_node *n = kmalloc(sizeof(struct fs_node));
-                    n->file = kmalloc(sizeof(struct vfs_file));
-                    n->file->name = kmalloc(VFS_MAX_FILE_NAME);
-                    strcpy(n->file->name, buf);
-                    child = tree_node(n);
-                    tree_insert_child(vfs_level, child);
-                }
-                memset(buf, 0, VFS_MAX_FILE_NAME);
-                vfs_level = child;
-            }
-        } else {
-            buf[j] = p;
-        }
-    }
-    kfree(buf);
 }
 
 /**
@@ -81,7 +52,6 @@ void vfs_mount_root(void)
     struct fs_node *root = fs->tree->root->data;
     root->file = kmalloc(sizeof(struct vfs_file));
     root->file->name = "root";
-    root->flags = VFS_IS_PSEUDOFILE;
     root->ioctl = NULL;
     root->write = NULL;
     root->read = NULL;

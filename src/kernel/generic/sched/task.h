@@ -15,11 +15,11 @@
 #pragma once
 
 #include <lib/log.h>
+#include <lib/lock.h>
+#include <lib/list.h>
 #include <lib/string.h>
-#include <lib/vec.h>
 
 #include <generic/malloc/malloc.h>
-#include <lib/lock.h>
 #include <generic/malloc/mmu.h>
 #include <generic/time/clock.h>
 
@@ -47,7 +47,7 @@ struct task {
     enum task_state_t state;    /* Task state */
     int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */
-    struct vector *children;    /* Task children */
+    struct list *children;    /* Task children */
 };
 
 struct processor {

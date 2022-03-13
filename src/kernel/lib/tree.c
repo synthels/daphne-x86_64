@@ -31,12 +31,12 @@ void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func 
     //         return child;
     //     }
     // }
-    match(parent->data, data);
     return NULL;
 }
 
-void tree_insert_child(struct tree_node *parent, struct tree_node *node)
+void tree_insert_child(struct tree_node *parent, void *data)
 {
+    struct tree_node *node = tree_node(data);
     list_insert(parent->children, node);
 }
 

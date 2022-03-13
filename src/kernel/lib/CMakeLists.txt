@@ -15,8 +15,6 @@ set(SRC
     ${SRCROOT}/list.h
     ${SRCROOT}/tree.c
     ${SRCROOT}/tree.h
-    ${SRCROOT}/vec.c
-    ${SRCROOT}/vec.h
     ${SRCROOT}/log.h
 )
 

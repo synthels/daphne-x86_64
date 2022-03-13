@@ -158,7 +158,7 @@ static void init_task(struct task *t, const char *name)
     t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
-    t->children = vector();
+    t->children = list();
     t->next = NULL;
 
     /* Add task to the linked list */
