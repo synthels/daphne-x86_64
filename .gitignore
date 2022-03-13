@@ -1,0 +1,10 @@
+/build
+
+*.o
+*.bin
+*.obj
+*.elf
+*.iso
+*.img
+*.efi
+*.a
