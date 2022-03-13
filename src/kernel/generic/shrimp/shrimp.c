@@ -176,8 +176,15 @@ void shrimp_putc(char a, struct color c)
         /* Scroll terminal if it fills up */
         if (shrimp_y >= ((ctx_height / FONT_HEIGHT))) {
             shrimp_y = ((ctx_height / FONT_HEIGHT)) - 1;
-            memmove((uint64_t *) lfb_address, (uint64_t *) (lfb_address + sizeof(uint32_t) * ctx_width * FONT_HEIGHT), (ctx_height - FONT_HEIGHT) * ctx_width * 4);
-            memset((uint64_t *) (lfb_address + sizeof(uint32_t) * (ctx_height - FONT_HEIGHT) * ctx_width), 0x00, FONT_HEIGHT * ctx_width * 4);
+            memmove(
+                (uint64_t *) lfb_address, 
+                ((uint64_t *) (lfb_address + sizeof(uint32_t) * ctx_width * FONT_HEIGHT)), 
+                (ctx_height - FONT_HEIGHT) * ctx_width * 4
+            );
+            memset(
+                ((uint64_t *) (lfb_address + sizeof(uint32_t) * (ctx_height - FONT_HEIGHT) * ctx_width)),
+                0x00, FONT_HEIGHT * ctx_width * 4
+            );
         }
         return;
     }
