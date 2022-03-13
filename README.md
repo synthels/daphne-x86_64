@@ -26,6 +26,16 @@ You can build the toolchain yourself using the scripts under the `tools` directo
 $ brew install x86_64-elf-gcc
 ```
 
+### Installing NASM
+
+In order to build the kernel, you will also need nasm installed, which is our assembler of choice. You can install it as so under different linux distributions:
+
+```bash
+$ sudo apt-get install nasm # Ubuntu
+$ sudo dnf install nasm # Fedora
+$ pacman -S nasm # Arch
+```
+
 #### Brew note
 
 If you installed gcc using brew, you may have to run these two commands before building the kernel, or CMake will not be able to find the compiler.
