@@ -26,18 +26,17 @@ struct tree *tree(void)
 
 void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match)
 {
-    // list_foreach(parent->children, child) {
-    //     if (match(child->data, data)) {
-    //         return child;
-    //     }
-    // }
+    list_foreach(parent->children, child) {
+        if (match(child->data, data)) {
+            return child;
+        }
+    }
     return NULL;
 }
 
 void tree_insert_child(struct tree_node *parent, void *data)
 {
-    struct tree_node *node = tree_node(data);
-    list_insert(parent->children, node);
+    list_insert(parent->children, tree_node(data));
 }
 
 struct tree_node *tree_node(void *data)

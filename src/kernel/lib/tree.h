@@ -31,6 +31,9 @@ struct tree {
 
 typedef bool (*tree_matching_func)(struct tree_node *, void *);
 
+#define tree_children_foreach(node, it) list_foreach(node->children, it)
+#define tree_child_get(child) ((struct tree_node *) child->data)->data
+
 /**
  * tree
  *   brief: allocate new tree
