@@ -1,10 +1,8 @@
 # daphne
 
-<img src=".github/logo.png" alt="logo" style="height: 100px; width:100px;"/>
+<img src=".github/logo.png" alt="logo" style="height: 200px; width:200px;"/>
 
-## What?
-
-Daphne is a UNIX-like 64-bit operating system written in pure C
+Daphne is a UNIX-like 64-bit operating system written in pure C.
 
 ## Build guide
 
@@ -20,7 +18,7 @@ Daphne is a UNIX-like 64-bit operating system written in pure C
 - Virtualbox
 - VMWare
 
-We use CMake as our build system, so you will have to install that first of all (see https://cmake.org/install/)
+We use CMake as our build system, so you will have to install that first of all (see https://cmake.org/install/).
 
 ### Building gcc
 
@@ -82,20 +80,20 @@ $ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_
 
 This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
 
-To finally build the binary, you can run CMake's generic build command
+To finally build the binary, you can run CMake's generic build command.
 
 ```bash
 $ cmake --build .
 ```
 
-If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then go back and fix them! It's not my fault you can't write C!)
+If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then go back and fix them! It's not my fault you can't write C!).
 
 ### Building an ISO image
 
 #### x86_64 UEFI/BIOS
 
 In order to build an ISO image under x86_64, follow these instructions.
-First, `cd` to `src/kernel/arch/x86_64/limine/bin`. Then, run the following commands
+First, `cd` to `src/kernel/arch/x86_64/limine/bin`. Then, run the following commands.
 
 ```bash
 $ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../../build/iso/
@@ -122,7 +120,7 @@ $ ./limine-install ../../../../../../build/daphne_img_x64.iso
 #### Testing x64 images in Virtualbox
 
 First, make sure the "Enable EFI (special OSes only)" checkbox under system is checked. Then, once
-you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands
+you point the VM to the ISO image, start the VM. When in the UEFI shell, type this sequence of commands.
 
 ```bash
 $ fs1:
