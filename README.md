@@ -1,6 +1,8 @@
 # daphne
 
-![daphne logo](.github/logo.png)
+<img src=".github/logo.png" alt="logo" style="height: 100px; width:100px;"/>
+
+## What?
 
 Daphne is a UNIX-like 64-bit operating system written in pure C
 
