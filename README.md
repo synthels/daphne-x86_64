@@ -1,5 +1,7 @@
 # daphne
 
+[daphne logo](.github/logo.png)
+
 Daphne is a UNIX-like 64-bit operating system written in pure C
 
 ## Build guide
