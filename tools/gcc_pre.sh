@@ -6,7 +6,7 @@ echo Stage 1 - Building Dependencies
 
 # make a working directory
 WORK_DIR="$HOME/Documents/Cross"
-rm -rf WORK_DIR
+rm -rf "$WORK_DIR"
 mkdir -p \
 "$WORK_DIR/Install" \
 "$WORK_DIR/build-mpc"
