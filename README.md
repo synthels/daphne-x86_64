@@ -19,6 +19,7 @@ Daphne is a UNIX-like 64-bit operating system written in pure C.
     *   [x86_64 UEFI/BIOS](#x86_64-uefi/bios)
     *   [Testing x64 images in Virtualbox](testing-x64-images-in-virtualbox)
     *   [Testing x64 images in QEMU](#testing-x64-images-in-qemu)
+
 *   [Contributing to daphne](#contributing-to-daphne)
     *   [Functions](#functions)
     *   [Comments](#comments)
