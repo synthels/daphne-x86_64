@@ -4,6 +4,27 @@
 
 Daphne is a UNIX-like 64-bit operating system written in pure C.
 
+## Table of contents
+
+- [Build guide](#build-guide)
+  - [Supported environments](#supported-environments)
+  - [Tested emulators](#tested-emulators)
+  - [Building gcc](#building-gcc)
+  - [Installing NASM](#installing-nasm)
+  - [Brew note](#brew-note)
+  - [Building for x86_64](#building-for-x86_64)
+  - [Building limine](#building-limine)
+  - [Building the kernel](#building-the-kernel)
+  - [Building an ISO image](#building-an-iso-image)
+  - [x86_64 UEFI/BIOS](#x86_64-uefi/bios)
+  - [Testing x64 images in Virtualbox](testing-x64-images-in-virtualbox)
+  - [Testing x64 images in QEMU](#testing-x64-images-in-qemu)
+- [Contributing to daphne](#contributing-to-daphne)
+  - [Functions](#functions)
+  - [Comments](#comments)
+  - [If statements and loops](#if-statements-and-loops)
+  - [Header files](#header-files)
+
 ## Build guide
 
 ### Supported environments
@@ -142,15 +163,6 @@ $ qemu-system-x86_64 -m 2048 -cdrom daphne_img_x64.iso -smp cores=6
 ## Contributing to daphne
 
 All contributions to daphne are very welcome and needed. If you have decided to contribute to this project, all you have to do is follow a few minor guidelines.
-
-### Table of contents
-
-- [Writing commit messages](#commit-messages)
-- [Code style](#code-style)
-  - [Functions](#functions)
-  - [Comments](#comments)
-  - [If statements and loops](#if-statements-and-loops)
-  - [Header files](#header-files)
 
 ### Commit messages
 
