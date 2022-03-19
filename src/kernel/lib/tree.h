@@ -31,7 +31,7 @@ struct tree {
 
 typedef bool (*tree_matching_func)(void *, void *);
 
-#define tree_children_foreach(node, it) list_foreach(node->children, it)
+#define tree_children_foreach(node, it) list_foreach(node->children, it, _i)
 #define tree_child_get(child) ((struct tree_node *) child->data)->data
 
 /**
@@ -44,13 +44,13 @@ struct tree *tree(void);
  * tree_match_child
  *   brief: get child for which match(p, d) rings true
  */
-void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match);
+struct tree_node *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match);
 
 /**
  * tree_insert_child
  *   brief: insert child to parent
  */
-void tree_insert_child(struct tree_node *parent, void *data);
+struct tree_node *tree_insert_child(struct tree_node *parent, void *data);
 
 /**
  * tree_node

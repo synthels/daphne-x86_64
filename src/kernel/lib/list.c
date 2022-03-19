@@ -30,11 +30,10 @@ void list_insert(struct list *ls, void *data)
     struct list_node *node = kmalloc(sizeof(struct list_node));
     node->data = data;
     node->next = NULL;
-    if (!ls->size) {
+    if (ls->size < 1) {
         ls->head = node;
         ls->tail = node;
         node->prev = NULL;
-        node->next = NULL;
         ls->size++;
         return;
     }
@@ -51,7 +50,7 @@ void list_insert_multiple(struct list *ls, void *data, size_t size)
     }
 }
 
-void list_insert_after(struct list_node *prev, void *data)
+void list_insert_after(struct list *ls, struct list_node *prev, void *data)
 {
     if (!prev) {
         return;
@@ -63,6 +62,7 @@ void list_insert_after(struct list_node *prev, void *data)
     new->next = prev->next;
     prev->next = new;
     prev->prev = prev;
+    ls->size++;
 
     if (new->next) {
         new->next->prev = new;
@@ -104,7 +104,7 @@ void list_merge(struct list *l1, struct list *l2)
 
 void list_destroy(struct list *ls)
 {
-    list_foreach(ls, i) {
+    list_foreach(ls, i, _i) {
         kfree(i);
     }
     kfree(ls);

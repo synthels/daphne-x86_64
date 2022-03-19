@@ -13,9 +13,9 @@ set(SRC
     ${SRCROOT}/lock.h
     ${SRCROOT}/list.c
     ${SRCROOT}/list.h
+    ${SRCROOT}/log.h
     ${SRCROOT}/tree.c
     ${SRCROOT}/tree.h
-    ${SRCROOT}/log.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})

@@ -24,7 +24,7 @@ struct tree *tree(void)
     return t;
 }
 
-void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match)
+struct tree_node *tree_match_child(struct tree_node *parent, void *data, tree_matching_func match)
 {
     tree_children_foreach(parent, child) {
         if (match(tree_child_get(child), data)) {
@@ -34,9 +34,11 @@ void *tree_match_child(struct tree_node *parent, void *data, tree_matching_func 
     return NULL;
 }
 
-void tree_insert_child(struct tree_node *parent, void *data)
+struct tree_node *tree_insert_child(struct tree_node *parent, void *data)
 {
-    list_insert(parent->children, tree_node(data));
+    struct tree_node *n = tree_node(data);
+    list_insert(parent->children, n);
+    return n;
 }
 
 struct tree_node *tree_node(void *data)

@@ -55,7 +55,7 @@ void strcpy(char *dest, const char *src);
 
 /**
  * strncpy
- *   brief: copy null terminated string src to
+ *   brief: copy string src to
  *          dest
  *   parameters:
  *     - dest: destination string
@@ -77,7 +77,7 @@ void *memcpy(void *dst, const void *src, size_t len);
 /**
  * memmove
  *   brief: copy data from src to dst, while taking
- *          care of overelaps
+ *          care of overlaps
  *   parameters:
  *     - dest:  destination
  *     - src:   source

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2022 synthels <synthels.me@gmail.com>
  *
@@ -15,49 +14,35 @@
 
 #pragma once
 
-#include <stdint.h>
-
 #include <lib/tree.h>
-#include <lib/string.h>
-
-#include <generic/malloc/malloc.h>
 
 #define VFS_MAX_FILE_NAME 256
 
-typedef void (*ioctl_func)(int, int);
-typedef void (*write_func)(const void *, size_t);
-typedef void *(*read_func)(int, size_t);
+typedef int   (*open_t) (const char *, int);
+typedef void  (*close_t)(int);
+typedef void  (*ioctl_t)(int, int);
+typedef void  (*write_t)(const void *, size_t);
+typedef void *(*read_t) (int, size_t);
 
-enum fs_node_flags {
-    VFS_IS_DEVICE = (1 << 0),
-};
-
-struct vfs_file {
-    int permissions;    /* TODO */
-    char *name;   /* Limited to 255 */
-    /* fs info... */
+enum fs_node_type {
+    FIS_FILE = 0,
+    FIS_ROOT = 1,
+    FIS_DIRECTORY = 2,
+    FIS_SOCKET = 3
 };
 
 struct fs_node {
-    struct vfs_file *file;
-    int flags;
-    ioctl_func ioctl;
-    write_func write;
-    read_func  read;
+    char  *name; /* Filename */
+    int    type; /* File type */
+
+    ioctl_t  ioctl;
+    open_t   open;
+    write_t  write;
+    read_t   read;
 };
 
-struct vfs {
-    struct tree *tree;
-};
-
-/**
- * vfs_init
- *   brief: initialise vfs
- */
 void vfs_init(void);
 
-/**
- * vfs_mount
- *   brief: mount fs node
- */
-void vfs_mount(const char *path, struct fs_node *node);
+struct fs_node *vfs_mount(const char *path, struct fs_node *node);
+
+struct fs_node *vfs_open(const char *path);

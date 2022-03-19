@@ -31,7 +31,10 @@ struct list {
     size_t size;
 };
 
-#define list_foreach(ls, it) for (struct list_node *it = ((struct list *) ls)->head; it; it = it->next)
+#define list_foreach(ls, it, idx) \
+    struct list_node *it = ((struct list *) ls)->head; \
+    size_t idx = 0; \
+    for (; idx < ls->size; it = it->next, idx++)
 
 /**
  * list
@@ -55,7 +58,7 @@ void list_insert_multiple(struct list *ls, void *data, size_t size);
  * list_insert_after
  *   brief: append node next to prev
  */
-void list_insert_after(struct list_node *prev, void *data);
+void list_insert_after(struct list *ls, struct list_node *prev, void *data);
 
 /**
  * list_remove
