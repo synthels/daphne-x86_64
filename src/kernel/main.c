@@ -16,7 +16,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stivale2.h>
 
 #include <generic/forbia/kernel.h>
 #include <generic/memory/mem.h>
@@ -27,6 +26,7 @@
 #include <generic/time/sleep.h>
 #include <generic/sched/task.h>
 #include <generic/fs/vfs.h>
+#include <generic/forbia/stivale2.h>
 
 #include <modules/fb/lfb.h>
 #include <modules/pci/pci.h>
