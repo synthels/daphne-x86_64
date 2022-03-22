@@ -46,7 +46,7 @@ struct list *list(void);
  * list_insert
  *   brief: append node to tail of list
  */
-void list_insert(struct list *ls, void *data);
+struct list_node *list_insert(struct list *ls, void *data);
 
 /**
  * list_insert_multiple
@@ -64,7 +64,7 @@ void list_insert_after(struct list *ls, struct list_node *prev, void *data);
  * list_remove
  *   brief: remove node from list
  */
-void list_remove(struct list_node *node);
+void list_remove(struct list *ls, struct list_node *node);
 
 /**
  * list_get

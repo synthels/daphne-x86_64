@@ -36,15 +36,35 @@ struct tree_node *tree_match_child(struct tree_node *parent, void *data, tree_ma
 
 struct tree_node *tree_insert_child(struct tree_node *parent, void *data)
 {
-    struct tree_node *n = tree_node(data);
-    list_insert(parent->children, n);
-    return n;
+    struct tree_node *node = tree_node(data);
+    node->parent = parent;
+    node->node = list_insert(parent->children, node);
+    return node;
+}
+
+void tree_free_node(struct tree_node *node)
+{
+    static bool first = true;
+    /* Free node and all its children */
+    if (!node) return;
+    /* Remove node from parent's children,
+       making it inaccessible */
+    if (first) {
+        list_remove(node->parent->children, node->node);
+        first = false;
+    }
+    /* Free node */
+    tree_children_foreach(node, child) {
+        tree_free_node(child->data);
+    }
+    kfree(node);
 }
 
 struct tree_node *tree_node(void *data)
 {
     struct tree_node *node = kmalloc(sizeof(struct tree_node));
     node->data = data;
+    node->node = NULL;
     node->children = list();
     return node;
 }

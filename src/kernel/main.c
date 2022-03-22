@@ -162,20 +162,20 @@ void main(struct stivale2_struct *stv)
     #endif
 
     #ifdef ARCH_x86_64
-        pci_scan();                         /* pci */
-        acpi_init(rsdp_info->rsdp);         /* acpi */
-        madt_init();                        /* madt */
+        pci_scan();                    /* pci */
+        acpi_init(rsdp_info->rsdp);    /* acpi */
+        madt_init();                   /* madt */
     #endif
 
-    enable_interrupts();                    /* enable interrupts */
-    kbd_init();                             /* init ps2 keyboard */
-    clock_init();                           /* clock */
-    time_init();                            /* time */
-    smp_init();                             /* smp */
-    tsc_init();                             /* tsc */
-    apic_init();                            /* try to boot up the APIC timer */
-    sched_init();                           /* scheduler */
-    vfs_init();                             /* vfs */
+    enable_interrupts();               /* enable interrupts */
+    kbd_init();                        /* init ps2 keyboard */
+    clock_init();                      /* clock */
+    time_init();                       /* time */
+    smp_init();                        /* smp */
+    tsc_init();                        /* tsc */
+    apic_init();                       /* try to boot up the APIC timer */
+    sched_init();                      /* scheduler */
+    vfs_init();                        /* vfs */
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

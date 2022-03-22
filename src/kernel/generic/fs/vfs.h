@@ -15,6 +15,7 @@
 #pragma once
 
 #include <lib/tree.h>
+#include <generic/forbia/errno.h>
 
 #define VFS_MAX_FILE_NAME 256
 
@@ -39,10 +40,24 @@ struct fs_node {
     open_t   open;
     write_t  write;
     read_t   read;
+
+    struct tree_node *vfs_ptr;
 };
 
+/**
+ * vfs_init
+ *   brief: init vfs
+ */
 void vfs_init(void);
 
+/**
+ * vfs_mount
+ *   brief: mount vfs node
+ */
 struct fs_node *vfs_mount(const char *path, struct fs_node *node);
 
-struct fs_node *vfs_open(const char *path);
+/**
+ * vfs_unmount
+ *   brief: unmount vfs node
+ */
+int vfs_unmount(const char *path);

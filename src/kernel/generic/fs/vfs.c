@@ -53,8 +53,9 @@ struct tree_node *create_or_traverse(struct tree_node *parent, char *name, struc
         struct fs_node *file = kmalloc(sizeof(struct fs_node));
         file->name = kmalloc(VFS_MAX_FILE_NAME);
         file->type = FIS_DIRECTORY;
+        file->vfs_ptr = tree_insert_child(parent, file);
         strncpy(file->name, name, VFS_MAX_FILE_NAME);
-        return tree_insert_child(parent, file);
+        return file->vfs_ptr;
     }
     return node;
 }
@@ -64,6 +65,19 @@ struct tree_node *create_or_traverse(struct tree_node *parent, char *name, struc
  *
  * Mounts some node at a certain virtual path, where
  * it can be accessed through the vfs.
+ *
+ * NOTE: Most UNIX vfs implementations would usually mount something like this:
+ *
+ *       node->name = "mynode"
+ *       vfs_mount("/path/", node);
+ *
+ *       And mean that the node can now be accessed at /path/. With this
+ *       vfs_mount, this node is actually mounted at /path/mynode, with
+ *       /path/ being marked as a directory. If you want to mount node at
+ *       /path/ instead, you'd do:
+ *
+ *       node->name = "path";
+ *       vfs_mount("/", node);
  *
  * @param path (absolute) path (starts with '/' and ends with '/')
  * @param node node to be mounted
@@ -75,6 +89,13 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
     if (path[0] != '/' || !path) {
         pr_err("vfs: calls to vfs_mount must use absolute paths!");
         return NULL;
+    }
+
+    /* Caller wants node mouted on root! */
+    if (!strncmp(path, "/", 2)) {
+        node->vfs_ptr = fs->root;
+        tree_insert_child(fs->root, node);
+        return node;
     }
 
     char buf[VFS_MAX_FILE_NAME];
@@ -102,19 +123,34 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
     /* Now we have traversed the tree and we can mount
        our node! */
     if (node) {
-        tree_insert_child(level, node);
+        node->vfs_ptr = tree_insert_child(level, node);
         return node;
     } else {
         return (struct fs_node *) level->data;
     }
 }
 
-struct fs_node *vfs_open(const char *path)
+/**
+ * @brief Unmount node at some path
+ *
+ * Unmounts some node at a certain virtual path, freeing
+ * all memory used by it
+ *
+ * @param path (absolute) path (starts with '/' and ends with '/')
+ */
+int vfs_unmount(const char *path)
 {
-    /* Passing NULL to vfs_mount makes it
-       return the node mounted at this
-       path, without creating any new nodes */
-    return vfs_mount(path, NULL);
+    struct fs_node *node;
+    if (!(node = vfs_mount(path, NULL))) {
+        return -ENOENT;
+    }
+    if (node->vfs_ptr) {
+        tree_free_node(node->vfs_ptr);
+        return -ENOTH;
+    } else {
+        pr_err("vfs_unmount: %s not mounted!", path);
+        return -ENOENT;
+    }
 }
 
 /**
@@ -137,4 +173,5 @@ void vfs_mount_root(void)
 void vfs_init(void)
 {
     vfs_mount_root();
+    pr_info("vfs: mounted root");
 }

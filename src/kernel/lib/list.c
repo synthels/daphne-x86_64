@@ -25,7 +25,7 @@ struct list *list(void)
     return ls;
 }
 
-void list_insert(struct list *ls, void *data)
+struct list_node *list_insert(struct list *ls, void *data)
 {
     struct list_node *node = kmalloc(sizeof(struct list_node));
     node->data = data;
@@ -35,12 +35,13 @@ void list_insert(struct list *ls, void *data)
         ls->tail = node;
         node->prev = NULL;
         ls->size++;
-        return;
+        return node;
     }
     ls->tail->next = node;
     node->prev = ls->tail;
     ls->tail = node;
     ls->size++;
+    return node;
 }
 
 void list_insert_multiple(struct list *ls, void *data, size_t size)
@@ -69,7 +70,7 @@ void list_insert_after(struct list *ls, struct list_node *prev, void *data)
     }
 }
 
-void list_remove(struct list_node *node)
+void list_remove(struct list *ls, struct list_node *node)
 {
     struct list_node *prev;
     if (!node) {
@@ -82,6 +83,7 @@ void list_remove(struct list_node *node)
         }
         prev->next = NULL;
     }
+    ls->size--;
 }
 
 struct list_node *list_get(struct list *ls, size_t i)

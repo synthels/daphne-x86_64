@@ -22,6 +22,8 @@
 
 struct tree_node {
     void *data;
+    struct list_node *node;
+    struct tree_node *parent;
     struct list *children;
 };
 
@@ -51,6 +53,12 @@ struct tree_node *tree_match_child(struct tree_node *parent, void *data, tree_ma
  *   brief: insert child to parent
  */
 struct tree_node *tree_insert_child(struct tree_node *parent, void *data);
+
+/**
+ * tree_free_node
+ *   brief: free node and all its children
+ */
+void tree_free_node(struct tree_node *node);
 
 /**
  * tree_node
