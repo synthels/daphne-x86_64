@@ -154,6 +154,10 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
             switch (c) {
                 case 's':
                     tmp = va_arg(args, char *);
+                    /* Handle null */
+                    if (!tmp) {
+                        tmp = "(null)";
+                    }
                     fmt_string = true;
                     break;
                 case 'u':
@@ -175,6 +179,7 @@ int vfprintf(printk_stream stream, const char *fmt, va_list args)
             /* Skip '%' sign */
             i--;
             if (!fmt_string) tmp = str;
+
             /* Copy string to buffer */
             for (int j = 0; (c = tmp[j]); i++, j++) {
                 buf[i] = c;
