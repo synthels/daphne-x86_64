@@ -1,2 +1,8 @@
-# Docs
-This directory contains documentation for features that will be implemented in daphne in the near future. (or that are already implemented)
+# Building the docs
+This directory contains the documentation for daphne. You can build the whole tree with sphinx in any format you want.
+
+```sh
+$ cd docs
+$ pip install -r requirements.txt
+$ make html # Run 'make' for all options
+```

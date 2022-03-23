@@ -1,5 +1,16 @@
+# Build directory
 /build
 
+# Docs
+/docs/_build/
+/docs/_static/
+/docs/_templates/
+
+# Python virtual environments
+.venv/
+.env/
+
+# Object files
 *.o
 *.bin
 *.obj
