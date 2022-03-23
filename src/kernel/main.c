@@ -117,7 +117,7 @@ void ap_startup(void)
 /**
  * @brief Kernel main
  *
- * Sets up all x86 stuff (TODO: it sould be seperate, anyways...)
+ * Sets up all x86 stuff (TODO: it sould be separate, anyways...)
  * and everything needed to eventually boot into
  * a usable userspace
  */
