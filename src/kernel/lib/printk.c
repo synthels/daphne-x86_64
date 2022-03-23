@@ -84,60 +84,6 @@ int vsprintf(char *buf, const char *fmt, va_list args)
     return 0;
 }
 
-size_t vsprintf_length(const char *fmt, va_list args)
-{
-    char c;
-    size_t length = 0;
-    char *str = kmalloc(VSPRINTF_BUFFER_SIZE * sizeof(char));
-    for (int i = 0; (c = *fmt++);) {
-        if (c == '%') {
-            c = *fmt++;
-            switch (c) {
-                /* Strings */
-                case 's':
-                    length += strlen(va_arg(args, char *));
-                    break;
-                /* Unsigned (no prettier way to do this) */
-                case 'u':
-                    switch (*fmt++) {
-                        case 'i':
-                            uitoa(va_arg(args, uint64_t), str);
-                            break;
-                    }
-                    break;
-                case 'i':
-                    itoa(va_arg(args, int64_t), str);
-                    break;
-                /* Hex */
-                case 'x':
-                    uitoh(va_arg(args, uint64_t), str);
-                    break;
-                /* Binary */
-                case 'b':
-                    /* TODO */
-                    break;
-                /* Just print a '%' */
-                case '%':
-                    length++;
-                    break;
-                /* Unknown type */
-                default:
-                    break;
-            }
-            /* Skip '%' sign */
-            i--;
-            /* Copy string to buffer */
-            for (; (c = *str++); i++) {
-                length++;
-            }
-            length += strlen(str);
-        }
-    }
-
-    kfree(str);
-    return length;
-}
-
 int vfprintf(printk_stream stream, const char *fmt, va_list args)
 {
     char c;
