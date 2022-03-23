@@ -16,6 +16,8 @@
 
 #include "vfs.h"
 
+declare_lock(vfs_lock);
+
 /* Filesystem tree */
 struct tree *fs;
 
@@ -91,10 +93,14 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
         return NULL;
     }
 
+    /* Maybe consider some multi-processor architecture 
+       for the vfs? */
+    lock(&vfs_lock);
     /* Caller wants node mouted on root! */
     if (!strncmp(path, "/", 2)) {
         node->vfs_ptr = fs->root;
         tree_insert_child(fs->root, node);
+        unlock(&vfs_lock);
         return node;
     }
 
@@ -108,6 +114,7 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
                 /* Return if create_or_traverse returns NULL! (only when node is NULL) */
                 if (!(level = create_or_traverse(level, buf, node))) {
                     pr_err("vfs_mount: %s: no node mounted on this path", path);
+                    unlock(&vfs_lock);
                     return NULL;
                 }
                 memset(buf, 0, VFS_MAX_FILE_NAME);
@@ -124,10 +131,13 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
        our node! */
     if (node) {
         node->vfs_ptr = tree_insert_child(level, node);
+        unlock(&vfs_lock);
         return node;
     } else {
+        unlock(&vfs_lock);
         return (struct fs_node *) level->data;
     }
+    unlock(&vfs_lock);
 }
 
 /**
