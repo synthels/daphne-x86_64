@@ -14,34 +14,47 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <lib/tree.h>
+#include <lib/lock.h>
+
 #include <generic/forbia/errno.h>
 
 #define VFS_MAX_FILE_NAME 256
 
-typedef int   (*open_t) (const char *, int);
-typedef void  (*close_t)(int);
+struct fs_node;
+
+typedef int   (*open_t) (struct fs_node *, int flags);
+typedef int   (*close_t)(struct fs_node *);
 typedef void  (*ioctl_t)(int, int);
-typedef void  (*write_t)(const void *, size_t);
-typedef void *(*read_t) (int, size_t);
+typedef int   (*write_t)(struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
+typedef int   (*read_t) (struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
 
 enum fs_node_type {
-    FIS_FILE = 0,
-    FIS_ROOT = 1,
-    FIS_DIRECTORY = 2,
-    FIS_SOCKET = 3
+    FS_FILE = 0,
+    FS_ROOT = 1,
+    /* This is not an actual directory -as in a filesystem defined thing-, it is more
+       of an in-memory container for other files */
+    FS_DIRECTORY = 2,
+    FS_SOCKET = 3
 };
 
 struct fs_node {
     char  *name; /* Filename */
     int    type; /* File type */
 
-    ioctl_t  ioctl;
     open_t   open;
+    close_t  close;
+    ioctl_t  ioctl;
     write_t  write;
     read_t   read;
 
-    struct tree_node *vfs_ptr;
+    bool ref; /* Set if this node is currently open */
+    struct tree_node *vfs_ptr; /* Pointer to vfs entry */
+
+    uint64_t inode;
+    void *device;
 };
 
 /**
@@ -55,6 +68,36 @@ void vfs_init(void);
  *   brief: mount vfs node
  */
 struct fs_node *vfs_mount(const char *path, struct fs_node *node);
+
+/**
+ * vfs_open
+ *   brief: open vfs node
+ */
+int vfs_open(struct fs_node *node, int flags);
+
+/**
+ * vfs_close
+ *   brief: close vfs node
+ */
+int vfs_close(struct fs_node *node);
+
+/**
+ * vfs_write
+ *   brief: write to vfs node
+ */
+int vfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size);
+
+/**
+ * vfs_read
+ *   brief: read from vfs node
+ */
+int vfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size);
+
+/**
+ * kopen
+ *   brief: open file from path
+ */
+void *kopen(const char *path, int flags);
 
 /**
  * vfs_unmount

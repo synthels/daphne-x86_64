@@ -54,7 +54,7 @@ struct tree_node *create_or_traverse(struct tree_node *parent, char *name, struc
         /* Create node */
         struct fs_node *file = kmalloc(sizeof(struct fs_node));
         file->name = kmalloc(VFS_MAX_FILE_NAME);
-        file->type = FIS_DIRECTORY;
+        file->type = FS_DIRECTORY;
         file->vfs_ptr = tree_insert_child(parent, file);
         strncpy(file->name, name, VFS_MAX_FILE_NAME);
         return file->vfs_ptr;
@@ -171,7 +171,7 @@ void vfs_mount_root(void)
     fs = tree();
     struct fs_node *root = kmalloc(sizeof(struct fs_node));
     root->name = NULL;
-    root->type = FIS_ROOT;
+    root->type = FS_ROOT;
 
     root->ioctl = NULL;
     root->open = NULL;
@@ -180,6 +180,88 @@ void vfs_mount_root(void)
     fs->root = tree_node(root);
 }
 
+/**
+ * @brief Open file
+ *
+ * Opens a vfs_node, allowing write and read calls
+ * to go through
+ */
+int vfs_open(struct fs_node *node, int flags)
+{
+    if (!node->ref) {
+        return -EBUSY;
+    } else {
+        node->ref = true;
+        return node->open(node, flags);
+    }
+}
+
+/**
+ * @brief Close file
+ *
+ * Closes a vfs_node
+ */
+int vfs_close(struct fs_node *node)
+{
+    if (node->ref) {
+        int ret = node->close(node);
+        node->ref = false;
+        return ret;
+    } else {
+        return -EBADFD;
+    }
+}
+
+/**
+ * @brief Write to file
+ *
+ * @param offset Offset to start writing at
+ * @param buffer Data to write
+ * @param size Buffer size
+ */
+int vfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size)
+{
+    if (node->ref) {
+        return node->write(node, offset, buffer, size);
+    } else {
+        return -EBADFD;
+    }
+}
+
+/**
+ * @brief Read from file
+ *
+ * @param offset Offset to start reading from
+ * @param buffer Buffer to write data to
+ * @param size Read size
+ */
+int vfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size)
+{
+    if (node->ref) {
+        return node->write(node, offset, buffer, size); 
+    } else {
+        return -EBADFD;
+    }
+}
+
+/**
+ * @brief Open file from path
+ *
+ * @param path (absolute) path
+ * @param flags flags
+ */
+void *kopen(const char *path, int flags)
+{
+    struct fs_node *node;
+    if (!(node = vfs_mount(path, NULL))) {
+        return NULL;
+    }
+    return (vfs_open(node, flags) != -EBUSY) ? node : NULL;
+}
+
+/**
+ * @brief Initialise vfs
+ */
 void vfs_init(void)
 {
     vfs_mount_root();
