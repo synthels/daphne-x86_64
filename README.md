@@ -2,19 +2,20 @@
 
 Daphne is a UNIX-like 64-bit operating system written in pure C
 
-## Build guide
+## Building
 
-### Supported environments
+### Table of contents
 
-- Any GNU/Linux distro
-- WSL
-- MinGW (will probably work, but not very well tested)
-
-### Tested emulators
-
-- QEMU
-- Virtualbox
-- VMWare
+- [Building gcc](#building-gcc)
+- [Installing NASM](#installing-nasm)
+  - [Brew note](#brew-note)
+- [Building for x86_64](#building-for-x86_64)
+- [Building limine](#building-limine)
+- [Building the kernel](#building-the-kernel)
+- [Compiling an ISO image](#compiling-an-iso-image)
+  - [x86_64 UEFI/BIOS](#x86_64-uefibios)
+  - [Testing x64 images in Virtualbox](#testing-x64-images-in-virtualbox)
+  - [Testing x64 images in QEMU](#testing-x64-images-in-qemu)
 
 We use CMake as our build system, so you will have to install that first of all (see https://cmake.org/install/)
 
@@ -86,7 +87,7 @@ $ cmake --build .
 
 If there are no errors and everything went well, you should now have a binary called `kernel.bin` in the `build` directory. Congratulations! (If by any chance it didn't go quite that well and instead gcc gave you a bunch of errors, then go back and fix them! It's not my fault you can't write C!)
 
-### Building an ISO image
+### Compiling an ISO image
 
 #### x86_64 UEFI/BIOS
 
