@@ -18,6 +18,6 @@
 
 void panic(const char *msg)
 {
-    printk(PANIC, "kernel panic: %s\n", msg);
+    printk(PANIC, "kernel panic: %s (on CPU %u)\n", msg, this_core->cpu_id);
     kernel_hang();
 }

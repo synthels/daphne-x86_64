@@ -29,7 +29,7 @@
 /* ap_startup */
 #include <main.h>
 
-#define SMP_MAX_CPUS 7
+#define SMP_MAX_CPUS 8
 
 #define LAPIC_ENABLE (1 << 10)
 #define LAPIC_ICR_CPUID_OFFSET 24

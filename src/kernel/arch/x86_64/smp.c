@@ -179,6 +179,19 @@ void smp_init(void)
 {
     lapic_init();
 
+    /* Get info from MADT */
+    struct madt_table_lapic **m = (struct madt_table_lapic **) madt_get_tables(MADT_LAPIC);
+    lapic_base = madt_get_header()->lapic;
+
+    /* Get core count */
+    int cores = 0;
+    for (; m[cores]; cores++) {
+        if (cores >= SMP_MAX_CPUS) {
+            pr_warn("smp: too many cpus, using only %u", SMP_MAX_CPUS);
+            break;
+        }
+    }
+
     /* Create pools for CPU structures */
     struct object_pool *cpu_pool = pool_create("cpus", NULL, sizeof(struct processor));
     struct object_pool *stc_pool = pool_create("stacks", NULL, KERNEL_STACK_SIZE * sizeof(uint8_t));
@@ -186,22 +199,11 @@ void smp_init(void)
         cpus[i] = pool_alloc(cpu_pool);
     }
 
-    /* Get info from MADT */
-    struct madt_table_lapic **m = (struct madt_table_lapic **) madt_get_tables(MADT_LAPIC);
-
-    lapic_base = madt_get_header()->lapic;
-    
-    int cores = 0;
     /* Enumerate all cores */
-    for (; m[cores]; cores++) {
-        /* Too many? Only use SMP_MAX_CPUS */
-        if (cores > SMP_MAX_CPUS) {
-            pr_warn("smp: too many cpus, defaulting to %u", SMP_MAX_CPUS);
-            break;
-        }
-        cpus[cores]->cpu_id = m[cores]->processor_id;
-        cpus[cores]->lapic_id = m[cores]->apic_id;
-        cpus[cores]->root = NULL;
+    for (int i = 0; i < cores; i++) {
+        cpus[i]->cpu_id = m[i]->processor_id;
+        cpus[i]->lapic_id = m[i]->apic_id;
+        cpus[i]->root = NULL;
     }
 
     smp_cores = kmalloc(sizeof(struct smp_cpus));
@@ -265,7 +267,6 @@ void smp_init(void)
     }
 
     pr_info("smp: initialised SMP with %u cores", cores);
-    return;
 }
 
 struct smp_cpus *smp_get_cores(void)
