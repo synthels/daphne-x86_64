@@ -21,6 +21,9 @@ declare_lock(vfs_lock);
 /* Filesystem tree */
 struct tree *fs;
 
+/* Filesystem hashmap */
+struct hashmap *filesystems;
+
 /**
  * @brief Match tree node child with filename
  *
@@ -130,6 +133,12 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
     /* Now we have traversed the tree and we can mount
        our node! */
     if (node) {
+        if (node->fs) {
+            struct fs_descriptor *filesystem = hashmap_get(filesystems, node->fs);
+            if (filesystem) {
+                filesystem->mount(path, node);
+            }
+        }
         node->vfs_ptr = tree_insert_child(level, node);
         unlock(&vfs_lock);
         return node;
@@ -164,6 +173,17 @@ int vfs_unmount(const char *path)
 }
 
 /**
+ * @brief Register a new filesystem
+ *
+ * @param fs Filesystem descriptor
+ */
+void vfs_register_fs(struct fs_descriptor *fs)
+{
+    if (!hashmap_get(filesystems, fs->name))
+        hashmap_insert(filesystems, fs->name, fs);
+}
+
+/**
  * @brief Mount vfs root
  */
 void vfs_mount_root(void)
@@ -172,6 +192,7 @@ void vfs_mount_root(void)
     struct fs_node *root = kmalloc(sizeof(struct fs_node));
     root->name = NULL;
     root->type = FS_ROOT;
+    root->fs = NULL;
 
     root->ioctl = NULL;
     root->open = NULL;
@@ -265,5 +286,6 @@ void *kopen(const char *path, int flags)
 void vfs_init(void)
 {
     vfs_mount_root();
+    filesystems = hashmap(MAX_REGISTERED_FILESYSTEMS);
     pr_info("vfs: mounted root");
 }

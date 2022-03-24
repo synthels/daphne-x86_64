@@ -16,12 +16,14 @@
 
 #include <stdint.h>
 
+#include <lib/hashmap.h>
 #include <lib/tree.h>
 #include <lib/lock.h>
 
 #include <generic/forbia/errno.h>
 
 #define VFS_MAX_FILE_NAME 256
+#define MAX_REGISTERED_FILESYSTEMS 15
 
 struct fs_node;
 
@@ -30,6 +32,7 @@ typedef int   (*close_t)(struct fs_node *);
 typedef void  (*ioctl_t)(int, int);
 typedef int   (*write_t)(struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
 typedef int   (*read_t) (struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
+typedef int   (*mount_t)(const char *, struct fs_node *); /* mount path, node */
 
 enum fs_node_type {
     FS_FILE = 0,
@@ -42,7 +45,8 @@ enum fs_node_type {
 
 struct fs_node {
     char  *name; /* Filename */
-    int    type; /* File type */
+    int    type; /* File type (fs_node_type) */
+    char  *fs;   /* Filesystem name (if applicable) */
 
     open_t   open;
     close_t  close;
@@ -57,6 +61,16 @@ struct fs_node {
     void *device;
 };
 
+struct fs_descriptor {
+    char *name;
+    char *author;
+    /* Will be called by vfs_mount whenever
+       a file from this filesystem is mounted.
+       The filesystem can then set its own
+       open/close and read/write functions. */
+    mount_t mount;
+};
+
 /**
  * vfs_init
  *   brief: init vfs
@@ -68,6 +82,18 @@ void vfs_init(void);
  *   brief: mount vfs node
  */
 struct fs_node *vfs_mount(const char *path, struct fs_node *node);
+
+/**
+ * vfs_unmount
+ *   brief: unmount vfs node
+ */
+int vfs_unmount(const char *path);
+
+/**
+ * vfs_register_fs
+ *   brief: register filesystem
+ */
+void vfs_register_fs(struct fs_descriptor *fs);
 
 /**
  * vfs_open
@@ -98,9 +124,3 @@ int vfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size);
  *   brief: open file from path
  */
 void *kopen(const char *path, int flags);
-
-/**
- * vfs_unmount
- *   brief: unmount vfs node
- */
-int vfs_unmount(const char *path);
