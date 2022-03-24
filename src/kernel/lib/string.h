@@ -114,3 +114,12 @@ int strncmp(const char *s1, const char *s2, size_t n);
  *     - n:     length
  */
 int strcmp(const char* s1, const char* s2);
+
+/**
+ * strcat
+ *   brief: append src to dest
+ *   parameters:
+ *     - src:   source string
+ *     - dest:  second string
+ */
+char *strcat(char *dest, const char *src);

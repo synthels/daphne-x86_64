@@ -137,3 +137,12 @@ int strcmp(const char* s1, const char* s2)
     }
     return *(const unsigned char*) s1 - *(const unsigned char*) s2;
 }
+
+char *strcat(char *dest, const char *src)
+{
+    char *rdest = dest;
+    while (*dest)
+        dest++;
+    while (*dest++ = *src++);
+    return rdest;
+}
