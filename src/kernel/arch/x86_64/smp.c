@@ -229,7 +229,8 @@ void smp_init(void)
          * Don't put the BSP in real mode! 
          */
         if ((uint32_t) cpus[i]->cpu_id == bsp_id) {
-            cpu_set_current_core((uintptr_t)&(smp_cores->cpus[bsp_id]));
+            this_core->cpu_id = bsp_id;
+            this_core->is_bsp = true;
             smp_cores->cpus[bsp_id]->is_bsp = true;
             continue;
         };
