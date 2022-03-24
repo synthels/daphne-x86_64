@@ -25,7 +25,7 @@
 
 struct fs_node;
 
-typedef int   (*open_t) (struct fs_node *, int flags);
+typedef int   (*open_t) (struct fs_node *, int); /* node, flags */
 typedef int   (*close_t)(struct fs_node *);
 typedef void  (*ioctl_t)(int, int);
 typedef int   (*write_t)(struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */

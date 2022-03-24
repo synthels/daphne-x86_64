@@ -16,6 +16,8 @@ set(SRC
     ${SRCROOT}/log.h
     ${SRCROOT}/tree.c
     ${SRCROOT}/tree.h
+    ${SRCROOT}/hashmap.c
+    ${SRCROOT}/hashmap.h
 )
 
 target_sources(kernel.bin PRIVATE ${SRC})
