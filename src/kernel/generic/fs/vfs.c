@@ -209,7 +209,7 @@ void vfs_mount_root(void)
  */
 int vfs_open(struct fs_node *node, int flags)
 {
-    if (!node->ref) {
+    if (node->ref) {
         return -EBUSY;
     } else {
         node->ref = true;
