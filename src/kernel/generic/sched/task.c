@@ -227,10 +227,6 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
 void switch_task(regs_t *r, uint64_t jiffies)
 {
     UNUSED(jiffies);
-    /* If we are in the middle of a sched_run_task call (or there are no tasks),
-       return so that we don't run into a race condition! */
-    if (sched_lock || pid < 1) return;
-
     struct task *prev = this_core->running_task;
     if (this_core->running_task->next) {
         /* If there is a next task, switch to it! */
