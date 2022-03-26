@@ -16,15 +16,11 @@
 
 #include "task.h"
 
-static struct task root = {"", 0, NULL, ASLEEP, -1, NULL, NULL}; /* Root task */
+static struct task root = {"root", 0, NULL, ASLEEP, -1, NULL, NULL}; /* Root task */
 static struct smp_cpus *cpus; /* CPUs */
 static bool _tasks_distributed = false;
 static bool _multicore;
 static pid_t pid = 0;
-
-/* Utilised as a drop-in replacement for
-   this_core->running_task on non-SMP systems */
-static struct task *running_task = &root;
 
 void switch_task(regs_t *r, uint64_t jiffies);
 
@@ -92,7 +88,7 @@ static void copy_task_to_cpu(struct processor *cpu, struct task *t)
 static void assign_tasks_to_cpus(struct task *added_task)
 {
     struct processor **cores = cpus->cpus;
-    struct task *taskptr = &root;
+    struct task *taskptr = this_core->root;
     static unsigned int added_task_idx = 0;
     /* Do we consider all tasks or not? */
     if (added_task == NULL) {
@@ -122,7 +118,7 @@ static void assign_tasks_to_cpus(struct task *added_task)
             }
 
             /* Assign leftover tasks */
-            taskptr = root.next;
+            taskptr = this_core->root->next;
             unsigned int i = 0;
             while (taskptr) {
                 /* Found unassigned task */
@@ -188,6 +184,8 @@ void sched_init(void)
 {
     /* Check if we run within a multicore system */
     cpus = smp_get_cores();
+    this_core->running_task = &root;
+    this_core->root = &root;
     _multicore = (cpus->size > 1);
     clock_hook(switch_task);
     pr_info("sched: initialised scheduler (%s multicore)", _multicore ? "with" : "without");
@@ -207,7 +205,11 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
         t2->state = RUNNING;
         /* Context switch (if t2 isn't root!) */
         if (t2->pid > 0) {
-            t1->context->regs = r;
+            /* Only save registers if task is not
+               root */
+            if (t1->pid > 0) {
+                t1->context->regs = r;
+            }
             mmu_switch(t2->context);
         }
     }
@@ -219,45 +221,23 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
  *
  * Checks which CPU calls & switches to its
  * next task
+ *
+ * @returns Never
  */
 void switch_task(regs_t *r, uint64_t jiffies)
 {
     UNUSED(jiffies);
-    const bool multicore_and_distributed = _multicore && _tasks_distributed;
-    struct task *prev;
-    /* If we are in the middle of a sched_run_task call,
+    /* If we are in the middle of a sched_run_task call (or there are no tasks),
        return so that we don't run into a race condition! */
-    if (sched_lock) return;
+    if (sched_lock || pid < 1) return;
 
-    /* I am aware that this is a very stupid way to go about it and it can
-       be reduced to just a few lines, but when I try to do away with
-       the duplication by using a pointer, it GPFs! Go figure! */
-    if (multicore_and_distributed) {
-        prev = this_core->running_task;
-        /* Initialise running_task */
-        if (!this_core->running_task) {
-            this_core->running_task = this_core->root;
-        /* Same shit as below */
-        } else if (!this_core->running_task->next) {
-            save_task_context_and_switch(r, this_core->running_task, this_core->root);
-            this_core->running_task = this_core->root;
-            return;
-        } else {
-            this_core->running_task = this_core->running_task->next;
-        }
+    struct task *prev = this_core->running_task;
+    if (this_core->running_task->next) {
+        /* If there is a next task, switch to it! */
+        this_core->running_task = this_core->running_task->next;
     } else {
-        prev = running_task;
-        /* Jump from last task in list to root task (does some
-           dodgy stuff, but it shouldn't matter...) */
-        if (!running_task->next) {
-            save_task_context_and_switch(r, running_task, &root);
-            running_task = &root;
-            return;
-        } else {
-            running_task = running_task->next;
-        }
+        /* Switch to root */
+        this_core->running_task = this_core->root;
     }
-    /* Switch tasks! */
-    if (prev)
-        save_task_context_and_switch(r, prev, multicore_and_distributed ? this_core->running_task : running_task);
+    save_task_context_and_switch(r, prev, this_core->running_task);
 }
