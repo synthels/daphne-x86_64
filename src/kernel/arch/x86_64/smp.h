@@ -113,6 +113,12 @@ uint64_t smp_get_lapic_base(void);
 void lapic_init(void);
 
 /**
+ * ap_lapic_init
+ *   brief: init lapic on ap
+ */
+void ap_lapic_init(void);
+
+/**
  * lapic_write
  *   brief: write to the lapic
  */

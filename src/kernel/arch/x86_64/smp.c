@@ -105,9 +105,19 @@ void lapic_redirect(uint8_t irq, uint8_t vector, uint32_t delivery)
 }
 
 /**
- * @brief Initialise the APIC
+ * @brief Enables the local APIC on an AP
  *
- * Disables the PIC & sets up the APIC
+ * Start receiving interrupts on current CPU
+ */
+void ap_lapic_init(void)
+{
+    lapic_write(SIVR, lapic_read(SIVR) | 0x1ff);
+}
+
+/**
+ * @brief Initialise the local APIC
+ *
+ * Disables the PIC & sets up the local APIC
  * for MMIO.
  */
 void lapic_init(void)
@@ -123,8 +133,7 @@ void lapic_init(void)
     mmu_map_mmio(apic, 3);
     mmu_map_mmio(ioapic_base, 3);
 
-    wrmsr(APIC, (rdmsr(APIC) | 0x800) & ~(LAPIC_ENABLE));
-
+    wrmsr(APIC, (rdmsr(APIC) | 0x800) & ~((1 << 10)));
     /* Disable the PIC & enable the APIC */
     lapic_write(SIVR, lapic_read(SIVR) | 0x1ff);
     pic_disable();

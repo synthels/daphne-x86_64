@@ -106,8 +106,10 @@ void ap_startup(void)
     const struct processor *cpu = smp_get_cores()->cpus[smp_get_current_ap()];
     cpu_set_current_core((uintptr_t) cpu);
     smp_next_ap();
-    lapic_init();
+    idt_init();
+    ap_lapic_init();
     apic_init();
+    enable_interrupts();
 
     for (;;) {
         asm("hlt");

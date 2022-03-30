@@ -204,7 +204,7 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
         t1->state = SUSPENDED;
         t2->state = RUNNING;
         /* Context switch (if t2 isn't root!) */
-        if (t2->pid > 0) {
+        if (t2->pid > 0 && r) {
             /* Only save registers if task is not
                root */
             if (t1->pid > 0) {
@@ -227,13 +227,23 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
 void switch_task(regs_t *r, uint64_t jiffies)
 {
     UNUSED(jiffies);
-    struct task *prev = this_core->running_task;
-    if (this_core->running_task->next) {
-        /* If there is a next task, switch to it! */
-        this_core->running_task = this_core->running_task->next;
-    } else {
-        /* Switch to root */
-        this_core->running_task = this_core->root;
+    /* Only bother doing anything if this CPU has a root task
+        set */
+    if (this_core->root) {
+        /* Set a running task for this CPU, if none
+            has been set (assign_tasks_to_cpus does not
+            handle this) */
+        if (!this_core->running_task) {
+            this_core->running_task = this_core->root;
+        }
+        struct task *prev = this_core->running_task;
+        if (this_core->running_task->next) {
+            /* If there is a next task, switch to it! */
+            this_core->running_task = this_core->running_task->next;
+        } else {
+            /* Switch to root */
+            this_core->running_task = this_core->root;
+        }
+        save_task_context_and_switch(r, prev, this_core->running_task);
     }
-    save_task_context_and_switch(r, prev, this_core->running_task);
 }

@@ -31,5 +31,9 @@ void apic_init(void)
     lapic_write(TIMER_DIV, 0x3);
     lapic_write(TIC, onems);
 
-    time_source_set(TIME_SOURCE_APIC);
+    /* If the APIC timer is intialised by an AP,
+       setting the time source will cause a GPF */
+    if (this_core->is_bsp) {
+        time_source_set(TIME_SOURCE_APIC);
+    }
 }
