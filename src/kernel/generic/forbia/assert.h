@@ -20,5 +20,5 @@
 
 /* I should know better than this */
 #define assert(expr) \
-    if (!expr) \
+    if (!(expr)) \
         panic("assertion failed!")
