@@ -1,5 +1,6 @@
 set(SRCROOT ${PROJECT_SOURCE_DIR}/src/kernel/lib)
 
+add_subdirectory(${SRCROOT}/tinf)
 set(SRC
     ${SRCROOT}/string.c
     ${SRCROOT}/string.h

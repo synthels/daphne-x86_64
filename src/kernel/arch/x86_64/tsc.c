@@ -29,7 +29,6 @@ void tsc_init(void)
     delay(HZ);
     int end = rdtsc();
     tsc_mhz = (end - start) / 1000000;
-    pr_info("tsc: timed at %u MHz", tsc_mhz);
 }
 
 uint64_t rdtsc(void)
