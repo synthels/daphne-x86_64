@@ -272,6 +272,14 @@ int fread(struct fs_node *node, size_t offset, void *buffer, size_t size)
 }
 
 /**
+ * @brief Get file status
+ */
+int fstat(struct fs_node *node, struct stat *buf)
+{
+    return node->stat(node, buf);
+}
+
+/**
  * @brief Open file from path
  *
  * @param path (absolute) path

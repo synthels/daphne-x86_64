@@ -21,6 +21,8 @@
 #include "clock.h"
 #include "tm.h"
 
+typedef uint64_t time_t;
+
 /**
  * time_init
  *   brief: init time module

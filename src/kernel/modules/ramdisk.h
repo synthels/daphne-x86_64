@@ -42,3 +42,4 @@ int ramfs_open(struct fs_node *node, int flags);
 int ramfs_close(struct fs_node *node);
 int ramfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size);
 int ramfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size);
+int ramfs_stat(struct fs_node *node, struct stat *buf);

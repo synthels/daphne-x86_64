@@ -20,12 +20,14 @@
 #include <lib/tree.h>
 #include <lib/lock.h>
 
+#include <generic/time/time.h>
 #include <generic/forbia/errno.h>
 
 #define VFS_MAX_FILE_NAME 256
 #define MAX_REGISTERED_FILESYSTEMS 15
 
 struct fs_node;
+struct stat;
 
 typedef int   (*open_t) (struct fs_node *, int); /* node, flags */
 typedef int   (*close_t)(struct fs_node *);
@@ -33,14 +35,14 @@ typedef void  (*ioctl_t)(int, int);
 typedef int   (*write_t)(struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
 typedef int   (*read_t) (struct fs_node *, size_t, void *, size_t); /* node, offset, buffer, size */
 typedef int   (*mount_t)(const char *, struct fs_node *); /* mount path, node */
+typedef int   (*stat_t) (struct fs_node *, struct stat *); /* node, stat buffer */
 
 enum fs_node_type {
     FS_FILE = 0,
     FS_ROOT = 1,
     /* This is not an actual directory -as in a filesystem defined thing-, it is more
        of an in-memory container for other files */
-    FS_DIRECTORY = 2,
-    FS_SOCKET = 3
+    FS_DIRECTORY = 2
 };
 
 struct fs_node {
@@ -53,6 +55,7 @@ struct fs_node {
     ioctl_t  ioctl;
     write_t  write;
     read_t   read;
+    stat_t   stat;
 
     bool ref; /* Set if this node is currently open */
     struct tree_node *vfs_ptr; /* Pointer to vfs entry */
@@ -68,6 +71,16 @@ struct fs_descriptor {
        The filesystem can then set its own
        open/close and read/write functions. */
     mount_t mount;
+};
+
+struct stat {
+    int     st_dev;     /* ID of device containing file */
+    int     st_ino;     /* inode number */
+    int     st_mode;    /* protection */
+    size_t  st_size;    /* total size, in bytes */
+    time_t  st_atime;   /* time of last access */
+    time_t  st_mtime;   /* time of last modification */
+    time_t  st_ctime;   /* time of last status change */
 };
 
 /**
@@ -117,6 +130,12 @@ int fwrite(struct fs_node *node, size_t offset, void *buffer, size_t size);
  *   brief: read from vfs node
  */
 int fread(struct fs_node *node, size_t offset, void *buffer, size_t size);
+
+/**
+ * fstat
+ *   brief: get file status
+ */
+int fstat(struct fs_node *node, struct stat *buf);
 
 /**
  * vfs_get_base_name

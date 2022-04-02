@@ -31,6 +31,7 @@ int ramfs_mount(const char *path, struct fs_node *node)
     node->close = ramfs_close;
     node->read = ramfs_read;
     node->write = ramfs_write;
+    node->stat = ramfs_stat;
     return -ENOTH;
 }
 
@@ -66,6 +67,17 @@ int ramfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size)
 int ramfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
     memcpy(buffer, ((struct tar_block *) node->device)->data + offset, size);
+    return -ENOTH;
+}
+
+/**
+ * @brief Read from ramdisk
+ *
+ * Reads the contents of a ramdisk node to a buffer
+ */
+int ramfs_stat(struct fs_node *node, struct stat *buf)
+{
+    buf->st_size = ((struct tar_block *) node->device)->size;
     return -ENOTH;
 }
 
