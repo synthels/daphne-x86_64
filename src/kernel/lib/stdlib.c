@@ -62,3 +62,20 @@ void uitoh(unsigned n, char s[])
     s[i] = '\0';
     reverse(s);
 }
+
+int atoi(char *s)
+{
+    int res = 0;
+    int sign = 1;
+    if (*s == '-') {
+        sign = -1;
+        s++;
+    }
+
+    if (*s == '+') s++;
+    while (*s >= '0' && *s <= '9') {
+        res = res * 10 + (*s - '0');
+        s++;
+    }
+    return (sign < 0) ? (-res) : res;
+}

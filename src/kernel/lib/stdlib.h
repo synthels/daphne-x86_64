@@ -42,3 +42,11 @@ void uitoa(unsigned n, char s[]);
  *     - s: output string
  */
 void uitoh(unsigned n, char s[]);
+
+/**
+ * atoi
+ *   brief: Convert s to an int
+ *   parameters:
+ *     - s: string to convert
+ */
+int atoi(char *s);

@@ -116,7 +116,7 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
                 buf[j] = 0;
                 /* Return if create_or_traverse returns NULL! (only when node is NULL) */
                 if (!(level = create_or_traverse(level, buf, node))) {
-                    pr_err("vfs_mount: %s: no node mounted on this path", path);
+                    pr_err("vfs_mount: cannot open %s: no node mounted on this path", path);
                     unlock(&vfs_lock);
                     return NULL;
                 }
@@ -140,11 +140,17 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
             }
         }
         node->vfs_ptr = tree_insert_child(level, node);
+        node->ref = false;
         unlock(&vfs_lock);
         return node;
     } else {
         unlock(&vfs_lock);
-        return (struct fs_node *) level->data;
+        struct fs_node *ret = (struct fs_node *) level->data;
+        if (ret->type == FS_DIRECTORY) {
+            pr_err("vfs_mount: cannot open %s: is a directory", ret->name);
+            return NULL;
+        }
+        return ret;
     }
     unlock(&vfs_lock);
 }
@@ -240,7 +246,7 @@ int vfs_close(struct fs_node *node)
  * @param buffer Data to write
  * @param size Buffer size
  */
-int vfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size)
+int fwrite(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
     if (node->ref) {
         return node->write(node, offset, buffer, size);
@@ -256,10 +262,10 @@ int vfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size)
  * @param buffer Buffer to write data to
  * @param size Read size
  */
-int vfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size)
+int fread(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
     if (node->ref) {
-        return node->write(node, offset, buffer, size); 
+        return node->read(node, offset, buffer, size); 
     } else {
         return -EBADFD;
     }
@@ -278,6 +284,52 @@ void *kopen(const char *path, int flags)
         return NULL;
     }
     return (vfs_open(node, flags) != -EBUSY) ? node : NULL;
+}
+
+/**
+ * @brief Get the part of path right after the last seperator
+ */
+char *vfs_get_base_name(char *path)
+{
+    char *p = strdup(path);
+    size_t last = strlen(p)-1;
+    for (size_t i = last; i > 0; --i) {
+        if (path[i] == '/') {
+            return &p[i+1];
+        }
+    }
+
+    return p;
+}
+
+/**
+ * @brief Get the part of path right before the last seperator
+ */
+char *vfs_get_dir_name(char *path)
+{
+    char *p = strdup(path);
+    size_t last = strlen(path)-1;
+    for (size_t i = last; i > 0; --i) {
+        if (p[i] == '/') {
+            p[i] = 0;
+            break;
+        }
+    }
+
+    return p;
+}
+
+/**
+ * @brief Inserts leading and trailing slash to path
+ */
+char *vfs_canonicalise(char *path)
+{
+    size_t len = strlen(path);
+    char *p = kmalloc(len + 2);
+    strcpy(&p[1], path);
+    p[0] = '/';
+    p[len + 1] = '/';
+    return p;
 }
 
 /**

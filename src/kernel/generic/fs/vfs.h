@@ -63,7 +63,6 @@ struct fs_node {
 
 struct fs_descriptor {
     char *name;
-    char *author;
     /* Will be called by vfs_mount whenever
        a file from this filesystem is mounted.
        The filesystem can then set its own
@@ -108,16 +107,34 @@ int vfs_open(struct fs_node *node, int flags);
 int vfs_close(struct fs_node *node);
 
 /**
- * vfs_write
+ * fwrite
  *   brief: write to vfs node
  */
-int vfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size);
+int fwrite(struct fs_node *node, size_t offset, void *buffer, size_t size);
 
 /**
- * vfs_read
+ * fread
  *   brief: read from vfs node
  */
-int vfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size);
+int fread(struct fs_node *node, size_t offset, void *buffer, size_t size);
+
+/**
+ * vfs_get_base_name
+ *   brief: get the part of path right after the last seperator
+ */
+char *vfs_get_base_name(char *path);
+
+/**
+ * vfs_get_dir_name
+ *   brief: get the part of path right before the last seperator
+ */
+char *vfs_get_dir_name(char *path);
+
+/**
+ * vfs_canonicalise
+ *   brief: inserts leading and trailing slash to path
+ */
+char *vfs_canonicalise(char *path);
 
 /**
  * kopen

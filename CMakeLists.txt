@@ -24,6 +24,9 @@ if (ARCH STREQUAL "x86_64")
     add_compile_definitions(ARCH_x86_64)
 endif()
 
+# Compile ramdisk
+execute_process(COMMAND ${SRCROOT}/tools/mk-ramdisk.sh WORKING_DIRECTORY ${SRCROOT})
+
 # Build kernel
 target_include_directories(${KERNEL_BIN} PRIVATE ${SRCROOT} ${SRCROOT}/src/kernel)
 add_subdirectory(${SRCROOT}/src/kernel)

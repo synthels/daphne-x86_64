@@ -65,7 +65,7 @@ Change your working directory to the root directory (`daphne/`) & follow this gu
 First, run
 
 ```bash
-$ ./tools/setup.sh -x64
+$ ./tools/setup.sh x86_64
 ```
 
 which will setup the build environment for x86_64.
@@ -77,7 +77,7 @@ $ cd build
 $ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
 
-This command will create all the necessary files for CMake to build the project. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
+This command will create all the necessary files for CMake to build the project. CMake will also archive the contents of `/base/` into a `tar.gz` file, so that it can be loaded by the kernel at boot. For this you will only need a working version of `tar`. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
 
 To finally build the binary, you can run CMake's generic build command
 

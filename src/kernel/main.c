@@ -28,12 +28,15 @@
 #include <generic/fs/vfs.h>
 #include <generic/forbia/stivale2.h>
 
+#include <modules/ramdisk.h>
 #include <modules/fb/lfb.h>
 #include <modules/pci/pci.h>
 #include <modules/apic/apic.h>
 #include <modules/kbd/kbd.h>
 
 #include <lib/log.h>
+#include <lib/string.h>
+#include <lib/stdlib.h>
 
 #include <tests/test.h>
 
@@ -131,6 +134,8 @@ void main(struct stivale2_struct *stv)
     struct stivale2_struct_tag_framebuffer *fb_info = get_tag(stv, STIVALE2_STRUCT_TAG_FRAMEBUFFER_ID);
     /* Get RSDP */
     struct stivale2_struct_tag_rsdp *rsdp_info = get_tag(stv, STIVALE2_STRUCT_TAG_RSDP_ID);
+    /* Get module info */
+    struct stivale2_struct_tag_modules *mod_info = get_tag(stv, STIVALE2_STRUCT_TAG_MODULES_ID);
 
     #ifdef ARCH_x86_64
         gdt_init(); /* gdt & tss */
@@ -178,6 +183,19 @@ void main(struct stivale2_struct *stv)
     apic_init();                       /* try to boot up the APIC timer */
     sched_init();                      /* scheduler */
     vfs_init();                        /* vfs */
+
+    /* Try to find ramdisk */
+    struct stivale2_module *rd = NULL;
+    for (size_t i = 0; i < mod_info->module_count; i++) {
+        struct stivale2_module *m = &(mod_info->modules[i]);
+        if (!strcmp(m->string, "ramdisk")) {
+            ramdisk_init((void *) m->begin);
+            rd = m;
+        }
+    }
+
+    /* Where's the ramdisk?? */
+    if (!rd) panic("ramdisk not found on boot device!");
 
     #ifdef BUILD_TESTS
         /* Run unit tests */

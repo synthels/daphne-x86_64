@@ -17,6 +17,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <generic/malloc/malloc.h>
+#include <generic/forbia/types.h>
+
 typedef uint8_t byte;
 
 #ifndef NULL
@@ -123,3 +126,11 @@ int strcmp(const char* s1, const char* s2);
  *     - dest:  second string
  */
 char *strcat(char *dest, const char *src);
+
+/**
+ * strdup
+ *   brief: duplicate string
+ *   parameters:
+ *     - src: string
+ */
+char *strdup(char *src);

@@ -8,17 +8,11 @@ cd "${SCRIPT_DIR}/.."
 # Create build directory if it doesn't exist
 if ! [[ -d "$BUILD_DIR" ]]
 then
-	mkdir ${BUILD_DIR}
+    mkdir ${BUILD_DIR}
 fi
 
-# Add a clean script to build
-touch ${BUILD_DIR}/clean.sh
-
-if [[ $1 = "-x64" ]]
+if [[ $1 = "x86_64" ]]
 then
-	mkdir ${BUILD_DIR}/iso
-	cp limine.cfg build/iso
-	echo "#!/bin/bash
-	rm -r ./*
-	bash ../tools/setup.sh -x64" > ${BUILD_DIR}/clean.sh
+    mkdir ${BUILD_DIR}/iso
+    cp limine.cfg build/iso
 fi
