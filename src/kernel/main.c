@@ -53,6 +53,8 @@
 
 #include "main.h"
 
+#include <lib/elf.h>
+
 /* Kernel stack */
 static uint8_t stack[KERNEL_STACK_SIZE] __attribute__((aligned(16))) = {0};
 

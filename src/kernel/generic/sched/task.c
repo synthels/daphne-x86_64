@@ -172,12 +172,14 @@ static void init_task(struct task *t, const char *name)
     }
 }
 
-void sched_run_task(const char *name)
+struct task *sched_run_task(const char *name, const char *path)
 {
+    UNUSED(path);
     lock(&sched_lock);
     struct task *t = kmalloc(sizeof(struct task));
     init_task(t, name);
     unlock(&sched_lock);
+    return t;
 }
 
 void sched_init(void)

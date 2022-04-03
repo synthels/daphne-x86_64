@@ -18,6 +18,8 @@ set(SRC
     ${SRCROOT}/tree.h
     ${SRCROOT}/tar.c
     ${SRCROOT}/tar.h
+    ${SRCROOT}/elf.c
+    ${SRCROOT}/elf.h
     ${SRCROOT}/hashmap.c
     ${SRCROOT}/hashmap.h
 )

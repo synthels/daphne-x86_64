@@ -84,7 +84,7 @@ void sched_init(void);
  * sched_run_task
  *   brief: run task
  */
-void sched_run_task(const char *name);
+struct task *sched_run_task(const char *name, const char *path);
 
 /**
  * switch_task

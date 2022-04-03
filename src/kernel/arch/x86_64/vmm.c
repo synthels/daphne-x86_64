@@ -87,6 +87,8 @@ void vmm_init(void)
 
 void vmm_init_pml(uint64_t *pml)
 {
+    memset(pml, 0, PAGE_SIZE);
+    pml[511] = (uint64_t) pml;
     map_kernel(pml, false);
 }
 
@@ -119,20 +121,21 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
 
 uint64_t *vmalloc(size_t n)
 {
-    vmm_init_pml(pml4);
+    uint64_t *pml = pmm_alloc_page();
+    vmm_init_pml(pml);
     for (uint64_t i = 0; i < n; i++) {
-        map_page(pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
     }
 
     for (uint64_t i = PROC_STACK_LOW; i < PROC_STACK_SIZE; i++) {
-        map_page(pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
     }
 
     for (uint64_t i = PROC_HEAP_LOW; i < PROC_HEAP_SIZE; i++) {
-        map_page(pml4, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
     }
 
-    return pml4;
+    return pml;
 }
 
 // uint64_t *vfree(uint64_t *pml)

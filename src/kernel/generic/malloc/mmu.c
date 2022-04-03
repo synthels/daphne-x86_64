@@ -43,6 +43,13 @@ void mmu_map_mmio(uintptr_t base, size_t pages)
     }
 }
 
+void mmu_map(uint64_t *page_table, uintptr_t base, size_t pages)
+{
+    for (size_t i = 0; i < pages; i++) {
+        map_page(page_table, base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
+    }
+}
+
 struct _Context *mmu_init_context(size_t heap, uint64_t stack)
 {
     return (struct _Context *) init_context(heap, stack);

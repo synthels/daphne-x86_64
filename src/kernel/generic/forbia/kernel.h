@@ -21,9 +21,8 @@
 
 /**
  * Kernel version
- *   fmt: vMajor.minor-Codename 
  */
-#define KERNEL_VERSION "v0.1-Alpha"
+#define KERNEL_VERSION "v0.1-alpha"
 
 #ifdef ARCH_x86_64
     #define KERNEL_ARCH "x86-64"

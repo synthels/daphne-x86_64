@@ -58,3 +58,9 @@ struct _Context *mmu_init_context(size_t heap, uint64_t stack);
  *   brief: switch context
  */
 void mmu_switch(struct _Context *context);
+
+/**
+ * mmu_map
+ *   brief: map to page table
+ */
+void mmu_map(uint64_t *page_table, uintptr_t base, size_t pages);
