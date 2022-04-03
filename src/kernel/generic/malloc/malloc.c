@@ -188,20 +188,22 @@ struct malloc_page *slab_pop_page(struct malloc_slab *slab)
  * @param n Slab list size
  * @param alloaction_size Allocation size
  */
-struct malloc_page *slab_pick_and_allocate(struct malloc_slab **slabs, size_t n, size_t allocation_size)
+struct malloc_page *slab_pick_and_allocate(struct malloc_slab *slabs, size_t n, size_t allocation_size)
 {
     /* We initially point best_fit to root, since root has the maximum allowed
        size for any slab */
     struct malloc_slab *best_fit = &root;
 
+    struct malloc_slab *s = slabs;
     for (size_t i = 0; i < n; i++) {
         /* Find best-fit slab */
-        if ((slabs[i]->size >= allocation_size) && (slabs[i]->size < best_fit->size)) {
-            best_fit = slabs[i];
+        if ((s->size >= allocation_size) && (s->size < best_fit->size)) {
+            best_fit = s;
         }
+        s = s->next;
     }
 
-    if (!best_fit) {
+    if (!best_fit->pages) {
         return NULL;
     }
 
@@ -319,26 +321,27 @@ void *pool_free(void *object)
 void *kmalloc(size_t n)
 {
     lock(&malloc_lock);
-    static struct malloc_slab **kmalloc_slabs = NULL;
-    /* First call, init bin */
+    static struct malloc_slab *kmalloc_slabs = NULL;
+    static size_t slabs_top = 0;
+    /* First call, create some initial slabs */
     if (!kmalloc_slabs) {
-        kmalloc_slabs = mmu_alloc(KMALLOC_SLABS * sizeof(struct malloc_slab *));
         /* Create 4 slabs of sizes 64, 128, 256, 512 and 1024 */
-        for (int i = 0; i < KMALLOC_SLABS; i++) {
-            kmalloc_slabs[i] = slab_create(64 * exp(i));
+        kmalloc_slabs = slab_create(64 * exp(0));
+        slabs_top = 64 * exp(KMALLOC_SLABS - 1);
+        struct malloc_slab *s = kmalloc_slabs;
+        for (int i = 1; i < KMALLOC_SLABS; i++) {
+            s->next = slab_create(64 * exp(i));
+            s = s->next;
         }
     }
 
-    if (n > kmalloc_slabs[KMALLOC_SLABS - 1]->size) {
-        pr_info(
-            "kmalloc: oops! That shouldn't happen! "
-            "It seems like someone tried to allocate "
-            "more memory than they should be able to with kmalloc(). If you're seeing this "
-            "and you're sure that this is not from code that you wrote, please report this "
-            "error."
-        );
-        unlock(&malloc_lock);
-        return NULL;
+    /* We don't have big enough slabs! */
+    if (n > slabs_top) {
+        struct malloc_slab **s = &kmalloc_slabs;
+        while ((*s)->next) {
+            (*s) = (*s)->next;
+        }
+        (*s) = slab_create(n);
     }
 
     /* Allocate on fitting slab */

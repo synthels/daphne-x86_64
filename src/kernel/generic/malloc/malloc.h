@@ -23,6 +23,7 @@
 #include <generic/memory/mem.h>
 
 #include <lib/string.h>
+#include <lib/list.h>
 
 #include "object.h"
 #include "mmu.h"
