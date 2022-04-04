@@ -116,7 +116,6 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
                 buf[j] = 0;
                 /* Return if create_or_traverse returns NULL! (only when node is NULL) */
                 if (!(level = create_or_traverse(level, buf, node))) {
-                    pr_err("vfs_mount: cannot open %s: no node mounted on this path", path);
                     unlock(&vfs_lock);
                     return NULL;
                 }
@@ -146,10 +145,6 @@ struct fs_node *vfs_mount(const char *path, struct fs_node *node)
     } else {
         unlock(&vfs_lock);
         struct fs_node *ret = (struct fs_node *) level->data;
-        if (ret->type == FS_DIRECTORY) {
-            pr_err("vfs_mount: cannot open %s: is a directory", ret->name);
-            return NULL;
-        }
         return ret;
     }
     unlock(&vfs_lock);
@@ -218,6 +213,9 @@ int vfs_open(struct fs_node *node, int flags)
     if (node->ref) {
         return -EBUSY;
     } else {
+        if (node->type == FS_DIRECTORY) {
+            return -EISDIR;
+        }
         node->ref = true;
         return node->open(node, flags);
     }
