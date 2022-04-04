@@ -217,7 +217,10 @@ int vfs_open(struct fs_node *node, int flags)
             return -EISDIR;
         }
         node->ref = true;
-        return node->open(node, flags);
+        if (node->open)
+            return node->open(node, flags);
+        else
+            return -EBADFD;
     }
 }
 
@@ -228,7 +231,7 @@ int vfs_open(struct fs_node *node, int flags)
  */
 int vfs_close(struct fs_node *node)
 {
-    if (node->ref) {
+    if (node->ref && node->close) {
         int ret = node->close(node);
         node->ref = false;
         return ret;
@@ -246,7 +249,7 @@ int vfs_close(struct fs_node *node)
  */
 int fwrite(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
-    if (node->ref) {
+    if (node->ref && node->write) {
         return node->write(node, offset, buffer, size);
     } else {
         return -EBADFD;
@@ -262,7 +265,7 @@ int fwrite(struct fs_node *node, size_t offset, void *buffer, size_t size)
  */
 int fread(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
-    if (node->ref) {
+    if (node->ref && node->read) {
         return node->read(node, offset, buffer, size); 
     } else {
         return -EBADFD;
@@ -274,7 +277,10 @@ int fread(struct fs_node *node, size_t offset, void *buffer, size_t size)
  */
 int fstat(struct fs_node *node, struct stat *buf)
 {
-    return node->stat(node, buf);
+    if (node->stat)
+        return node->stat(node, buf);
+    else
+        return -EBADFD;
 }
 
 /**
