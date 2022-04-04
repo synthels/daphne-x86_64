@@ -19,9 +19,9 @@
 
 #include <generic/malloc/malloc.h>
 
-struct _Context {
+struct context {
     uint64_t *page_table;
     regs_t *regs;
 };
 
-struct _Context *init_context(size_t heap, uint64_t stack);
+struct context *initcontext(size_t heap, uint64_t stack);

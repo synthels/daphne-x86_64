@@ -130,8 +130,8 @@ void lapic_init(void)
     ioapic_base = ioapic_table[lapic_read(LAPIC_ID) >> 24]->ioapic_addr;
 
     /* Map APIC base for MMIO */
-    mmu_map_mmio(apic, 3);
-    mmu_map_mmio(ioapic_base, 3);
+    mmap_file(apic, 3);
+    mmap_file(ioapic_base, 3);
 
     wrmsr(APIC, (rdmsr(APIC) | 0x800) & ~((1 << 10)));
     /* Disable the PIC & enable the APIC */
@@ -230,7 +230,7 @@ void smp_init(void)
     kfree(m);
 
     /* Map lapic for MMIO */
-    mmu_map_mmio(lapic_base, 1);
+    mmap_file(lapic_base, 1);
 
     for (int i = 0; i < cores; i++) {
         const uint32_t bsp_id = (lapic_read(LAPIC_ID) >> 24);
@@ -252,7 +252,7 @@ void smp_init(void)
          * and the entry point for the AP just below the
          * bootstrap code where the AP can retrieve them
          */
-        mmu_map_mmio(0x0, 1);
+        mmap_file(0x0, 1);
         uint8_t *cpu_stack = pool_alloc(stc_pool);
         *((volatile uint64_t *)(SMP_PAGE_TABLE)) = (uint64_t) vmm_get_pml4();
         *((volatile uint64_t *)(SMP_STACK)) = ((uint64_t) cpu_stack + KERNEL_STACK_SIZE);
@@ -265,7 +265,7 @@ void smp_init(void)
         );
 
         /* Map & load bootstrap code */
-        mmu_map_mmio(AP_BOOTSTRAP_VIRT_START, (ap_bootstrap_len / PAGE_SIZE) + 2);
+        mmap_file(AP_BOOTSTRAP_VIRT_START, (ap_bootstrap_len / PAGE_SIZE) + 2);
         memcpy((void *) AP_BOOTSTRAP_VIRT_START, (void *) &ap_bootstrap16, ap_bootstrap_len);
 
         /* Startup CPU */

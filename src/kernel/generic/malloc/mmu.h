@@ -30,10 +30,10 @@
 void *mmu_alloc(size_t n);
 
 /**
- * mmu_map_mmio
+ * mmap_file
  *   brief: map region for mmio
  */
-void mmu_map_mmio(uintptr_t base, size_t pages);
+void mmap_file(uintptr_t base, size_t pages);
 
 /**
  * mmu_vmalloc
@@ -48,19 +48,13 @@ uint64_t *mmu_vmalloc(size_t n);
 void mmu_vswitch(uint64_t *pml);
 
 /**
- * mmu_init_context
+ * mmu_initcontext
  *   brief: init virtual context
  */
-struct _Context *mmu_init_context(size_t heap, uint64_t stack);
+struct context *mmu_initcontext(size_t heap, uint64_t stack);
 
 /**
  * mmu_switch
  *   brief: switch context
  */
-void mmu_switch(struct _Context *context);
-
-/**
- * mmu_map
- *   brief: map to page table
- */
-void mmu_map(uint64_t *page_table, uintptr_t base, size_t pages);
+void mmu_switch(struct context *context);

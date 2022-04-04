@@ -151,7 +151,7 @@ static void init_task(struct task *t, const char *name)
     /* Fill in all the fields */
     t->pid = ++pid;
     t->name = name;
-    t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
+    t->context = mmu_initcontext(PROC_HEAP_SIZE, PROC_STACK_LOW);
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = list();
@@ -199,7 +199,7 @@ void sched_init(void)
  * Saves t1's context from the CPU to its structure
  * and switches the CPU's context to t2's context
  */
-static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task *t2)
+static void save_taskcontext_and_switch(regs_t *r, struct task *t1, struct task *t2)
 {
     if (t2->state == SUSPENDED) {
         /* Suspend current task and run next task */
@@ -246,6 +246,6 @@ void switch_task(regs_t *r, uint64_t jiffies)
             /* Switch to root */
             this_core->running_task = this_core->root;
         }
-        save_task_context_and_switch(r, prev, this_core->running_task);
+        save_taskcontext_and_switch(r, prev, this_core->running_task);
     }
 }

@@ -16,9 +16,9 @@
 
 #include "context.h"
 
-struct _Context *init_context(size_t heap, uint64_t stack)
+struct context *initcontext(size_t heap, uint64_t stack)
 {
-    struct _Context *c = kmalloc(sizeof(struct _Context));
+    struct context *c = kmalloc(sizeof(struct context));
     c->page_table = vmalloc(heap);
     c->regs = kmalloc(sizeof(regs_t));
     c->regs->rsp = stack;

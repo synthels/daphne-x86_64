@@ -43,7 +43,7 @@ enum task_state_t {
 struct task {
     const char *name;
     pid_t pid;
-    struct _Context *context;
+    struct context *context;
     enum task_state_t state;    /* Task state */
     int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */

@@ -36,23 +36,16 @@ void *mmu_alloc(size_t n)
     __builtin_unreachable();
 }
 
-void mmu_map_mmio(uintptr_t base, size_t pages)
+void mmap_file(uintptr_t base, size_t pages)
 {
     for (size_t i = 0; i < pages; i++) {
         pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
     }
 }
 
-void mmu_map(uint64_t *page_table, uintptr_t base, size_t pages)
+struct context *mmu_initcontext(size_t heap, uint64_t stack)
 {
-    for (size_t i = 0; i < pages; i++) {
-        map_page(page_table, base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
-    }
-}
-
-struct _Context *mmu_init_context(size_t heap, uint64_t stack)
-{
-    return (struct _Context *) init_context(heap, stack);
+    return (struct context *) initcontext(heap, stack);
 }
 
 uint64_t *mmu_vmalloc(size_t n)
@@ -65,7 +58,7 @@ void mmu_vswitch(uint64_t *pml)
     vswitch(pml);
 }
 
-void mmu_switch(struct _Context *context)
+void mmu_switch(struct context *context)
 {
     mmu_vswitch(context->page_table);
 }

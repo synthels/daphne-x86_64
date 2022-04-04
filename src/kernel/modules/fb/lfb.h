@@ -18,7 +18,7 @@
 #include <generic/malloc/malloc.h>
 #include <generic/forbia/kernel.h>
 
-#define MAX_CONTEXTS 5
+#define MAXcontextS 5
 
 struct pos {
     uint16_t x;
@@ -32,7 +32,7 @@ struct color {
     uint8_t a;
 } __attribute__((packed));
 
-struct gfx_context {
+struct gfxcontext {
     struct pos pos;
     uint16_t width;
     uint16_t height;
@@ -74,7 +74,7 @@ uint64_t lfb_get_addr(void);
  * lfb_create_ctx
  *   brief: create context
  */
-int lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height);
+int lfb_create_ctx(struct gfxcontext *ctx, struct pos _pos, uint16_t _width, uint16_t _height);
 
 /**
  * lfb_destroy_ctx

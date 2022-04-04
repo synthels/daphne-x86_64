@@ -27,7 +27,7 @@ bool elf_verify(struct elf_header *header)
     && (header->e_ident[EI_CLASS] == ELFCLASS_64));
 }
 
-void elf_load(void *elf, uint64_t base, struct task *t, struct elf_stat *st)
+void elf_load(void *elf, struct elf_stat *st)
 {
     struct elf_header *header = (struct elf_header *) elf;
     /* Incorrect header, oh well... */
@@ -45,15 +45,15 @@ void elf_load(void *elf, uint64_t base, struct task *t, struct elf_stat *st)
         }
 
         size_t misalign = phdr->p_vaddr & (PAGE_SIZE - 1);
-        uintptr_t addr = base + phdr->p_vaddr - misalign;
+        uintptr_t addr = phdr->p_vaddr - misalign;
         size_t length = (phdr->p_memsz + misalign + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
 
         /* Load segment */
         st->entry = header->e_entry;
         if (phdr->p_type == PT_LOAD) {
-            mmu_map(t->context->page_table, addr, length);
-            memset((void *) (base + phdr->p_vaddr + phdr->p_filesz), 0, (phdr->p_memsz - phdr->p_filesz));
-            memcpy((void *) (base + phdr->p_vaddr), (void *) (elf + phdr->p_offset), phdr->p_filesz);
+            mmap_file(addr, length);
+            memset((void *) (phdr->p_vaddr + phdr->p_filesz), 0, (phdr->p_memsz - phdr->p_filesz));
+            memcpy((void *) (phdr->p_vaddr), (void *) (elf + phdr->p_offset), phdr->p_filesz);
         }
     }
 

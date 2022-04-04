@@ -18,7 +18,6 @@
 #include <stddef.h>
 
 #include <generic/forbia/types.h>
-#include <generic/sched/task.h>
 #include <generic/malloc/mmu.h>
 
 #include <lib/string.h>
@@ -117,4 +116,4 @@ bool elf_verify(struct elf_header *head);
  * elf_load
  *   brief: load elf to process
  */
-void elf_load(void *elf, uint64_t base, struct task *t, struct elf_stat *st);
+void elf_load(void *elf, struct elf_stat *st);
