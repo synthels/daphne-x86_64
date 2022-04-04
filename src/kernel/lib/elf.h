@@ -22,6 +22,10 @@
 
 #include <lib/string.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/vmm.h>
+#endif
+
 #define ELFMAG0 0x7f
 #define ELFMAG1 'E'
 #define ELFMAG2 'L'
@@ -116,4 +120,4 @@ bool elf_verify(struct elf_header *head);
  * elf_load
  *   brief: load elf to process
  */
-void elf_load(void *elf, struct elf_stat *st);
+void elf_load(void *elf, struct context *c, struct elf_stat *st);

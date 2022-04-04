@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <stddef.h>
 #include <arch/x86_64/vmm.h>
 #include <arch/x86_64/context.h>
 #include <arch/x86_64/cpu.h>
 
-#include <stdint.h>
+#include <generic/memory/mem.h>
 
-#include "malloc.h"
+#include <stdint.h>
+#include <stddef.h>
 
 /**
  * mmu_alloc
@@ -30,10 +30,16 @@
 void *mmu_alloc(size_t n);
 
 /**
- * mmap_file
- *   brief: map region for mmio
+ * mmap_current
+ *   brief: memory map region in current virtual space
  */
-void mmap_file(uintptr_t base, size_t pages);
+void mmap_current(uintptr_t base, size_t pages);
+
+/**
+ * mmap
+ *   brief: memory map region
+ */
+void mmap(void *pml, uintptr_t base, size_t pages);
 
 /**
  * mmu_vmalloc
@@ -48,10 +54,10 @@ uint64_t *mmu_vmalloc(size_t n);
 void mmu_vswitch(uint64_t *pml);
 
 /**
- * mmu_initcontext
+ * mmu_init_context
  *   brief: init virtual context
  */
-struct context *mmu_initcontext(size_t heap, uint64_t stack);
+struct context *mmu_init_context(size_t heap, uint64_t stack);
 
 /**
  * mmu_switch

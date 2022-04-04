@@ -27,7 +27,7 @@ bool elf_verify(struct elf_header *header)
     && (header->e_ident[EI_CLASS] == ELFCLASS_64));
 }
 
-void elf_load(void *elf, struct elf_stat *st)
+void elf_load(void *elf, struct context *c, struct elf_stat *st)
 {
     struct elf_header *header = (struct elf_header *) elf;
     /* Incorrect header, oh well... */
@@ -37,6 +37,8 @@ void elf_load(void *elf, struct elf_stat *st)
     }
 
     /* Load all loadable segments */
+    void *parent = vmm_get_pml4();
+    mmu_switch(c);
     for (uint16_t i = 0; i < header->e_phnum; i++) {
         struct elf_phdr *phdr = ((struct elf_phdr *) (elf + header->e_phoff + i * header->e_phentsize));
         /* Skip if header is empty */
@@ -51,11 +53,14 @@ void elf_load(void *elf, struct elf_stat *st)
         /* Load segment */
         st->entry = header->e_entry;
         if (phdr->p_type == PT_LOAD) {
-            mmap_file(addr, length);
+            mmap_current(addr, length);
             memset((void *) (phdr->p_vaddr + phdr->p_filesz), 0, (phdr->p_memsz - phdr->p_filesz));
             memcpy((void *) (phdr->p_vaddr), (void *) (elf + phdr->p_offset), phdr->p_filesz);
         }
     }
+
+    /* Switch back to running task */
+    mmu_switch(parent);
 
     st->loaded = true;
 }

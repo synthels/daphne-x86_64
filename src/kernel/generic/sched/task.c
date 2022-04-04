@@ -142,16 +142,18 @@ static void assign_tasks_to_cpus(struct task *added_task)
 /**
  * @brief Initialise task
  *
- * Allocate a context for this task
+ * Initialise all the fields of a task
+ * structure
  */
-static void init_task(struct task *t, const char *name)
+static void init_task(struct task *t, const char *name, uintptr_t entry)
 {
     static struct task *prev = &root;
 
     /* Fill in all the fields */
     t->pid = ++pid;
     t->name = name;
-    t->context = mmu_initcontext(PROC_HEAP_SIZE, PROC_STACK_LOW);
+    t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
+    t->context->regs->rip = entry; /* Not x86 specific! */
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = list();
@@ -172,12 +174,19 @@ static void init_task(struct task *t, const char *name)
     }
 }
 
-struct task *sched_run_task(const char *name, const char *path)
+/**
+ * @brief Create task
+ *
+ * @param name Task name
+ * @param entry Task entry structure
+ *
+ * @return Created task
+ */
+struct task *sched_create_task(const char *name, struct task_entry *entry)
 {
-    UNUSED(path);
     lock(&sched_lock);
     struct task *t = kmalloc(sizeof(struct task));
-    init_task(t, name);
+    init_task(t, name, entry->entrypoint);
     unlock(&sched_lock);
     return t;
 }
@@ -199,7 +208,7 @@ void sched_init(void)
  * Saves t1's context from the CPU to its structure
  * and switches the CPU's context to t2's context
  */
-static void save_taskcontext_and_switch(regs_t *r, struct task *t1, struct task *t2)
+static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task *t2)
 {
     if (t2->state == SUSPENDED) {
         /* Suspend current task and run next task */
@@ -246,6 +255,6 @@ void switch_task(regs_t *r, uint64_t jiffies)
             /* Switch to root */
             this_core->running_task = this_core->root;
         }
-        save_taskcontext_and_switch(r, prev, this_core->running_task);
+        save_task_context_and_switch(r, prev, this_core->running_task);
     }
 }

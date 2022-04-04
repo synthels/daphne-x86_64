@@ -16,13 +16,15 @@
  * Note 1: mmu_allocate works by splitting the heap in 64 byte chunks
  * (where 64 is a VERY arbitrary choice btw) and so all allocated memory
  * sizes are rounded up to a mulitple of 64.
- *
- * Note 2: mmu_free frees the 64 byte chunk that ptr resides in,
- * but it doesn't go further than that.
  */
 
 #include "mmu.h"
 
+/**
+ * @brief Allocate n bytes in the heap
+ *
+ * Watermarks n bytes
+ */
 void *mmu_alloc(size_t n)
 {
     static uint64_t ap = KERNEL_HEAP_LOW;
@@ -36,28 +38,67 @@ void *mmu_alloc(size_t n)
     __builtin_unreachable();
 }
 
-void mmap_file(uintptr_t base, size_t pages)
+/**
+ * @brief Memory map in the current address space
+ *
+ * @param base Base address
+ * @param pages Number of pages
+ */
+void mmap_current(uintptr_t base, size_t pages)
 {
     for (size_t i = 0; i < pages; i++) {
         pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
     }
 }
 
-struct context *mmu_initcontext(size_t heap, uint64_t stack)
+/**
+ * @brief Memory map
+ *
+ * @param pml Virtual address space
+ * @param base Base address
+ * @param pages Number of pages
+ */
+void mmap(void *pml, uintptr_t base, size_t pages)
+{
+    for (size_t i = 0; i < pages; i++) {
+        map_page(pml, base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
+    }  
+}
+
+/**
+ * @brief Initialise process context
+ *
+ * @param heap Heap base address
+ * @param stack Stack base address
+ */
+struct context *mmu_init_context(size_t heap, uint64_t stack)
 {
     return (struct context *) initcontext(heap, stack);
 }
 
+/**
+ * @brief Allocate an address space
+ */
 uint64_t *mmu_vmalloc(size_t n)
 {
     return vmalloc(n);
 }
 
+/**
+ * @brief Switch to address space
+ *
+ * @param pml Address space
+ */
 void mmu_vswitch(uint64_t *pml)
 {
     vswitch(pml);
 }
 
+/**
+ * @brief Switch to process context
+ *
+ * @param context Process context
+ */
 void mmu_switch(struct context *context)
 {
     mmu_vswitch(context->page_table);

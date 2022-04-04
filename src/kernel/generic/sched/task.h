@@ -50,6 +50,12 @@ struct task {
     struct list *children;    /* Task children */
 };
 
+struct task_entry {
+    uintptr_t entrypoint;
+    int argc;
+    char *argv;
+};
+
 struct processor {
     /**
      * Tasks assigned to this CPU. If task is NULL,
@@ -81,10 +87,10 @@ static struct processor __seg_gs *const this_core = NULL;
 void sched_init(void);
 
 /**
- * sched_run_task
- *   brief: run task
+ * sched_create_task
+ *   brief: create task
  */
-struct task *sched_run_task(const char *name, const char *path);
+struct task *sched_create_task(const char *name, struct task_entry *entry);
 
 /**
  * switch_task
