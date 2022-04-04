@@ -171,7 +171,7 @@ int vfs_unmount(const char *path)
     }
     if (node->vfs_ptr) {
         tree_free_node(node->vfs_ptr);
-        return -ENOTH;
+        return ENORM;
     } else {
         pr_err("vfs_unmount: %s not mounted!", path);
         return -ENOENT;

@@ -76,7 +76,7 @@ struct processor {
 
 /**
  * this_core
- *   brief: points to the current core
+ *   brief: points to the core running this code
  */
 static struct processor __seg_gs *const this_core = NULL;
 
@@ -90,7 +90,7 @@ void sched_init(void);
  * sched_create_task
  *   brief: create task
  */
-struct task *sched_create_task(const char *name, struct task_entry *entry);
+struct task *sched_create_task(const char *name);
 
 /**
  * switch_task

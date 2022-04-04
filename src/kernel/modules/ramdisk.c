@@ -32,7 +32,7 @@ int ramfs_mount(const char *path, struct fs_node *node)
     node->read = ramfs_read;
     node->write = ramfs_write;
     node->stat = ramfs_stat;
-    return -ENOTH;
+    return ENORM;
 }
 
 /* Stub open/close */
@@ -40,13 +40,13 @@ int ramfs_open(struct fs_node *node, int flags)
 {
     UNUSED(node);
     UNUSED(flags);
-    return -ENOTH;
+    return ENORM;
 }
 
 int ramfs_close(struct fs_node *node)
 {
     UNUSED(node);
-    return -ENOTH;
+    return ENORM;
 }
 
 /* Ramfs is read only! */
@@ -67,7 +67,7 @@ int ramfs_write(struct fs_node *node, size_t offset, void *buffer, size_t size)
 int ramfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size)
 {
     memcpy(buffer, ((struct tar_block *) node->device)->data + offset, size);
-    return -ENOTH;
+    return ENORM;
 }
 
 /**
@@ -78,7 +78,7 @@ int ramfs_read(struct fs_node *node, size_t offset, void *buffer, size_t size)
 int ramfs_stat(struct fs_node *node, struct stat *buf)
 {
     buf->st_size = ((struct tar_block *) node->device)->size;
-    return -ENOTH;
+    return ENORM;
 }
 
 /**

@@ -18,6 +18,8 @@
 #include <stddef.h>
 
 #include <generic/forbia/types.h>
+
+#include <generic/malloc/malloc.h>
 #include <generic/malloc/mmu.h>
 
 #include <lib/string.h>

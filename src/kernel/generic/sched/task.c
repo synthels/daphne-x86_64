@@ -145,7 +145,7 @@ static void assign_tasks_to_cpus(struct task *added_task)
  * Initialise all the fields of a task
  * structure
  */
-static void init_task(struct task *t, const char *name, uintptr_t entry)
+static void init_task(struct task *t, const char *name)
 {
     static struct task *prev = &root;
 
@@ -153,7 +153,6 @@ static void init_task(struct task *t, const char *name, uintptr_t entry)
     t->pid = ++pid;
     t->name = name;
     t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
-    t->context->regs->rip = entry; /* Not x86 specific! */
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = list();
@@ -182,11 +181,11 @@ static void init_task(struct task *t, const char *name, uintptr_t entry)
  *
  * @return Created task
  */
-struct task *sched_create_task(const char *name, struct task_entry *entry)
+struct task *sched_create_task(const char *name)
 {
     lock(&sched_lock);
     struct task *t = kmalloc(sizeof(struct task));
-    init_task(t, name, entry->entrypoint);
+    init_task(t, name);
     unlock(&sched_lock);
     return t;
 }

@@ -148,4 +148,4 @@
 #define EILSEQ 138
 #define EOVERFLOW 139	/* Value too large for defined data type */
 
-#define ENOTH 140       /* Added this to return in some awkward situations (ENOTHing) */
+#define ENORM 0       /* Added this to return in some awkward situations */
