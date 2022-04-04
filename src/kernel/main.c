@@ -153,7 +153,7 @@ void main(struct stivale2_struct *stv)
     );
 
     /* Create kernel video context */
-    struct gfxcontext kern_ctx;
+    struct gfx_context kern_ctx;
     struct lfb_info info;
     struct pos ctx_pos = {0, 0};
     lfb_get_info(&info);

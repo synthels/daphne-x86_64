@@ -22,7 +22,7 @@ static uint64_t framebuffer;
 static uint16_t width, height, pitch;
 
 /* Graphics contexts */
-static struct gfxcontext **contexts;
+static struct gfx_context **contexts;
 /* Last context handle */
 static int last_handle = 0;
 
@@ -34,7 +34,7 @@ void lfb_init(uint16_t _width, uint16_t _height, uint64_t _framebuffer, uint16_t
     pitch       = _pitch;
 
     /* Allocate contexts */
-    contexts = kmalloc(MAXcontextS * sizeof(struct gfxcontext *));
+    contexts = kmalloc(MAXcontextS * sizeof(struct gfx_context *));
 }
 
 void lfb_get_info(struct lfb_info *info)
@@ -46,12 +46,12 @@ void lfb_get_info(struct lfb_info *info)
 
 void lfb_get_ctx_info(int handle, struct lfb_info *info)
 {
-    struct gfxcontext *ctx = contexts[handle];
+    struct gfx_context *ctx = contexts[handle];
     info->screen_width  = ctx->width;
     info->screen_height = ctx->height;
 }
 
-int lfb_create_ctx(struct gfxcontext *ctx, struct pos _pos, uint16_t _width, uint16_t _height)
+int lfb_create_ctx(struct gfx_context *ctx, struct pos _pos, uint16_t _width, uint16_t _height)
 {
     if (ctx->handle >= MAXcontextS || _pos.x > width || _pos.y > height) return -1;
     ctx->pos    = _pos;
@@ -77,7 +77,7 @@ int lfb_destroy_ctx(int handle)
 int lfb_set_pixel(int handle, uint16_t x, uint16_t y, struct color c)
 {
     if (handle > MAXcontextS) return -1;
-    struct gfxcontext *ctx = contexts[handle];
+    struct gfx_context *ctx = contexts[handle];
     
     /* Destroyed context */
     if (ctx == NULL) return -1;
