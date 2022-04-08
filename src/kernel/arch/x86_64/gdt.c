@@ -69,7 +69,7 @@ void gdt_init(void)
         "mov %1, %%ss\n"
         "mov %1, %%fs\n"
         "mov %1, %%gs\n"
-        : : "m"(gp), "a"(__KERNEL_DS)
+        : : "m"(gp), "a"(KERNEL_DS)
         : "rbx"
     );
 }

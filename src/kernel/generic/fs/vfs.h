@@ -160,3 +160,9 @@ char *vfs_canonicalise(char *path);
  *   brief: open file from path
  */
 void *kopen(const char *path, int flags);
+
+/**
+ * kclose
+ *   brief: close fs_node
+ */
+int kclose(struct fs_node *node);

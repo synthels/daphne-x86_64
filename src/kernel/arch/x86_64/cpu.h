@@ -86,10 +86,10 @@ enum {
 };
 
 /**
- * arch_save_regs
- *   brief: save registers into regs
+ * save_registers
+ *   brief: save registers to buffer
  */
-void arch_save_regs(regs_t *regs);
+void save_registers(regs_t *buf, regs_t *r);
 
 /**
  * cpu_has_apic

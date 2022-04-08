@@ -17,11 +17,19 @@
 #include "x64.h"
 #include "vmm.h"
 
-#include <generic/malloc/malloc.h>
-
 struct context {
     uint64_t *page_table;
     regs_t *regs;
 };
 
-struct context *initcontext(size_t heap, uint64_t stack);
+/**
+ * init_context
+ *   brief: init context
+ */
+struct context *init_context(size_t heap, uint64_t stack);
+
+/**
+ * destroy_context
+ *   brief: destroy context
+ */
+void destroy_context(struct context *c);

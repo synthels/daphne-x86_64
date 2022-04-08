@@ -18,6 +18,7 @@
 #include <generic/sched/task.h>
 #include <generic/fs/vfs.h>
 
+#include <lib/string.h>
 #include <lib/elf.h>
 
 /**

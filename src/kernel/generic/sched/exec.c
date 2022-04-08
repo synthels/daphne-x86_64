@@ -34,24 +34,27 @@ int exec(const char *path, int argc, const char *argv)
         return -EINVAL;
     }
 
-    /* First, we create a task (maybe strdup this?) */
-    struct task *task = sched_create_task(path);
+    /* First, we create a task */
+    struct task *task = sched_create_task(strdup(path));
 
     struct stat st;
+    struct elf_stat elf_st;
     fstat(file, &st);
 
     /* Just read the whole damn thing into memory, its fine... */
     void *elf = kmalloc(st.st_size);
-    struct elf_stat elf_st;
     fread(file, 0, elf, st.st_size);
     elf_load(elf, task->context, &elf_st);
 
     if (!elf_st.loaded) {
         pr_err("exec: %s: couldn't execute file", path);
-        return -EINVAL;
+        return -ENOEXEC;
     }
 
     task->context->regs->rip = elf_st.entry;
+    sched_queue(task);
+    kclose(file);
     kfree(elf);
+
     return ENORM;
 }

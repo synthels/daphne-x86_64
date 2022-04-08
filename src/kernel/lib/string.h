@@ -133,4 +133,4 @@ char *strcat(char *dest, const char *src);
  *   parameters:
  *     - src: string
  */
-char *strdup(char *src);
+char *strdup(const char *src);

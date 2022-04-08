@@ -299,6 +299,16 @@ void *kopen(const char *path, int flags)
 }
 
 /**
+ * @brief Close fs_node
+ *
+ * @param node Node
+ */
+int kclose(struct fs_node *node)
+{
+    return vfs_close(node);
+}
+
+/**
  * @brief Get the part of path right after the last seperator
  */
 char *vfs_get_base_name(char *path)

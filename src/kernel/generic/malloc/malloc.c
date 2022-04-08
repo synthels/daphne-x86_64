@@ -16,7 +16,7 @@
  * This is currently a very barebones object allocator, working
  * with slabs, without any caches (although we should implement them at some point).
  * For a quick gist, kmalloc allocates memory on small slabs with sizes ranging from 64 to
- * 1024. For bigger allocations, we expose routines that access special "object pools" of
+ * any arbitrary size. For bigger allocations, we expose routines that access special "object pools" of
  * arbitrary sizes.
  */
 
@@ -345,7 +345,7 @@ void *kmalloc(size_t n)
     }
 
     /* Allocate on fitting slab */
-    struct malloc_page *page = slab_pick_and_allocate(kmalloc_slabs, KMALLOC_SLABS, n);
+    struct malloc_page *page = slab_pick_and_allocate(kmalloc_slabs, KMALLOC_SLABS - 1, n);
 
     /* Return address right next to header */
     unlock(&malloc_lock);

@@ -11,16 +11,25 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Task contexts (x64)
+ * Task contexts (x86_64)
  */
 
 #include "context.h"
 
-struct context *initcontext(size_t heap, uint64_t stack)
+struct context *init_context(size_t heap, uint64_t stack)
 {
     struct context *c = kmalloc(sizeof(struct context));
     c->page_table = vmalloc(heap);
     c->regs = kmalloc(sizeof(regs_t));
-    c->regs->rsp = stack;
+    c->regs->rsp = stack + PROC_STACK_SIZE;
+    c->regs->cs = KERNEL_CS;
+    // c->regs->ss = KERNEL_CS;
     return c;
+}
+
+void destroy_context(struct context *c)
+{
+    /* TODO: vfree page table */
+    kfree(c->regs);
+    kfree(c);
 }

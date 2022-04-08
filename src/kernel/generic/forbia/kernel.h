@@ -26,17 +26,16 @@
 
 #ifdef ARCH_x86_64
     #define KERNEL_ARCH "x86-64"
-    #define __KERNEL_CS 0x8
-    #define __KERNEL_DS 0x10
-    #define __SYSCALL_INDEX 0x80
+    #define KERNEL_CS 0x08
+    #define KERNEL_DS 0x10
+    #define SYSCALL_INDEX 0x80
+    #define KERNEL_STACK_SIZE 65536 /* 64KiB */
 #endif
 
 /**
  * Mark a symbol unused
  */
 #define UNUSED(x) (void) (x)
-
-#define KERNEL_STACK_SIZE 65536 /* 64KiB */
 
 /**
  * kernel_hang

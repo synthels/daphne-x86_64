@@ -16,40 +16,24 @@
 
 #include "cpu.h"
 
-void arch_save_regs(regs_t *regs)
+void save_registers(regs_t *buf, regs_t *r)
 {
-    asm volatile (
-        "mov %%rax, %0\n"
-        "mov %%rbx, %1\n"
-        "mov %%rcx, %2\n"
-        "mov %%rdx, %3\n"
-        "mov %%rsi, %4\n"
-        "mov %%rdi, %5\n"
-        "mov %%rbp, %6\n"
-        "mov %%r8,  %7\n"
-        "mov %%r9,  %8\n"
-        "mov %%r10, %9\n"
-        "mov %%r11, %10\n"
-        "mov %%r12, %11\n"
-        "mov %%r13, %12\n"
-        "mov %%r14, %13\n"
-        "mov %%r15, %14\n"
-        : : "rm"(regs->rax),
-            "rm"(regs->rbx),
-            "rm"(regs->rcx),
-            "rm"(regs->rdx),
-            "rm"(regs->rsi),
-            "rm"(regs->rdi),
-            "rm"(regs->rbp),
-            "rm"(regs->r8),
-            "rm"(regs->r9),
-            "rm"(regs->r10),
-            "rm"(regs->r11),
-            "rm"(regs->r12),
-            "rm"(regs->r13),
-            "rm"(regs->r14),
-            "rm"(regs->r15)
-    );
+    buf->r15 = r->r15;
+    buf->r14 = r->r14;
+    buf->r13 = r->r13;
+    buf->r12 = r->r12;
+    buf->r11 = r->r11;
+    buf->r10 = r->r10;
+    buf->r9 = r->r9;
+    buf->r8 = r->r8;
+    buf->rbp = r->rbp;
+    buf->rdi = r->rdi;
+    buf->rsi = r->rsi;
+    buf->rdx = r->rdx;
+    buf->rcx = r->rcx;
+    buf->rbx = r->rbx;
+    buf->rax = r->rax;
+    buf->rflags = r->rflags;
 }
 
 void cpu_set_current_core(uintptr_t base)

@@ -142,21 +142,29 @@ static void assign_tasks_to_cpus(struct task *added_task)
 /**
  * @brief Initialise task
  *
- * Initialise all the fields of a task
+ * Initialise all the fields of a task's
  * structure
  */
 static void init_task(struct task *t, const char *name)
 {
-    static struct task *prev = &root;
-
-    /* Fill in all the fields */
     t->pid = ++pid;
     t->name = name;
     t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
+    memset(t->context->regs, 1, sizeof(regs_t));
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = list();
     t->next = NULL;
+}
+
+/**
+ * @brief Queue task
+ *
+ * @param t Task
+ */
+void sched_queue(struct task *t)
+{
+    static struct task *prev = &root;
 
     /* Add task to the linked list */
     prev->next = t;
@@ -177,7 +185,6 @@ static void init_task(struct task *t, const char *name)
  * @brief Create task
  *
  * @param name Task name
- * @param entry Task entry structure
  *
  * @return Created task
  */
@@ -218,9 +225,32 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
             /* Only save registers if task is not
                root */
             if (t1->pid > 0) {
-                t1->context->regs = r;
+                save_registers(t1->context->regs, r);
             }
             mmu_switch(t2->context);
+            /* This doesn't work if I outsource
+               it to a separate function... (obviously very bad!) */
+            asm volatile(
+                "mov %0, %%rsp\n"
+                "pop %%r15\n"
+                "pop %%r14\n"
+                "pop %%r13\n"
+                "pop %%r12\n"
+                "pop %%r11\n"
+                "pop %%r10\n"
+                "pop %%r9\n"
+                "pop %%r8\n"
+                "pop %%rbp\n"
+                "pop %%rdi\n"
+                "pop %%rsi\n"
+                "pop %%rdx\n"
+                "pop %%rcx\n"
+                "pop %%rbx\n"
+                "pop %%rax\n"
+                "addq $16, %%rsp\n"
+                "iretq\n"
+                ::"r"(t2->context->regs)
+            );
         }
     }
 }

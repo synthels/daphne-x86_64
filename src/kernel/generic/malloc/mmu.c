@@ -73,7 +73,7 @@ void mmap(void *pml, uintptr_t base, size_t pages)
  */
 struct context *mmu_init_context(size_t heap, uint64_t stack)
 {
-    return (struct context *) initcontext(heap, stack);
+    return (struct context *) init_context(heap, stack);
 }
 
 /**

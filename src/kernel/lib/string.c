@@ -147,7 +147,7 @@ char *strcat(char *dest, const char *src)
     return rdest;
 }
 
-char *strdup(char *src)
+char *strdup(const char *src)
 {
     char *str;
     char *p;

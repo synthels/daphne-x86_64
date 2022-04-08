@@ -93,6 +93,12 @@ void sched_init(void);
 struct task *sched_create_task(const char *name);
 
 /**
+ * sched_queue
+ *   brief: queue task
+ */
+void sched_queue(struct task *t);
+
+/**
  * switch_task
  *   brief: switch task
  */
