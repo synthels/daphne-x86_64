@@ -1,0 +1,119 @@
+diff -ruN --color host-gcc/config.sub patch/config.sub
+--- host-gcc/config.sub	2022-04-26 11:29:01.017013406 +0300
++++ patch/config.sub	2022-04-26 11:37:28.669805042 +0300
+@@ -1725,7 +1725,7 @@
+ 	     | skyos* | haiku* | rdos* | toppers* | drops* | es* \
+ 	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
+ 	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | wasi* \
+-	     | nsk* | powerunix* | genode* | zvmoe* | qnx* | emx*)
++	     | nsk* | powerunix* | genode* | zvmoe* | qnx* | emx* | forbia*)
+ 		;;
+ 	# This one is extra strict with allowed versions
+ 	sco3.2v2 | sco3.2v[4-9]* | sco5v6*)
+diff -ruN --color host-gcc/fixincludes/mkfixinc.sh patch/fixincludes/mkfixinc.sh
+--- host-gcc/fixincludes/mkfixinc.sh	2022-04-26 11:29:01.057013478 +0300
++++ patch/fixincludes/mkfixinc.sh	2022-04-26 11:50:53.063709975 +0300
+@@ -11,6 +11,7 @@
+ 
+ # Check for special fix rules for particular targets
+ case $machine in
++    *-forbia | \
+     i?86-*-cygwin* | \
+     i?86-*-mingw32* | \
+     x86_64-*-mingw32* | \
+diff -ruN --color host-gcc/gcc/config/forbia.h patch/gcc/config/forbia.h
+--- host-gcc/gcc/config/forbia.h	1970-01-01 02:00:00.000000000 +0200
++++ patch/gcc/config/forbia.h	2022-04-26 11:45:13.885270253 +0300
+@@ -0,0 +1,28 @@
++/* Useful if you wish to make target-specific GCC changes. */
++#undef TARGET_FORBIA
++#define TARGET_FORBIA 1
++
++/* Default arguments you want when running your
++   i686-forbia-gcc/x86_64-forbia-gcc toolchain */
++#undef LIB_SPEC
++#define LIB_SPEC "-lc" /* link against C standard library */
++
++/* Files that are linked before user code.
++   The %s tells GCC to look for these files in the library directory. */
++#undef STARTFILE_SPEC
++#define STARTFILE_SPEC "crt0.o%s crti.o%s crtbegin.o%s"
++
++/* Files that are linked after user code. */
++#undef ENDFILE_SPEC
++#define ENDFILE_SPEC "crtend.o%s crtn.o%s"
++
++/* Additional predefined macros. */
++#undef TARGET_OS_CPP_BUILTINS
++#define TARGET_OS_CPP_BUILTINS()      \
++  do {                                \
++    builtin_define ("__forbia__");    \
++    builtin_define ("__unix__");      \
++    builtin_assert ("system=forbia"); \
++    builtin_assert ("system=unix");   \
++    builtin_assert ("system=posix");  \
++  } while(0);
+diff -ruN --color host-gcc/gcc/config.gcc patch/gcc/config.gcc
+--- host-gcc/gcc/config.gcc	2022-04-26 11:29:01.601014453 +0300
++++ patch/gcc/config.gcc	2022-04-26 11:41:50.459165506 +0300
+@@ -750,6 +750,12 @@
+     "" | yes | posix) thread_file='posix' ;;
+   esac
+   ;;
++*-*-forbia*)
++  gas=yes
++  gnu_ld=yes
++  default_use_cxa_atexit=yes
++  use_gcc_stdint=wrap
++  ;;
+ *-*-dragonfly*)
+   gas=yes
+   gnu_ld=yes
+@@ -1872,6 +1878,12 @@
+ 		dwarf2=no
+ 	fi
+ 	;;
++i[34567]86-*-forbia*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h glibc-stdint.h i386/i386elf.h forbia.h"
++	;;
++x86_64-*-forbia*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h glibc-stdint.h i386/i386elf.h i386/x86-64.h forbia.h"
++	;;
+ i[34567]86-*-darwin1[89]*)
+ 	echo "Error: 32bit target is not supported after Darwin17" 1>&2
+ 	;;
+diff -ruN --color host-gcc/libgcc/config.host patch/libgcc/config.host
+--- host-gcc/libgcc/config.host	2022-04-26 11:29:07.501025002 +0300
++++ patch/libgcc/config.host	2022-04-26 11:48:32.438821577 +0300
+@@ -689,6 +689,14 @@
+ hppa*-*-netbsd*)
+ 	tmake_file="$tmake_file pa/t-netbsd"
+ 	;;
++i[34567]86-*-forbia*)
++	extra_parts="$extra_parts crti.o crtbegin.o crtend.o crtn.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
++x86_64-*-forbia*)
++	extra_parts="$extra_parts crti.o crtbegin.o crtend.o crtn.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
+ i[34567]86-*-darwin*)
+ 	tmake_file="$tmake_file i386/t-crtpc t-crtfm i386/t-msabi"
+ 	tm_file="$tm_file i386/darwin-lib.h"
+diff -ruN --color host-gcc/libstdc++-v3/crossconfig.m4 patch/libstdc++-v3/crossconfig.m4
+--- host-gcc/libstdc++-v3/crossconfig.m4	2022-04-26 11:29:08.969027620 +0300
++++ patch/libstdc++-v3/crossconfig.m4	2022-04-26 11:46:31.657926713 +0300
+@@ -67,6 +67,13 @@
+     AC_DEFINE(HAVE_USELOCALE)
+     ;;
+ 
++  *-forbia*)
++    GLIBCXX_CHECK_COMPILER_FEATURES
++    GLIBCXX_CHECK_LINKER_FEATURES
++    GLIBCXX_CHECK_MATH_SUPPORT
++    GLIBCXX_CHECK_STDLIB_SUPPORT
++    ;;
++
+   *-darwin*)
+     # Darwin versions vary, but the linker should work in a cross environment,
+     # so we just check for all the features here.

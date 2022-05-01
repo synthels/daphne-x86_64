@@ -1,0 +1,83 @@
+# See https://github.com/synthels/pkgr
+
+build:
+  sysroot:
+    - 'build/sysroot'
+    - 'usr'
+  working-dir: 'build/packages'
+  prefix: 'build/bin'
+  patches: 'patches'
+
+packages:
+  - name: host-gcc
+    clone-at: toolchain
+    git: 'https://gcc.gnu.org/git/gcc.git'
+    separate: True
+    tag: 'releases/gcc-11.3.0'
+    build:
+      configure:
+        - ['cd %THIS_DIR && %PREFIX/bin/autoconf']
+        - ['cd %THIS_DIR/libstdc++-v3 && %PREFIX/bin/autoconf']
+        - ['cp', '-r', '%PROJECT_SOURCE_DIR/libc/include', '%SYSROOT/usr']
+      compile:
+        - ['%PROJECT_SOURCE_DIR/tools/toolchain/gcc.sh', '%BUILD_DIR', '%THIS_DIR', '%CORES', '%PREFIX']
+    dependencies:
+      - binutils
+
+  - name: binutils
+    clone-at: toolchain
+    separate: True
+    git: 'git://sourceware.org/git/binutils-gdb.git'
+    tag: 'binutils-2_32'
+    build:
+      configure:
+        - ['cd %THIS_DIR/ld && %PREFIX/bin/aclocal']
+        - ['cd %THIS_DIR/ld && %PREFIX/bin/automake']
+        - ['cd %THIS_DIR/ld && %PREFIX/bin/autoreconf']
+        - ['%THIS_DIR/configure',
+            '--target=x86_64-forbia',
+            '--prefix=%PREFIX',
+            '--with-sysroot=%SYSROOT',
+            '--disable-werror',
+            '--enable-targets=x86_64-elf',
+            'CFLAGS=-O2']
+      compile:
+        - ['make', '-j%CORES', 'all-binutils', 'all-gas', 'all-ld']
+      install:
+        - ['make', 'install-binutils', 'install-gas', 'install-ld']
+        - ['ln',
+           '-sf',
+           'x86_64-forbia-ld',
+           '%PREFIX/bin/x86_64-unknown-forbia-ld']
+        - ['ln',
+           '-sf',
+           'x86_64-forbia-as',
+           '%PREFIX/bin/x86_64-unknown-forbia-as']
+    dependencies:
+      - autoconf
+      - automake
+
+  - name: automake
+    clone-at: toolchain
+    ftp: 'https://ftp.gnu.org/gnu/automake/automake-1.11.6.tar.gz'
+    build:
+      configure:
+        - ['%THIS_DIR/configure', '--prefix=%PREFIX', 'MAKEINFO=/bin/true']
+      compile:
+        - ['make', '-j%CORES']
+      install:
+        - ['make', 'install']
+        - ['ln', '-sf', '%PREFIX/share/aclocal-1.11', '%PREFIX/share/aclocal']
+    dependencies:
+      - autoconf
+
+  - name: autoconf
+    clone-at: toolchain
+    ftp: 'https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz'
+    build:
+      configure:
+        - ['%THIS_DIR/configure', '--prefix=%PREFIX']
+      compile:
+        - ['make', '-j%CORES']
+      install:
+        - ['make install']
