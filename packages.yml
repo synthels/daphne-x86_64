@@ -39,6 +39,7 @@ packages:
             '--prefix=%PREFIX',
             '--with-sysroot=%SYSROOT',
             '--disable-werror',
+            '--disable-nls',
             '--enable-targets=x86_64-elf',
             'CFLAGS=-O2']
       compile:

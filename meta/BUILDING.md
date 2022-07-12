@@ -55,7 +55,7 @@ Building limine is really simple. All you have to do is run `./autogen.sh` and t
 Change your working directory to the build directory and run
 
 ```sh
-$ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=x86_64-elf-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
+$ cmake -G "Unix Makefiles" -DCMAKE_C_COMPILER=FULL/PATH/TO/DAPHNE/build/bin/bin/x86_64-forbia-gcc -DCMAKE_TOOLCHAIN_FILE=cmake/x86.cmake -DARCH=x86_64 ..
 ```
 
 This command will create all the necessary files for CMake to build the project. CMake will also archive the contents of `base` into a `tar.gz` file, so that it can be loaded by the kernel at boot. For this you will only need a working version of `tar`. If by this stage you wish to build the tests along with the kernel, add the `-DBUILD_TESTS=all` option to the previous command.
