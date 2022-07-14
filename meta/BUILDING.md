@@ -46,10 +46,6 @@ $ sudo dnf install nasm # Fedora
 $ pacman -S nasm # Arch
 ```
 
-## Building limine
-
-Building limine is really simple. All you have to do is run `./autogen.sh` and then make from inside the `src/kernel/arch/x86_64/limine` directory.
-
 ## Building the kernel
 
 Change your working directory to the build directory and run
@@ -70,13 +66,7 @@ If there are no errors and everything went well, you should now have a binary ca
 
 ## Compiling an ISO image
 
-First, change your working directory to `src/kernel/arch/x86_64/limine/bin`. Then, run
-
-```sh
-$ cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin ../../../../../../build/iso/
-```
-
-Now, change your working directory back to the build directory (not `limine/build`) and run
+Make sure your current directory is the build directory and run
 
 ```sh
 $ cp -v kernel.bin iso
@@ -87,7 +77,7 @@ $ xorriso -as mkisofs -b limine-cd.bin \
     iso -o daphne-img-x86_64.iso
 ```
 
-## Testing in QEMU
+## Testing under QEMU
 
 Assuming you have `qemu-system-x86_64` installed, you can use the following two commands:
 

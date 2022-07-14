@@ -7,10 +7,19 @@
 
 cd $1
 
-$2/configure --prefix="$4" --target=x86_64-forbia --with-sysroot="$5" --enable-languages=c,c++ --disable-multilib --disable-nls CFLAGS=-O2 CXXFLAGS=-O2
+$2/configure                    \
+    --prefix="$4"               \
+    --target=x86_64-forbia      \
+    --with-sysroot="$5"         \
+    --enable-languages=c,c++    \
+    --disable-multilib          \
+    --disable-nls               \
+    CFLAGS=-O2                  \
+    CXXFLAGS=-O2                \
 
 make -j"$3" all-gcc
-make install-gcc
-
 make -j"$3" all-target-libgcc
-make install install-target-libgcc
+make -j"$3" all-target-libstdc++-v3
+DESTDIR="$1" make install-strip-target-libstdc++-v3
+
+make install-gcc

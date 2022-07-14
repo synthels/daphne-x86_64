@@ -9,6 +9,14 @@ build:
   patches: 'patches'
 
 packages:
+  - name: limine
+    clone-at: toolchain
+    git: https://github.com/limine-bootloader/limine.git
+    tag: 'v2.5-binary'
+    build:
+      configure:
+        - ['cp -v limine.sys limine-cd.bin limine-eltorito-efi.bin %PROJECT_SOURCE_DIR/build/iso/']
+
   - name: host-gcc
     clone-at: toolchain
     git: 'https://gcc.gnu.org/git/gcc.git'
@@ -16,7 +24,8 @@ packages:
     tag: 'releases/gcc-11.3.0'
     build:
       configure:
-        - ['cd %THIS_DIR && %PREFIX/bin/autoconf']
+        - ['./contrib/download_prerequisites']
+        - ['cd %THIS_DIR/gcc && %PREFIX/bin/autoconf']
         - ['cd %THIS_DIR/libstdc++-v3 && %PREFIX/bin/autoconf']
         - ['cp', '-r', '%PROJECT_SOURCE_DIR/libc/include', '%SYSROOT/usr']
       compile:
