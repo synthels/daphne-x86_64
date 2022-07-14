@@ -18,6 +18,8 @@
 
 void lock(mutex_t *mutex)
 {
+    asm volatile("cli");
+
     while(!__sync_bool_compare_and_swap(mutex, 0, 1)) {
         asm("pause");
     }
@@ -26,5 +28,7 @@ void lock(mutex_t *mutex)
 
 void unlock(mutex_t *mutex)
 {
+    asm volatile("sti");
+
     *mutex = 0;
 }
