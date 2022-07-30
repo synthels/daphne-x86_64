@@ -124,15 +124,15 @@ uint64_t *vmalloc(size_t n)
     uint64_t *pml = pmm_alloc_page();
     vmm_init_pml(pml);
     for (uint64_t i = 0; i < n; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
     }
 
     for (uint64_t i = PROC_STACK_LOW; i < PROC_STACK_SIZE; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
     }
 
     for (uint64_t i = PROC_HEAP_LOW; i < PROC_HEAP_SIZE; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(PAGE_SIZE), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
     }
 
     return pml;

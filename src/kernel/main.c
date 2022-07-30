@@ -203,7 +203,6 @@ void main(struct stivale2_struct *stv)
         pr_test("All tests complete!");
     #endif
 
-
     for (;;) {
         asm("hlt");
     }

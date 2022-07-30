@@ -16,6 +16,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <limits.h>
 
 #include <generic/forbia/kernel.h>
 #include <lib/panic.h>
@@ -36,9 +37,15 @@ void pmm_init(void);
 
 /**
  * pmm_alloc
- *   brief: allocate n bytes in physical memory
+ *   brief: allocate PAGE_SIZE bytes in physical memory
  */
-void *pmm_alloc(size_t n);
+void *pmm_alloc(void);
+
+/**
+ * pmm_free
+ *   brief: Free a whole page of memory around addr
+ */
+void pmm_free(void *addr);
 
 /**
  * pmm_alloc_page

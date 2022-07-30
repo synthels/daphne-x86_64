@@ -35,7 +35,7 @@ struct bitmap {
  *     - bmp: bitmap
  *     - size: bitmap size
  */
-void new_bitmap(struct bitmap *bmp, size_t size);
+void new_bitmap(struct bitmap *bmp, void *data, size_t size);
 
 /**
  * bitmap_set

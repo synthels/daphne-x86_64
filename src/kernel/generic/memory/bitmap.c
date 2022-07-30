@@ -16,10 +16,10 @@
 
 #include "bitmap.h"
 
-void new_bitmap(struct bitmap *bmp, size_t size)
+void new_bitmap(struct bitmap *bmp, void *data, size_t size)
 {
-    bmp->buf = kmalloc(size);
-    memset(bmp->buf, 0xff, size / 8);
+    bmp->buf = data;
+    memset(bmp->buf, 0xff, size);
     bmp->size = size;
 }
 
