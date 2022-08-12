@@ -11,25 +11,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Task contexts (x86_64)
+ * Enter usermode on x86-64
  */
 
-#include "context.h"
+#include <arch/x86_64/user.h>
 
-struct context *init_context(size_t heap, uint64_t stack)
+void arch_enter_user(
+    uintptr_t entrypoint, int argc, char *argv[], 
+    char *envp[], uintptr_t stack)
 {
-    UNUSED(stack);
-    struct context *c = kmalloc(sizeof(struct context));
-    c->page_table = vmalloc(heap);
-    c->regs = kmalloc(sizeof(regs_t));
-    c->regs->cs = KERNEL_CS;
-    c->regs->ss = KERNEL_CS;
-    return c;
-}
 
-void destroy_context(struct context *c)
-{
-    /* TODO: vfree page table */
-    kfree(c->regs);
-    kfree(c);
 }

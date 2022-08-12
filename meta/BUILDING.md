@@ -83,7 +83,7 @@ Assuming you have `qemu-system-x86_64` installed, you can use the following two 
 
 ```sh
 # UEFI
-$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -smp cores=6 -m 2048 -cdrom daphne-img-x86_64.iso
+$ qemu-system-x86_64 --bios /usr/share/qemu/OVMF.fd -smp cores=6 -m 2G -cdrom daphne-img-x86_64.iso
 # Legacy BIOS
-$ qemu-system-x86_64 -m 2048 -cdrom daphne-img-x86_64.iso -smp cores=6
+$ qemu-system-x86_64 -m 2G -cdrom daphne-img-x86_64.iso -smp cores=6
 ```

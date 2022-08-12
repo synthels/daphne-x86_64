@@ -20,11 +20,11 @@
 #include <generic/forbia/kernel.h>
 #include <generic/memory/mem.h>
 #include <generic/malloc/malloc.h>
+#include <generic/binfmt/binfmt.h>
 #include <generic/shrimp/shrimp.h>
 #include <generic/time/clock.h>
 #include <generic/time/time.h>
 #include <generic/time/sleep.h>
-#include <generic/sched/exec.h>
 #include <generic/fs/vfs.h>
 #include <generic/forbia/stivale2.h>
 
@@ -183,6 +183,7 @@ void main(struct stivale2_struct *stv)
     apic_init();                       /* try to boot up the APIC timer */
     sched_init();                      /* scheduler */
     vfs_init();                        /* vfs */
+    binfmt_init();                     /* binfmt */
 
     /* Try to find ramdisk */
     struct stivale2_module *rd = NULL;

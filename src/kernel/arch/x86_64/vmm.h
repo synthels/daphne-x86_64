@@ -29,7 +29,7 @@
 #define MEM_KERN_OFFSET (size_t) 0xffffffff80000000
 #define MMU_CEIL(a, b) (((a) + ((b) - 1)) / (b))
 
-#define HEAP_PAGES 500 /* Pages in the heap (2MiB) */
+#define HEAP_PAGES 10000 /* Pages in the heap (2MiB) */
 
 #define FLAGS_READ_WRITE 0x03
 

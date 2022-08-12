@@ -17,7 +17,10 @@
 #include "x64.h"
 #include "vmm.h"
 
+#include <generic/forbia/kernel.h>
+
 struct context {
+    uint64_t entry;
     uint64_t *page_table;
     regs_t *regs;
 };

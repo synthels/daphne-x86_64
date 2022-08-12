@@ -147,6 +147,7 @@ void slab_push_page(struct malloc_slab *slab, struct malloc_page *page)
  * @brief Pops the top page from a slab
  *
  * @param slab Well, you get it by now
+ * @todo  This fails for some large allocations
  */
 struct malloc_page *slab_pop_page(struct malloc_slab *slab)
 {

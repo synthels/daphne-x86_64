@@ -20,6 +20,10 @@
 #define PROC_STACK_LOW  0x5AF3107A4000 /* Process stack (100TB) */
 #define PROC_HEAP_LOW   0x5F7F37B39000 /* Process heap (105TB) */
 
+/* Unit conversions */
+#define KiB(n) 1024 * n
+#define MiB(n) 1048576 * n
+
 /* ??? */
 #define PROC_STACK_SIZE 128
 #define PROC_HEAP_SIZE  128

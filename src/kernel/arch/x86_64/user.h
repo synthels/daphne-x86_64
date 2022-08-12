@@ -14,15 +14,6 @@
 
 #pragma once
 
-#include <generic/malloc/malloc.h>
-#include <generic/sched/task.h>
-#include <generic/fs/vfs.h>
+#include <stdint.h>
 
-#include <lib/string.h>
-#include <lib/elf.h>
-
-/**
- * exec
- *   brief: execute the file located at some path
- */
-int exec(const char *path, int argc, const char *argv);
+void arch_enter_user(uintptr_t entrypoint, int argc, char *argv[], char *envp[], uintptr_t stack);

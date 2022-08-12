@@ -26,6 +26,8 @@ set(SRC
     ${SRCROOT}/irq.h
     ${SRCROOT}/ports.c
     ${SRCROOT}/ports.h
+    ${SRCROOT}/user.c
+    ${SRCROOT}/user.h
     ${SRCROOT}/cmos.c
     ${SRCROOT}/cmos.h
 )

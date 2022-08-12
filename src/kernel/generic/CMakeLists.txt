@@ -5,6 +5,7 @@ add_subdirectory(${SRCROOT}/memory)
 add_subdirectory(${SRCROOT}/shrimp)
 add_subdirectory(${SRCROOT}/forbia)
 add_subdirectory(${SRCROOT}/malloc)
+add_subdirectory(${SRCROOT}/binfmt)
 add_subdirectory(${SRCROOT}/fs)
 add_subdirectory(${SRCROOT}/time)
 
