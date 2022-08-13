@@ -53,6 +53,7 @@ static int binfmt_load(const char *path, struct binfmt_object *obj)
 
     void *buf = pool_alloc(obj_pool);
     if (fread(f, 0, buf, st_buf.st_size) >= 0) {
+        pr_debug("binfmt: loaded %u bytes.", st_buf.st_size);
         obj->name = strdup(path);
         obj->buf = buf;
     } else {
