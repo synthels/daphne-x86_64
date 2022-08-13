@@ -195,8 +195,9 @@ void smp_init(void)
     /* Get core count */
     int cores = 0;
     for (; m[cores]; cores++) {
-        if (cores >= SMP_MAX_CPUS) {
+        if (cores > SMP_MAX_CPUS) {
             pr_warn("smp: too many cpus, using only %u", SMP_MAX_CPUS);
+            cores = SMP_MAX_CPUS;
             break;
         }
     }
@@ -204,7 +205,7 @@ void smp_init(void)
     /* Create pools for CPU structures */
     struct object_pool *cpu_pool = pool_create("cpus", NULL, sizeof(struct processor));
     struct object_pool *stc_pool = pool_create("stacks", NULL, KERNEL_STACK_SIZE * sizeof(uint8_t));
-    for (int i = 0; i < SMP_MAX_CPUS; i++) {
+    for (int i = 0; i < cores; i++) {
         cpus[i] = pool_alloc(cpu_pool);
     }
 
