@@ -30,11 +30,12 @@
 #define VSPRINTF_BUFFER_SIZE 512
 
 enum printk_log_level {
-    NORMAL   = 0,
-    WARNING  = 1,
-    ERROR    = 2,
-    TEST     = 3,
-    PANIC    = 4,
+    DEBUG    = -1,
+    NORMAL   =  0,
+    WARNING  =  1,
+    ERROR    =  2,
+    TEST     =  3,
+    PANIC    =  4,
 };
 
 typedef int (*printk_stream)(const char *);

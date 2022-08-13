@@ -17,7 +17,7 @@
 #include "printk.h"
 
 /* Don't let anyone see this... */
-static int log_level = NORMAL;
+static int log_level = DEBUG;
 
 declare_lock(printf_lock);
 
