@@ -205,9 +205,6 @@ void main(struct stivale2_struct *stv)
         pr_test("All tests complete!");
     #endif
 
-    exec("/usr/kernel.bin/", NULL, NULL);
-    pr_info("still here");
-
     for (;;) {
         asm("hlt");
     }
