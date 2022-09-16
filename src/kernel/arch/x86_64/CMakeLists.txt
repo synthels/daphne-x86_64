@@ -22,6 +22,7 @@ set(SRC
     ${SRCROOT}/tsc.c
     ${SRCROOT}/tsc.h
     ${SRCROOT}/smp.asm
+    ${SRCROOT}/user.asm
     ${SRCROOT}/irq.c
     ${SRCROOT}/irq.h
     ${SRCROOT}/ports.c

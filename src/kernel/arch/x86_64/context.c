@@ -16,11 +16,10 @@
 
 #include "context.h"
 
-struct context *init_context(size_t heap, uint64_t stack)
+struct context *init_context(void)
 {
-    UNUSED(stack);
     struct context *c = kmalloc(sizeof(struct context));
-    c->page_table = vmalloc(heap);
+    c->page_table = vmalloc();
     c->regs = kmalloc(sizeof(regs_t));
     c->regs->cs = KERNEL_CS;
     c->regs->ss = KERNEL_CS;

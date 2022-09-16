@@ -45,7 +45,7 @@ void mmap(void *pml, uintptr_t base, size_t pages);
  * mmu_vmalloc
  *   brief: allocate page directory
  */
-uint64_t *mmu_vmalloc(size_t n);
+uint64_t *mmu_vmalloc(void);
 
 /**
  * mmu_vswitch
@@ -57,7 +57,7 @@ void mmu_vswitch(uint64_t *pml);
  * mmu_init_context
  *   brief: init virtual context
  */
-struct context *mmu_init_context(size_t heap, uint64_t stack);
+struct context *mmu_init_context(void);
 
 /**
  * mmu_switch

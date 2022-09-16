@@ -29,7 +29,7 @@ struct context {
  * init_context
  *   brief: init context
  */
-struct context *init_context(size_t heap, uint64_t stack);
+struct context *init_context(void);
 
 /**
  * destroy_context

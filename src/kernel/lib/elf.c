@@ -41,7 +41,6 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
     mmu_switch(c);
 
     for (uint16_t i = 0; i < header->e_phnum; i++) {
-        pr_info("loading %u/%u", i, header->e_phnum);
         struct elf_phdr *phdr = ((struct elf_phdr *) (elf + header->e_phoff + i * header->e_phentsize));
 
         /* Skip if header is empty */

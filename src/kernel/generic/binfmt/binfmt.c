@@ -91,8 +91,9 @@ static int _exec(struct binfmt_object *obj)
     elf_load(obj->buf, t->context, &st);
 
     if (st.loaded) {
-        pr_info("exec: scheduled \"%s\".", obj->name);
+        t->context->regs->rip = st.entry;
         sched_queue(t);
+        pr_info("exec: scheduled \"%s\".", obj->name);
     } else {
         unlock(&exec_lock);
         pr_err("binfmt: \"%s\" is not a valid executable.", obj->name);

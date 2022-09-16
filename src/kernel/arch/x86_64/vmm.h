@@ -32,6 +32,7 @@
 #define HEAP_PAGES 10000 /* Pages in the heap (2MiB) */
 
 #define FLAGS_READ_WRITE 0x03
+#define USER_PML_ACCESS 0x07
 
 #define GB 0x40000000UL
 
@@ -63,7 +64,7 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
  * vmalloc
  *   brief: Create new virtual address space of size n
  */
-uint64_t *vmalloc(size_t n);
+uint64_t *vmalloc(void);
 
 /**
  * vswitch

@@ -44,14 +44,14 @@ struct task {
     const char *name;
     pid_t pid;
     struct context *context;
+    struct task_args *args;     /* TODO */
     enum task_state_t state;    /* Task state */
     int assigned_to_cpu;        /* id of cpu this task is assigned to */
     struct task *next;          /* Next task */
     struct list *children;      /* Task children */
 };
 
-struct task_entry {
-    uintptr_t entrypoint;
+struct task_args {
     int argc;
     char *argv;
 };

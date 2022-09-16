@@ -16,13 +16,14 @@
 
 #include "task.h"
 
-static struct task root = {"root", 0, NULL, ASLEEP, -1, NULL, NULL}; /* Root task */
+static struct task root = {"root", 0, NULL, NULL, ASLEEP, -1, NULL, NULL}; /* Root task */
 static struct smp_cpus *cpus; /* CPUs */
 static bool _tasks_distributed = false;
 static bool _multicore;
 static pid_t pid = 0;
 
 void switch_task(regs_t *r, uint64_t jiffies);
+extern void cpu_switch_to_user(uint64_t ret, regs_t *r);
 
 declare_lock(sched_lock);
 
@@ -149,8 +150,8 @@ static void init_task(struct task *t, const char *name)
 {
     t->pid = ++pid;
     t->name = name;
-    t->context = mmu_init_context(PROC_HEAP_SIZE, PROC_STACK_LOW);
-    memset(t->context->regs, 1, sizeof(regs_t));
+    t->context = mmu_init_context();
+    memset(t->context->regs, 0, sizeof(regs_t));
     t->state = SUSPENDED;
     t->assigned_to_cpu = -1;
     t->children = list();
@@ -228,29 +229,8 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
                 save_registers(t1->context->regs, r);
             }
             mmu_switch(t2->context);
-            /* This doesn't work if I outsource
-               it to a separate function... (obviously very bad!) */
-            asm volatile(
-                "mov %0, %%rsp\n"
-                "pop %%r15\n"
-                "pop %%r14\n"
-                "pop %%r13\n"
-                "pop %%r12\n"
-                "pop %%r11\n"
-                "pop %%r10\n"
-                "pop %%r9\n"
-                "pop %%r8\n"
-                "pop %%rbp\n"
-                "pop %%rdi\n"
-                "pop %%rsi\n"
-                "pop %%rdx\n"
-                "pop %%rcx\n"
-                "pop %%rbx\n"
-                "pop %%rax\n"
-                "addq $16, %%rsp\n"
-                "iretq\n"
-                ::"r"(t2->context->regs)
-            );
+            /* To Infinity and Beyond! (maybe towards a page fault) */
+            cpu_switch_to_user(t2->context->regs->rip, t1->context->regs);
         }
     }
 }

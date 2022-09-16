@@ -71,17 +71,17 @@ void mmap(void *pml, uintptr_t base, size_t pages)
  * @param heap Heap base address
  * @param stack Stack base address
  */
-struct context *mmu_init_context(size_t heap, uint64_t stack)
+struct context *mmu_init_context(void)
 {
-    return (struct context *) init_context(heap, stack);
+    return (struct context *) init_context();
 }
 
 /**
  * @brief Allocate an address space
  */
-uint64_t *mmu_vmalloc(size_t n)
+uint64_t *mmu_vmalloc(void)
 {
-    return vmalloc(n);
+    return vmalloc();
 }
 
 /**

@@ -119,20 +119,17 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
     pml1[pml1_entry] = (uint64_t) (phys_addr | flags);
 }
 
-uint64_t *vmalloc(size_t n)
+uint64_t *vmalloc(void)
 {
     uint64_t *pml = pmm_alloc_page();
     vmm_init_pml(pml);
-    for (uint64_t i = 0; i < n; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
-    }
 
     for (uint64_t i = PROC_STACK_LOW; i < PROC_STACK_SIZE; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), USER_PML_ACCESS);
     }
 
     for (uint64_t i = PROC_HEAP_LOW; i < PROC_HEAP_SIZE; i++) {
-        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), FLAGS_READ_WRITE);
+        map_page(pml, i * PAGE_SIZE, (uint64_t) pmm_alloc(), USER_PML_ACCESS);
     }
 
     return pml;
