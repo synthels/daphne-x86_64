@@ -80,7 +80,7 @@ static int _exec(struct binfmt_object *obj)
 {
     lock(&exec_lock);
     struct task *t;
-    if (!(t = sched_create_task(obj->name))) {
+    if (!(t = sched_create_task(strdup(obj->name)))) {
         unlock(&exec_lock);
         pr_err("binfmt: cannot exec \"%s\"", obj->name);
         return -ENOENT;
@@ -91,11 +91,11 @@ static int _exec(struct binfmt_object *obj)
     elf_load(obj->buf, t->context, &st);
 
     if (st.loaded) {
-        sched_queue(t);
         pr_info("exec: scheduled \"%s\".", obj->name);
+        sched_queue(t);
     } else {
         unlock(&exec_lock);
-        pr_err("binfmt: error while scheduling \"%s\" to run.", obj->name);
+        pr_err("binfmt: \"%s\" is not a valid executable.", obj->name);
         return -ENOEXEC;
     }
 
@@ -118,6 +118,7 @@ int exec(const char *path, const char *argv[], const char *envp[])
 
     struct binfmt_object obj;
     if (binfmt_load(path, &obj) < 0) {
+        unlock(&binfmt_lock);
         pr_err("exec: cannot load executable at \"%s\".", path);
         return -ENOENT;
     }

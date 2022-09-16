@@ -41,7 +41,9 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
     mmu_switch(c);
 
     for (uint16_t i = 0; i < header->e_phnum; i++) {
+        pr_info("loading %u/%u", i, header->e_phnum);
         struct elf_phdr *phdr = ((struct elf_phdr *) (elf + header->e_phoff + i * header->e_phentsize));
+
         /* Skip if header is empty */
         if (!phdr->p_memsz) {
             continue;
@@ -56,8 +58,8 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
         c->entry = header->e_entry;
         if (phdr->p_type == PT_LOAD) {
             mmap_current(addr, length);
-            memset((void *) (phdr->p_vaddr + phdr->p_filesz), 0, (phdr->p_memsz - phdr->p_filesz));
-            memcpy((void *) (phdr->p_vaddr), (void *) (elf + phdr->p_offset), phdr->p_filesz);
+            memset((void *) (phdr->p_vaddr), 0, (phdr->p_memsz - phdr->p_filesz)); /* Fishy, at best */
+            memcpy((void *) (phdr->p_vaddr), (void *) (elf + phdr->p_offset), (phdr->p_memsz - phdr->p_filesz));
         }
     }
 
