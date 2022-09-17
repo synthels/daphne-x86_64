@@ -38,7 +38,7 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
 
     /* Load all loadable segments */
     void *parent = vmm_get_pml4();
-    mmu_switch(c);
+    mmu_swap_context(c);
 
     for (uint16_t i = 0; i < header->e_phnum; i++) {
         struct elf_phdr *phdr = ((struct elf_phdr *) (elf + header->e_phoff + i * header->e_phentsize));
@@ -64,7 +64,7 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
 
     c->regs->rsp = PROC_STACK_LOW;
     /* Switch back to running task */
-    mmu_switch(parent);
+    mmu_swap_context(parent);
 
     st->loaded = true;
 }

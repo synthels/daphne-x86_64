@@ -228,9 +228,9 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
             if (t1->pid > 0) {
                 save_registers(t1->context->regs, r);
             }
-            mmu_switch(t2->context);
+            mmu_swap_context(t2->context);
             /* To Infinity and Beyond! (maybe towards a page fault) */
-            cpu_switch_to_user(t2->context->regs->rip, t1->context->regs);
+            cpu_switch_to_user(t2->context->regs->rip, t2->context->regs);
         }
     }
 }

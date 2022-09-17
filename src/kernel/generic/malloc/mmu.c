@@ -77,29 +77,11 @@ struct context *mmu_init_context(void)
 }
 
 /**
- * @brief Allocate an address space
- */
-uint64_t *mmu_vmalloc(void)
-{
-    return vmalloc();
-}
-
-/**
- * @brief Switch to address space
- *
- * @param pml Address space
- */
-void mmu_vswitch(uint64_t *pml)
-{
-    vswitch(pml);
-}
-
-/**
  * @brief Switch to process context
  *
  * @param context Process context
  */
-void mmu_switch(struct context *context)
+void mmu_swap_context(struct context *context)
 {
-    mmu_vswitch(context->page_table);
+    swap_page_directory(context->page_table);
 }

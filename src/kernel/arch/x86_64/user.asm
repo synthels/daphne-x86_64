@@ -15,31 +15,27 @@
  ;;
 
 [bits 64]
+global arch_features_enable
+arch_features_enable:
+    mov ecx, 0xc0000080
+    rdmsr
+    or eax, 1 << 0
+    wrmsr
+    ret
+
 global cpu_switch_to_user
 cpu_switch_to_user:
-    mov rsp, [rsi + 136]
-    mov rbp, [rsi + 8],
-    mov eax, [rsi + 24]
-    mov edx, [rsi + 28]
-    mov rcx, 0xc0000100
-    wrmsr
-    mov rbx, [rsi + 32]
-    mov r12, [rsi + 40]
-    mov r13, [rsi + 48]
-    mov r14, [rsi + 56]
-    mov r15, [rsi + 64]
-
-    mov rcx, 0xc0000082
-    wrmsr
-    mov rcx, 0xc0000080
-    rdmsr
-    or eax, 1
-    wrmsr
-    mov rcx, 0xc0000081
-    rdmsr
-    mov edx, 0x00180008
-    wrmsr
+    mov rbp, [rsi + 72]
+    mov rax, [rsi + 120]
+    mov rdx, [rsi + 96]
+    mov rbx, [rsi + 112]
+    mov r12, [rsi + 32]
+    mov r13, [rsi + 24]
+    mov r14, [rsi + 16]
+    mov r15, [rsi + 8]
+    mov rsp, [rsi + 160]
 
     mov rcx, rdi
     mov r11, 0x202
+
     o64 sysret

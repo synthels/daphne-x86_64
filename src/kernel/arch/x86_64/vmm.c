@@ -11,13 +11,18 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * x64 vmm
+ * x86_64 virtual memory manager
  */
 
 #include "vmm.h"
 
 static uint64_t *pml4;
 extern uint64_t kernel_end;
+
+uint64_t *vmm_get_pml4(void)
+{
+    return pml4;
+}
 
 uint64_t *next_level_or_alloc(uint64_t *current_level, size_t entry)
 {
@@ -34,28 +39,36 @@ size_t get_pml_index(uint64_t addr)
     return (addr >> 12) & 0x1ff;
 }
 
-/* Copy a page from pml src to pml dst */
+/**
+ * @brief Copy a page from src to dst
+ */
 void copy_page(uint64_t *src, uint64_t *dst, uint64_t addr)
 {
     size_t idx = get_pml_index(addr);
     map_page(dst, addr, src[idx], FLAGS_READ_WRITE);
 }
 
-/* Map spec regions */
+/**
+ * @brief Map all memory needed by the processor
+ *
+ * Maps the regions 0x00000000->0x100000000, 0x100000000->0xffffffff80000000
+ */
 void map_spec(uint64_t *pml)
 {
-    /* Map first 4 GB */
     for (uintptr_t i = 0; i < 4 * GB; i += PAGE_SIZE) {
         map_page(pml, MEM_PHYS_OFFSET + i, i, FLAGS_READ_WRITE);
         map_page(pml, i, i, FLAGS_READ_WRITE);
     }
-    /* Map 0x00000000 -> 0xffffffff80000000 as per the spec */
     for (uint64_t addr = 0; addr < 0x80000000; addr += PAGE_SIZE) {
         map_page(pml, addr + MEM_KERN_OFFSET, addr, FLAGS_READ_WRITE);
     }
 }
 
-/* Map kernel space */
+/**
+ * @brief Map kernel into PML
+ *
+ * Maps the kernel heap, text and stack
+ */
 void map_kernel(uint64_t *pml, bool load_pml)
 {
     map_spec(pml);
@@ -76,6 +89,11 @@ void map_kernel(uint64_t *pml, bool load_pml)
     }
 }
 
+/**
+ * @brief Initialize VMM
+ *
+ * Creates a page table and maps the kernel into it
+ */
 void vmm_init(void)
 {
     pml4 = pmm_alloc_page();
@@ -85,6 +103,11 @@ void vmm_init(void)
     map_kernel(pml4, true);
 }
 
+/**
+ * @brief Initialize a PML
+ *
+ * Maps the kernel into a PML
+ */
 void vmm_init_pml(uint64_t *pml)
 {
     memset(pml, 0, PAGE_SIZE);
@@ -92,16 +115,21 @@ void vmm_init_pml(uint64_t *pml)
     map_kernel(pml, false);
 }
 
-uint64_t *vmm_get_pml4(void)
-{
-    return pml4;
-}
-
+/**
+ * @brief Map a page into the kernel's PML
+ *
+ * Maps the kernel into a PML
+ */
 void pml4_map_page(uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
 {
     map_page(pml4, virt_addr, phys_addr, flags);
 }
 
+/**
+ * @brief Map a page into a PML
+ *
+ * Creates a mapping for phys_addr to virt_addr
+ */
 void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t flags)
 {
     /* Calculate every index */
@@ -119,6 +147,11 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
     pml1[pml1_entry] = (uint64_t) (phys_addr | flags);
 }
 
+/**
+ * @brief Allocate a new PML
+ *
+ * Creates a new PML for a process
+ */
 uint64_t *vmalloc(void)
 {
     uint64_t *pml = pmm_alloc_page();
@@ -135,12 +168,24 @@ uint64_t *vmalloc(void)
     return pml;
 }
 
-// uint64_t *vfree(uint64_t *pml)
-// {
-//     pmm_free(pml);
-// }
-
-void vswitch(uint64_t *pml)
+/**
+ * @brief Free PML
+ *
+ * Frees a PML
+ */
+void vfree(uint64_t *pml)
 {
-    pml4 = pml;
+    pmm_free(pml);
+}
+
+/**
+ * @brief Swap page directory of this core to pml
+ */
+void swap_page_directory(uint64_t *pml)
+{
+    /* TODO: Handle this_core->id > 0 */
+    if (this_core->is_bsp) {
+        pml4 = pml;
+    }
+    asm volatile ("movq %0, %%cr3" : : "r"((uintptr_t) pml));
 }

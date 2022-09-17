@@ -62,12 +62,18 @@ void map_page(uint64_t *pml, uint64_t virt_addr, uint64_t phys_addr, uint64_t fl
 
 /**
  * vmalloc
- *   brief: Create new virtual address space of size n
+ *   brief: Create new virtual address space
  */
 uint64_t *vmalloc(void);
 
 /**
- * vswitch
+ * vfree
+ *   brief: Free virtual address space
+ */
+void vfree(uint64_t *pml);
+
+/**
+ * swap_page_directory
  *   brief: Switch pml
  */
-void vswitch(uint64_t *pml);
+void swap_page_directory(uint64_t *pml);

@@ -55,6 +55,7 @@
 
 /* Kernel stack */
 static uint8_t stack[KERNEL_STACK_SIZE] __attribute__((aligned(16))) = {0};
+extern void arch_features_enable(void);
 
 static struct stivale2_header_tag_framebuffer framebuffer_hdr_tag = {
     .tag = {
@@ -179,6 +180,7 @@ void main(struct stivale2_struct *stv)
     kbd_init();                        /* init ps2 keyboard */
     clock_init();                      /* clock */
     time_init();                       /* time */
+    arch_features_enable();            /* Architecture specific features */
     smp_init();                        /* smp */
     tsc_init();                        /* tsc */
     apic_init();                       /* try to boot up the APIC timer */
