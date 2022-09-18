@@ -15,6 +15,7 @@
 #pragma once
 
 #include <arch/x86_64/vmm.h>
+#include <arch/x86_64/pmm.h>
 #include <arch/x86_64/context.h>
 #include <arch/x86_64/cpu.h>
 
@@ -40,6 +41,12 @@ void mmap_current(uintptr_t base, size_t pages);
  *   brief: memory map region
  */
 void mmap(void *pml, uintptr_t base, size_t pages);
+
+/**
+ * user_virt_map
+ *   brief: memory map region in userspace
+ */
+void user_virt_map(void *pml, uintptr_t base, size_t pages);
 
 /**
  * mmu_init_context

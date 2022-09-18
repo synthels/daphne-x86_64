@@ -47,12 +47,14 @@ void *mmu_alloc(size_t n)
 void mmap_current(uintptr_t base, size_t pages)
 {
     for (size_t i = 0; i < pages; i++) {
-        pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
+        pml4_map_page(base + i * PAGE_SIZE, base + i * PAGE_SIZE, KERNEL_PAGE_ACCESS);
     }
 }
 
 /**
  * @brief Memory map
+ *
+ * Identity maps a range in physical memory
  *
  * @param pml Virtual address space
  * @param base Base address
@@ -61,8 +63,25 @@ void mmap_current(uintptr_t base, size_t pages)
 void mmap(void *pml, uintptr_t base, size_t pages)
 {
     for (size_t i = 0; i < pages; i++) {
-        map_page(pml, base + i * PAGE_SIZE, base + i * PAGE_SIZE, FLAGS_READ_WRITE);
-    }  
+        map_page(pml, base + i * PAGE_SIZE, base + i * PAGE_SIZE, KERNEL_PAGE_ACCESS);
+    }
+}
+
+/**
+ * @brief Virtual map
+ *
+ * Allocates physical memory and maps it to specified
+ * virtual memory
+ *
+ * @param pml Virtual address space
+ * @param base Base address
+ * @param pages Number of pages
+ */
+void user_virt_map(void *pml, uintptr_t base, size_t pages)
+{
+    for (size_t i = 0; i < pages; i++) {
+        map_page(pml, base + i * PAGE_SIZE, pmm_alloc_page(), USER_PAGE_ACCESS);
+    }
 }
 
 /**

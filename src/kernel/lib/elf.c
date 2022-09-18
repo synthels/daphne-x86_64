@@ -37,9 +37,6 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
     }
 
     /* Load all loadable segments */
-    void *parent = vmm_get_pml4();
-    mmu_swap_context(c);
-
     for (uint16_t i = 0; i < header->e_phnum; i++) {
         struct elf_phdr *phdr = ((struct elf_phdr *) (elf + header->e_phoff + i * header->e_phentsize));
 
@@ -56,15 +53,12 @@ void elf_load(void *elf, struct context *c, struct elf_stat *st)
         st->entry = header->e_entry;
         c->entry = header->e_entry;
         if (phdr->p_type == PT_LOAD) {
-            mmap_current(addr, length);
+            user_virt_map(c->page_table, addr, length);
             memset((void *) (phdr->p_vaddr), 0, (phdr->p_memsz - phdr->p_filesz)); /* Fishy, at best */
             memcpy((void *) (phdr->p_vaddr), (void *) (elf + phdr->p_offset), (phdr->p_memsz - phdr->p_filesz));
         }
     }
 
     c->regs->rsp = PROC_STACK_LOW;
-    /* Switch back to running task */
-    mmu_swap_context(parent);
-
     st->loaded = true;
 }

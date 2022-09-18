@@ -23,7 +23,7 @@ static bool _multicore;
 static pid_t pid = 0;
 
 void switch_task(regs_t *r, uint64_t jiffies);
-extern void cpu_switch_to_user(uint64_t ret, regs_t *r);
+extern void arch_switch_to_user(uint64_t ret, regs_t *r);
 
 declare_lock(sched_lock);
 
@@ -230,7 +230,7 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
             }
             mmu_swap_context(t2->context);
             /* To Infinity and Beyond! (maybe towards a page fault) */
-            cpu_switch_to_user(t2->context->regs->rip, t2->context->regs);
+            arch_switch_to_user(t2->context->regs->rip, t2->context->regs);
         }
     }
 }

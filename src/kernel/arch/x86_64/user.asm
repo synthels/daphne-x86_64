@@ -23,8 +23,13 @@ arch_features_enable:
     wrmsr
     ret
 
-global cpu_switch_to_user
-cpu_switch_to_user:
+global arch_reload_page_table
+arch_reload_page_table:
+    mov cr3, rdi
+    ret
+
+global arch_switch_to_user
+arch_switch_to_user:
     mov rbp, [rsi + 72]
     mov rax, [rsi + 120]
     mov rdx, [rsi + 96]

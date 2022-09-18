@@ -30,9 +30,8 @@
 #define MMU_CEIL(a, b) (((a) + ((b) - 1)) / (b))
 
 #define HEAP_PAGES 10000 /* Pages in the heap (2MiB) */
-
-#define FLAGS_READ_WRITE 0x03
-#define USER_PML_ACCESS 0x07
+#define KERNEL_PAGE_ACCESS 0x03
+#define USER_PAGE_ACCESS 0x07
 
 #define GB 0x40000000UL
 

@@ -33,8 +33,8 @@ void madt_init(void)
     uintptr_t lbase_addr =  madt->lapic;
     lbase_addr = ALIGN_UP(lbase_addr, PAGE_SIZE);
 
-    pml4_map_page(lbase_addr, lbase_addr, FLAGS_READ_WRITE);
-    pml4_map_page(lbase_addr + PAGE_SIZE, lbase_addr + PAGE_SIZE, FLAGS_READ_WRITE);
+    pml4_map_page(lbase_addr, lbase_addr, KERNEL_PAGE_ACCESS);
+    pml4_map_page(lbase_addr + PAGE_SIZE, lbase_addr + PAGE_SIZE, KERNEL_PAGE_ACCESS);
 }
 
 void **madt_get_tables(enum madt_type type)

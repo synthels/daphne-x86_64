@@ -114,7 +114,7 @@ void ap_startup(void)
     ap_lapic_init();
     apic_init();
 
-    pr_debug("cpu %u online, waiting for interruputs.", this_core->cpu_id);
+    pr_debug("cpu %u online, waiting for interruputs", this_core->cpu_id);
 
     for (;;) {
         asm("hlt");

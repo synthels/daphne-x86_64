@@ -42,22 +42,22 @@ static int binfmt_load(const char *path, struct binfmt_object *obj)
     struct fs_node *f;
 
     if (!(f = kopen(path, 0))) {
-        pr_err("binfmt: couldn't locate object at \"%s\".", path);
+        pr_err("binfmt: couldn't locate object at \"%s\"", path);
         return -ENOENT;
     }
 
     if (fstat(f, &st_buf) < 0) {
-        pr_err("binfmt: cannot stat \"%s\".", path);
+        pr_err("binfmt: cannot stat \"%s\"", path);
         return -ENOENT;
     }
 
     void *buf = pool_alloc(obj_pool);
     if (fread(f, 0, buf, st_buf.st_size) >= 0) {
-        pr_debug("binfmt: loaded %u bytes.", st_buf.st_size);
+        pr_debug("binfmt: loaded %u bytes", st_buf.st_size);
         obj->name = strdup(path);
         obj->buf = buf;
     } else {
-        pr_err("binfmt: cannot read from \"%s\".", path);
+        pr_err("binfmt: cannot read from \"%s\"", path);
         return -ENOENT;
     }
 
@@ -93,10 +93,10 @@ static int _exec(struct binfmt_object *obj)
     if (st.loaded) {
         t->context->regs->rip = st.entry;
         sched_queue(t);
-        pr_info("exec: scheduled \"%s\".", obj->name);
+        pr_info("exec: scheduled \"%s\"", obj->name);
     } else {
         unlock(&exec_lock);
-        pr_err("binfmt: \"%s\" is not a valid executable.", obj->name);
+        pr_err("binfmt: \"%s\" is not a valid executable", obj->name);
         return -ENOEXEC;
     }
 
@@ -120,7 +120,7 @@ int exec(const char *path, const char *argv[], const char *envp[])
     struct binfmt_object obj;
     if (binfmt_load(path, &obj) < 0) {
         unlock(&binfmt_lock);
-        pr_err("exec: cannot load executable at \"%s\".", path);
+        pr_err("exec: cannot load executable at \"%s\"", path);
         return -ENOENT;
     }
 
