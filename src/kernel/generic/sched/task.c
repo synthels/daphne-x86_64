@@ -26,6 +26,7 @@ void switch_task(regs_t *r, uint64_t jiffies);
 extern void arch_switch_to_user(uint64_t ret, regs_t *r);
 
 declare_lock(sched_lock);
+declare_lock(task_switch_lock);
 
 /**
  * @brief Make a copy of a task (disconnected from its tree)
@@ -206,7 +207,7 @@ void sched_init(void)
     this_core->root = &root;
     _multicore = (cpus->size > 1);
     clock_hook(switch_task);
-    pr_info("sched: initialised scheduler (%s multicore)", _multicore ? "with" : "without");
+    pr_info("sched: initialized scheduler (%s multicore)", _multicore ? "with" : "without");
 }
 
 /**
@@ -229,7 +230,9 @@ static void save_task_context_and_switch(regs_t *r, struct task *t1, struct task
                 save_registers(t1->context->regs, r);
             }
             mmu_swap_context(t2->context);
+
             /* To Infinity and Beyond! (maybe towards a page fault) */
+            unlock(&task_switch_lock);              
             arch_switch_to_user(t2->context->regs->rip, t2->context->regs);
         }
     }
@@ -249,6 +252,7 @@ void switch_task(regs_t *r, uint64_t jiffies)
     UNUSED(jiffies);
     /* Only bother doing anything if this CPU has a root task
         set */
+    lock(&task_switch_lock);    
     if (this_core->root) {
         /* Set a running task for this CPU, if none
             has been set (assign_tasks_to_cpus does not
@@ -266,4 +270,7 @@ void switch_task(regs_t *r, uint64_t jiffies)
         }
         save_task_context_and_switch(r, prev, this_core->running_task);
     }
+
+    /* In case save_task_context_and_switch returns (or doesn't run) */
+    unlock(&task_switch_lock);
 }

@@ -11,14 +11,34 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
- * Kernel panic
+ * Serial port debugging
  */
 
-#include "panic.h"
+#include "debug.h"
 
-void panic(const char *msg)
+/**
+ * @brief Check if DEBUG_SERIAL_PORT is empty
+ */
+static int serial_is_empty(void)
 {
-    printk(PANIC, "kernel panic: %s (on CPU %u)\n", msg, this_core->cpu_id);
-    debug(msg); /* Yes, I really couldn't live without this */
-    kernel_hang();
+    return inb(DEBUG_SERIAL_PORT + 5) & 0x20;
+}
+
+/**
+ * @brief Write single character to DEBUG_SERIAL_PORT
+ */
+static void serial_write(char out)
+{
+    while (!serial_is_empty());
+    outb(DEBUG_SERIAL_PORT, out);
+}
+
+/**
+ * @brief Write whole string to DEBUG_SERIAL_PORT
+ */
+void debug(const char *out)
+{
+    for (uint32_t i = 0; i < strlen(out); ++i) {
+        serial_write(out[i]);
+    }
 }

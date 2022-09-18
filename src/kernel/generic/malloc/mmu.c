@@ -80,7 +80,7 @@ void mmap(void *pml, uintptr_t base, size_t pages)
 void user_virt_map(void *pml, uintptr_t base, size_t pages)
 {
     for (size_t i = 0; i < pages; i++) {
-        map_page(pml, base + i * PAGE_SIZE, pmm_alloc_page(), USER_PAGE_ACCESS);
+        map_page(pml, base + i * PAGE_SIZE, (uintptr_t) pmm_alloc_page(), USER_PAGE_ACCESS);
     }
 }
 

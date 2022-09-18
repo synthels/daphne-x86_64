@@ -10,15 +10,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
- * Kernel panic
  */
 
-#include "panic.h"
+#pragma once
 
-void panic(const char *msg)
-{
-    printk(PANIC, "kernel panic: %s (on CPU %u)\n", msg, this_core->cpu_id);
-    debug(msg); /* Yes, I really couldn't live without this */
-    kernel_hang();
-}
+#include <lib/string.h>
+#include "ports.h"
+
+#define DEBUG_SERIAL_PORT 0x3F8
+
+/**
+ * debug
+ *   brief: write debug message to serial
+ */
+void debug(const char *out);

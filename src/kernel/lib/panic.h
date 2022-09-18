@@ -19,5 +19,9 @@
 #include <lib/log.h>
 #include <generic/forbia/kernel.h>
 
+#ifdef ARCH_x86_64
+    #include <arch/x86_64/debug.h>
+#endif
+
 /* Throws a tantrum */
 void panic(const char *msg);

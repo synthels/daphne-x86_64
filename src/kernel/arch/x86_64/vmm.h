@@ -25,9 +25,10 @@
 
 #define ALIGN_UP(__addr, __align) (((__addr) + (__align)-1) & ~((__align)-1))
 #define ALIGN_DOWN(__addr, __align) ((__addr) & ~((__align)-1))
+#define MMU_CEIL(a, b) (((a) + ((b) - 1)) / (b))
+
 #define MEM_PHYS_OFFSET (size_t) 0xffff800000000000
 #define MEM_KERN_OFFSET (size_t) 0xffffffff80000000
-#define MMU_CEIL(a, b) (((a) + ((b) - 1)) / (b))
 
 #define HEAP_PAGES 10000 /* Pages in the heap (2MiB) */
 #define KERNEL_PAGE_ACCESS 0x03

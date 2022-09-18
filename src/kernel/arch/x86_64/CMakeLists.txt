@@ -15,6 +15,8 @@ set(SRC
     ${SRCROOT}/pic.h
     ${SRCROOT}/acpi.c
     ${SRCROOT}/acpi.h
+    ${SRCROOT}/debug.c
+    ${SRCROOT}/debug.h
     ${SRCROOT}/madt.c
     ${SRCROOT}/madt.h
     ${SRCROOT}/smp.c
